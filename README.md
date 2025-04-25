@@ -1,4 +1,4 @@
-# Modbus RTU equipment reader
+# Huawei Battery EMS 48150 B1 Modbus RTU reader
 
 ## Requisitos del proyecto
 - **Python 3.12.5** (obligatorio).
