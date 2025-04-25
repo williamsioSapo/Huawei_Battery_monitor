@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz Modbus RTU - Batería Huawei</title>
+    <!-- Enlace a la hoja de estilos CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Interfaz Modbus RTU - Batería Huawei ESM-48150B1</h1>
+            <div class="status-indicator disconnected" id="connectionStatus">
+                <span class="dot"></span>
+                <span class="text">Desconectado</span>
+            </div>
+        </header>
+
+        <main>
+            <section id="connection-section" class="section card">
+                <h2>Configuración de Conexión</h2>
+                <div class="form-grid">
+                    <div>
+                        <label for="port">Puerto:</label>
+                        <input type="text" id="port" value="COM8">
+                    </div>
+                    <div>
+                        <label for="baudrate">Baudrate:</label>
+                        <select id="baudrate">
+                            <option value="9600" selected>9600</option>
+                            <option value="19200">19200</option>
+                            <option value="38400">38400</option>
+                            <option value="57600">57600</option>
+                            <option value="115200">115200</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="parity">Paridad:</label>
+                        <select id="parity">
+                            <option value="N" selected>Ninguna (N)</option>
+                            <option value="E">Par (E)</option>
+                            <option value="O">Impar (O)</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="stopbits">Bits de parada:</label>
+                        <select id="stopbits">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="bytesize">Bits de datos:</label>
+                        <select id="bytesize">
+                             <option value="7">7</option>
+                            <option value="8" selected>8</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="timeout">Timeout (s):</label>
+                        <input type="number" id="timeout" value="1" min="1" max="10">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="connectBtn">Conectar</button>
+                    <button id="disconnectBtn" disabled>Desconectar</button>
+                </div>
+                 <div class="message-area" id="connectionMessage"></div>
+            </section>
+
+            <section id="battery-dashboard" class="section card" style="display: none;">
+                <h2>Panel de Control de Batería</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item">
+                        <div class="metric-label">Voltaje Batería</div>
+                        <div class="metric-value" id="battery-voltage">--</div>
+                        <div class="metric-unit">V</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="metric-label">Voltaje Pack</div>
+                        <div class="metric-value" id="pack-voltage">--</div>
+                        <div class="metric-unit">V</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="metric-label">Corriente</div>
+                        <div class="metric-value" id="battery-current">--</div>
+                        <div class="metric-unit">A</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="metric-label">SOC</div>
+                        <div class="metric-value" id="battery-soc">--</div>
+                        <div class="metric-unit">%</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="metric-label">SOH</div>
+                        <div class="metric-value" id="battery-soh">--</div>
+                        <div class="metric-unit">%</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="metric-label">Estado</div>
+                        <div class="metric-value" id="battery-status">--</div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="refreshDashboardBtn">Actualizar</button>
+                    <button id="startMonitoringBtn">Iniciar Monitoreo</button>
+                    <button id="stopMonitoringBtn" disabled>Detener Monitoreo</button>
+                </div>
+                <div class="message-area" id="dashboardMessage"></div>
+            </section>
+
+            <section id="read-section" class="section card" style="display: none;">
+                <h2>Lectura de Registros</h2>
+                 <div class="form-grid">
+                    <div>
+                        <label for="readSlaveId">ID Esclavo:</label>
+                        <input type="number" id="readSlaveId" value="217" min="1" max="247">
+                    </div>
+                     <div>
+                        <label for="readFunction">Función:</label>
+                        <select id="readFunction">
+                            <option value="holding" selected>Holding Regs (03)</option>
+                            <option value="input">Input Regs (04)</option>
+                            <option value="coil">Coils (01)</option>
+                            <option value="discrete">Discrete Inputs (02)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="readAddress">Dirección:</label>
+                        <input type="number" id="readAddress" value="0" min="0">
+                    </div>
+                    <div>
+                        <label for="readCount">Cantidad:</label>
+                        <input type="number" id="readCount" value="7" min="1" max="125">
+                    </div>
+                </div>
+                 <div class="button-group">
+                    <button id="readBtn">Leer</button>
+                 </div>
+                <h3>Resultados:</h3>
+                <div class="result" id="readResult"></div>
+                <div class="table-container">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Registro</th>
+                                <th>Valor (Dec)</th>
+                                <th>Valor (Hex)</th>
+                                <th>Valor Interpretado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Las filas se añadirán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="write-section" class="section card" style="display: none;">
+                <h2>Escritura de Registros</h2>
+                <div class="form-grid">
+                     <div>
+                        <label for="writeSlaveId">ID Esclavo:</label>
+                        <input type="number" id="writeSlaveId" value="217" min="1" max="247">
+                    </div>
+                    <div>
+                        <label for="writeFunction">Función:</label>
+                        <select id="writeFunction">
+                            <option value="holding" selected>Holding Regs (06/16)</option>
+                            <option value="coil">Coils (05/15)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="writeAddress">Dirección:</label>
+                        <input type="number" id="writeAddress" value="0" min="0">
+                    </div>
+                     <div>
+                        <label for="writeValues">Valores (separados por coma):</label>
+                        <input type="text" id="writeValues" value="0" placeholder="Ej: 100, 255 o true, false">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="writeBtn">Escribir</button>
+                </div>
+                <div class="message-area" id="writeMessage"></div>
+            </section>
+            
+            <section id="device-info-section" class="section card" style="display: none;">
+                <h2>Información del Dispositivo (FC41)</h2>
+                <div class="button-group">
+                    <button id="readInfoBtn">Leer Info Dispositivo</button>
+                </div>
+                <h3>Datos Obtenidos:</h3>
+                <div class="result" id="deviceInfoResult">
+                    <pre><code><!-- El resultado parseado irá aquí --></code></pre>
+                </div>
+                <div class="message-area" id="deviceInfoMessage"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
