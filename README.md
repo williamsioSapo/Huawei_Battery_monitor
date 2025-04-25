@@ -175,11 +175,11 @@ En este caso en particular se uso un adaptador RS485-ETH para capturar los paque
 
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 20px 0;">
   <div style="flex: 1; text-align: center;">
-    <img src="static/images/RS485_ETH_converter.jpg" alt="Conversor físico" style="width: 100%; max-width: 350px; border: 1px solid #ddd; border-radius: 8px;">
+    <img src="static/images/RS485_ETH_converter.jpg" alt="Conversor físico" style="width: 50%; max-width: 350px; border: 1px solid #ddd; border-radius: 8px;">
     <p style="font-size: 0.9em; color: #666;">Conversor RS485-ETH (Modelo USR-TCP232-304)</p>
   </div>
   <div style="flex: 1; text-align: center;">
-    <img src="static/images/usr_config_1.jpg" alt="Interfaz web" style="width: 100%; max-width: 450px; border: 1px solid #ddd; border-radius: 8px;">
+    <img src="static/images/usr_config_1.jpg" alt="Interfaz web" style="width: 50%; max-width: 450px; border: 1px solid #ddd; border-radius: 8px;">
     <p style="font-size: 0.9em; color: #666;">Interfaz web de configuración (Baudrate: 9600, 8N1)</p>
   </div>
 </div>
@@ -193,11 +193,11 @@ En este caso en particular se uso un adaptador RS485-ETH para capturar los paque
   
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 20px 0;">
   <div style="flex: 1; text-align: center;">
-    <img src="static/images/vcom_config_2.jpg" alt="Conversor físico" style="width: 100%; max-width: 350px; border: 1px solid #ddd; border-radius: 8px;">
+    <img src="static/images/vcom_config_2.jpg" alt="Conversor físico" style="width: 50%; max-width: 350px; border: 1px solid #ddd; border-radius: 8px;">
     <p style="font-size: 0.9em; color: #666;">Aplicativo Vcom configurado para asignar COM8 a ip:puerto de adaptador RS485/ETH</p>
   </div>
   <div style="flex: 1; text-align: center;">
-    <img src="static/images/adm_dispo_1.jpg" alt="Interfaz web" style="width: 100%; max-width: 450px; border: 1px solid #ddd; border-radius: 8px;">
+    <img src="static/images/adm_dispo_1.jpg" alt="Interfaz web" style="width: 50%; max-width: 450px; border: 1px solid #ddd; border-radius: 8px;">
     <p style="font-size: 0.9em; color: #666;">Validando que COM8 aparesca en Administrador de Dispositivos de Windows.</p>
   </div>
 </div>
