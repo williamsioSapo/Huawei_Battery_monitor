@@ -111,10 +111,9 @@ La comunicación con la función personalizada `FC41` de Huawei **requiere** una
 
 1.  **Clonar el Repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/tu-repo.git
+    git clone https://github.com/nestorcal/ModbusReader_SR
     cd tu-repo
     ```
-    *(Reemplaza `https://github.com/tu-usuario/tu-repo.git` con la URL real)*
 
 2.  **Crear Archivo `requirements.txt`:**
     Crea un archivo llamado `requirements.txt` en la raíz del proyecto con el siguiente contenido (ajusta las versiones si es necesario, especialmente `pymodbus`):
