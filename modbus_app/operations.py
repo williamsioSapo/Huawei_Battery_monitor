@@ -1,6 +1,7 @@
 # modbus_app/operations.py
 from .client import get_client, is_client_connected # Importar desde el mismo paquete
 from .custom_requests import ReadDeviceInfoRequest, ReadDeviceInfoResponse # Importar clases personalizadas
+from . import device_info  # Importar el módulo completo
 from pymodbus.exceptions import ModbusIOException
 from pymodbus.pdu import ModbusExceptions as merror
 
@@ -99,49 +100,49 @@ def execute_write_operation(slave_id, function, address, values):
 
 
 def execute_read_device_info(slave_id, info_index):
-    """ Ejecuta la operación personalizada FC41 para leer info del dispositivo. """
+    """
+    Ejecuta la operación personalizada FC41 para leer info del dispositivo.
+    Utiliza la caché cargada durante la autenticación.
+    """
     if not is_client_connected():
         return {"status": "error", "message": "No hay conexión activa"}
 
-    client = get_client()
-
-    if not (0 <= info_index <= 5): # Validar índice basado en capturas
-         return {"status": "error", "message": "Índice inválido (0-5)"}
-
-    try:
-        request_obj = ReadDeviceInfoRequest(index=info_index, slave=slave_id)
-        result = client.execute(request_obj) # Ejecutar petición personalizada
-
-        # Procesar resultado
-        if isinstance(result, ModbusIOException):
-             return {"status": "error", "message": f"Error de I/O Modbus (FC41): {str(result)}"}
-        if result.isError():
-             if hasattr(result, 'exception_code'):
-                 error_message = f"Excepción Modbus (FC41): {str(merror(result.exception_code))} (Código: {result.exception_code})"
-             else:
-                 error_message = f"Error Modbus o resp inesperada (FC41): {result}"
-             return {"status": "error", "message": error_message}
-
-        # Verificar que la respuesta es del tipo esperado
-        if isinstance(result, ReadDeviceInfoResponse):
-            raw_bytes = result.info_data
-            try:
-                decoded_string = raw_bytes.decode('utf-8', errors='ignore')
-                return {
-                    "status": "success",
-                    "index": info_index,
-                    "raw_bytes": list(raw_bytes), # Lista de enteros
-                    "ascii_data": decoded_string
-                }
-            except Exception as decode_err:
-                 return {
-                    "status": "warning", # Advertencia, datos recibidos pero no decodificados
-                    "message": f"Error al decodificar datos: {str(decode_err)}",
-                    "index": info_index,
-                    "raw_bytes": list(raw_bytes)
-                 }
-        else:
-            return {"status": "error", "message": f"Respuesta inesperada para FC41: {type(result)}"}
-
-    except Exception as e:
-        return {"status": "error", "message": f"Excepción general durante FC41: {str(e)}"}
+    # Obtener información desde la caché
+    from . import device_info  # Importar aquí para evitar importación circular
+    cached_info = device_info.get_cached_device_info()
+    
+    # Verificar si hay información disponible
+    if cached_info.get("status") != "success":
+        return {
+            "status": "error", 
+            "message": cached_info.get("message", "Información no disponible")
+        }
+    
+    # Verificar que existe el fragmento solicitado
+    fragments = cached_info.get("fragments", {})
+    fragment_key = f"fragment_{info_index}"
+    
+    if fragment_key not in fragments:
+        return {
+            "status": "error",
+            "message": f"Índice {info_index} no disponible"
+        }
+    
+    # Devolver el fragmento solicitado
+    fragment_data = fragments[fragment_key]
+    
+    # Verificar si es un mensaje de error
+    if fragment_data.startswith("ERROR"):
+        return {
+            "status": "error",
+            "message": fragment_data
+        }
+    
+    # Todo bien, devolver datos
+    return {
+        "status": "success",
+        "index": info_index,
+        "ascii_data": fragment_data,
+        "raw_bytes": list(fragment_data.encode('utf-8', errors='ignore')),
+        "cached": True
+    }

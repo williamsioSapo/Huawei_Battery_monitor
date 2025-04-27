@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Análisis Modbus RTU - Batería Huawei ESM-48150B1</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            text-align: left;
+            padding: 12px;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .byte-sequence {
+            font-family: monospace;
+            background-color: #f8f8f8;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #d35400;
+        }
+        .function-code {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .slave-id {
+            color: #27ae60;
+        }
+        .index-value {
+            color: #8e44ad;
+            font-weight: bold;
+        }
+        .crc {
+            color: #7f8c8d;
+        }
+        .important {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .note {
+            background-color: #fffde7;
+            padding: 15px;
+            border-left: 4px solid #fbc02d;
+            margin: 20px 0;
+        }
+        .step {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+        .code-block {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 10px 15px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informe de Análisis Modbus RTU - Batería Huawei ESM-48150B1</h1>
+        
+        <p>Este informe contiene el análisis de la comunicación Modbus RTU con una batería Huawei ESM-48150B1, con enfoque en la función personalizada FC41 utilizada para obtener información extendida del dispositivo.</p>
+
+        <div class="note">
+            <strong>Hallazgo clave:</strong> Se ha descubierto que la comunicación con la función personalizada FC41 requiere una secuencia de autorización previa compuesta por tres pasos específicos.
+        </div>
+
+        <h2>1. Secuencia de Autorización Descubierta</h2>
+        
+        <p>Para poder utilizar la función personalizada FC41 y acceder a la información extendida del dispositivo, es necesario ejecutar la siguiente secuencia:</p>
+
+        <div class="step">
+            <h3>Paso 1: Comando de desbloqueo especial (FC03)</h3>
+            <ul>
+                <li><strong>Enviar:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">03</span> 01 06 00 01 <span class="crc">77 2f</span></span></li>
+                <li><strong>Respuesta esperada:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">03</span> 02 00 cb <span class="crc">d9 c0</span></span></li>
+                <li><strong>Nota:</strong> Este es un comando no estándar que utiliza el código de función 03 con formato personalizado</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Paso 2: Sincronización de fecha/hora (FC10)</h3>
+            <ul>
+                <li><strong>Enviar:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">10</span> 10 00 00 06 0c [AÑO] [MES] [DÍA] [HORA] [MIN] [SEG] <span class="crc">CRC</span></span></li>
+                <li><strong>Ejemplo real:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">10</span> 10 00 00 06 0c 07 e9 00 04 00 15 00 17 00 26 00 13 <span class="crc">33 31</span></span></li>
+                <li><strong>Interpretación:</strong> Escribe fecha/hora (2025-04-21 23:38:19) en 6 registros desde dirección 4096</li>
+                <li><strong>Respuesta esperada:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">10</span> 10 00 00 06 <span class="crc">56 13</span></span></li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Paso 3: Validación de acceso (FC41 inicial)</h3>
+            <ul>
+                <li><strong>Enviar:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 05 01 04 3d <span class="crc">bd</span></span></li>
+                <li><strong>Respuesta esperada:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 05 06 04 00 00 01 <span class="crc">5c 40 56 59</span></span></li>
+                <li><strong>Nota:</strong> Este comando inicial FC41 parece verificar que el acceso ha sido concedido</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Paso 4: Lecturas FC41 (después de autorización)</h3>
+            <ul>
+                <li><strong>Formato de solicitud:</strong> <span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">[ÍNDICE]</span> <span class="crc">CRC</span></span></li>
+                <li><strong>Índices disponibles:</strong> 0 a 5</li>
+            </ul>
+        </div>
+
+        <h2>2. Análisis Detallado de Solicitudes FC41</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Paquete#</th>
+                    <th>Solicitud (Bytes)</th>
+                    <th>Índice</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1743</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">00</span> <span class="crc">95 59</span></span></td>
+                    <td>0</td>
+                    <td>Solicitud de información versión archivo</td>
+                </tr>
+                <tr>
+                    <td>1748</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">01</span> <span class="crc">54 99</span></span></td>
+                    <td>1</td>
+                    <td>Solicitud de información tipo y código de barras</td>
+                </tr>
+                <tr>
+                    <td>1751</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">02</span> <span class="crc">14 98</span></span></td>
+                    <td>2</td>
+                    <td>Solicitud de número de modelo y descripción (parte 1)</td>
+                </tr>
+                <tr>
+                    <td>1756</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">03</span> <span class="crc">d5 58</span></span></td>
+                    <td>3</td>
+                    <td>Solicitud de especificaciones y fecha fabricación</td>
+                </tr>
+                <tr>
+                    <td>1760</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">04</span> <span class="crc">94 9a</span></span></td>
+                    <td>4</td>
+                    <td>Solicitud de fabricante y otros códigos</td>
+                </tr>
+                <tr>
+                    <td>1763</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">05</span> <span class="crc">55 5a</span></span></td>
+                    <td>5</td>
+                    <td>Solicitud de versión etiqueta electrónica</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3. Análisis Detallado de Respuestas FC41</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Paquete#</th>
+                    <th>Inicio de Respuesta</th>
+                    <th>Índice</th>
+                    <th>Información Contenida</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1747</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 43 04 00 <span class="index-value">00</span> ...</span></td>
+                    <td>0</td>
+                    <td>"[ArchivesInfo Version]<br>ArchivesInfoVersion=3.0<br><br>[Board"</td>
+                </tr>
+                <tr>
+                    <td>1750</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 43 04 00 <span class="index-value">01</span> ...</span></td>
+                    <td>1</td>
+                    <td>"Properties]<br>BoardType=ESM-48150B1<br>BarCode=UB2430002599<br>Item=0"</td>
+                </tr>
+                <tr>
+                    <td>1754</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 43 04 00 <span class="index-value">02</span> ...</span></td>
+                    <td>2</td>
+                    <td>"1074848-010<br>Description=Lithium Battery,ESM-48150B1,442mm (W) *"</td>
+                </tr>
+                <tr>
+                    <td>1759</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 43 04 00 <span class="index-value">03</span> ...</span></td>
+                    <td>3</td>
+                    <td>"560mm (D) * 130mm (H),48V,150Ah<br>Manufactured=2024-03-05<br>Vendo"</td>
+                </tr>
+                <tr>
+                    <td>1762</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 43 04 00 <span class="index-value">04</span> ...</span></td>
+                    <td>4</td>
+                    <td>"rName=Huawei<br>IssueNumber=00<br>CLEICode=<br>BOM=<br>Model=ESM-48150B1"</td>
+                </tr>
+                <tr>
+                    <td>1765</td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 1f 04 00 <span class="index-value">05</span> ...</span></td>
+                    <td>5</td>
+                    <td>"$ElabelVersion=4.0"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. Estructura de Mensajes</h2>
+
+        <h3>4.1 Formato de Solicitud FC41</h3>
+        <div class="code-block">
+            <strong>Cliente → Batería:</strong><br>
+            [ID_ESCLAVO (1 byte)] [FUNCIÓN (0x41)] [LONGITUD (0x06)] [SUBCÓDIGO1 (0x03)] [SUBCÓDIGO2 (0x04)] [BYTE1 (0x00)] [ÍNDICE (1 byte)] [CRC (2 bytes)]
+        </div>
+
+        <h3>4.2 Formato de Respuesta FC41</h3>
+        <div class="code-block">
+            <strong>Batería → Cliente:</strong><br>
+            [ID_ESCLAVO (1 byte)] [FUNCIÓN (0x41)] [LONGITUD (0x06)] [TIPO_RESPUESTA (0x43/0x1F)] [SUBCÓDIGO (0x04)] [BYTE1 (0x00)] [ÍNDICE (1 byte)] [DATOS ASCII] [CRC (2 bytes)]
+        </div>
+
+        <h2>5. Análisis de Errores en Comunicación</h2>
+        
+        <p>Durante las pruebas de comunicación con la batería se ha capturado un patrón consistente de errores cuando se intenta usar la función FC41 sin la secuencia de autorización previa.</p>
+        
+        <div class="note">
+            <strong>Hallazgo crítico:</strong> Cuando se intenta usar FC41 sin la secuencia de autorización previa, el dispositivo responde sistemáticamente con un código de error, confirmando que la autorización es OBLIGATORIA.
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Comando Cliente</th>
+                    <th>Respuesta Batería</th>
+                    <th>Interpretación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">00</span> <span class="crc">95 59</span></span></td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="important">c1</span> e1 31 e3 00</span></td>
+                    <td>Función 0x41 + bit de error (0x80) = 0xC1<br>Código de error específico del fabricante</td>
+                </tr>
+                <tr>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">01</span> <span class="crc">54 99</span></span></td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="important">c1</span> e1 31 e3 00</span></td>
+                    <td>Mismo patrón de error para todos los índices</td>
+                </tr>
+                <tr>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="function-code">41</span> 06 03 04 00 <span class="index-value">02-05</span> <span class="crc">...</span></span></td>
+                    <td><span class="byte-sequence"><span class="slave-id">d9</span> <span class="important">c1</span> e1 31 e3 00</span></td>
+                    <td>La respuesta de error es consistente, independientemente del índice solicitado</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p>Este patrón de error sigue la convención Modbus estándar donde un dispositivo responde con el código de función original + 0x80 cuando recibe un comando que no puede ejecutar. El código de excepción "e1 31 e3 00" parece ser específico del fabricante Huawei.</p>
+        
+        <h2>6. Discrepancias Encontradas en Implementación Actual</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Elemento</th>
+                    <th>Implementación Actual</th>
+                    <th>Implementación Correcta</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Prefijo de solicitud</td>
+                    <td><span class="byte-sequence">06 03 04 00</span></td>
+                    <td><span class="byte-sequence">06 03 04 00</span> (correcto pero falta secuencia previa de autorización)</td>
+                </tr>
+                <tr>
+                    <td>Secuencia de autorización</td>
+                    <td><span class="important">Ausente</span></td>
+                    <td><span class="important">Requerida - 3 pasos previos</span></td>
+                </tr>
+                <tr>
+                    <td>Estructura de respuesta</td>
+                    <td>Asume 6 bytes de cabecera fija</td>
+                    <td>Cabecera variable según tipo de respuesta (0x43 o 0x1F)</td>
+                </tr>
+                <tr>
+                    <td>Tipo de función</td>
+                    <td>Función personalizada aislada</td>
+                    <td>Parte de una secuencia de comandos interrelacionados</td>
+                </tr>
+                <tr>
+                    <td>Manejo de errores</td>
+                    <td>No contempla errores específicos</td>
+                    <td>Debe interpretar respuestas de error (0xC1) y manejar reintentos o secuencia de autorización</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>7. Recomendaciones para Implementación</h2>
+
+        <ol>
+            <li>Implementar la secuencia completa de autorización de 3 pasos antes de intentar usar FC41</li>
+            <li>Actualizar la clase <code>ReadDeviceInfoRequest</code> para usar el formato correcto</li>
+            <li>Actualizar la clase <code>ReadDeviceInfoResponse</code> para manejar correctamente los diferentes formatos de respuesta</li>
+            <li>Verificar la sincronización de fecha/hora, ya que parece ser un requisito para la autorización</li>
+            <li>Considerar crear una clase dedicada para el proceso de autorización</li>
+            <li>Implementar manejo de errores para detectar respuestas 0xC1 e intentar reiniciar la secuencia de autorización</li>
+            <li>Agregar un mecanismo de reintento que detecte errores y vuelva a ejecutar la secuencia de autorización completa</li>
+        </ol>
+
+        <div class="note">
+            <strong>Nota importante:</strong> El dispositivo Huawei parece requerir sincronización de tiempo antes de permitir acceso a información extendida. Los valores de fecha/hora enviados en el paso 2 deben ser actuales.
+        </div>
+
+        <h2>8. Información Obtenible del Dispositivo</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Índice</th>
+                    <th>Información Disponible</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>Versión de archivo de información (ArchivesInfoVersion=3.0)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Tipo de placa (BoardType=ESM-48150B1)<br>Código de barras (BarCode=UB2430002599)</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Número de modelo (1074848-010)<br>Descripción (parte 1)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Descripción (parte 2) - dimensiones<br>Fecha de fabricación (Manufactured=2024-03-05)</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Nombre de fabricante (VendorName=Huawei)<br>Número de versión (IssueNumber=00)<br>Modelo completo (Model=ESM-48150B1)</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Versión de etiqueta electrónica (ElabelVersion=4.0)</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>

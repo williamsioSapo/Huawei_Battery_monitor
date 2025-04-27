@@ -1,24 +1,29 @@
 // static/js/main.js
 
-// Referencias a elementos del DOM
+// --- Referencias a elementos del DOM (Solo necesarios para conexión y secciones generales) ---
 const connectionStatusEl = document.getElementById('connectionStatus');
 const connectionStatusText = connectionStatusEl.querySelector('.text');
 const connectBtn = document.getElementById('connectBtn');
 const disconnectBtn = document.getElementById('disconnectBtn');
 const connectionMessageEl = document.getElementById('connectionMessage');
 
+// Secciones generales (para mostrar/ocultar)
+const connectionSection = document.getElementById('connection-section'); // Referencia a la sección conexión
+const batteryDashboardSection = document.getElementById('battery-dashboard'); // Referencia a la sección dashboard
 const readSection = document.getElementById('read-section');
 const writeSection = document.getElementById('write-section');
 const deviceInfoSection = document.getElementById('device-info-section');
 
+// --- Elementos para la sección de LECTURA (si se mantiene) ---
 const readSlaveIdInput = document.getElementById('readSlaveId');
 const readFunctionSelect = document.getElementById('readFunction');
 const readAddressInput = document.getElementById('readAddress');
 const readCountInput = document.getElementById('readCount');
 const readBtn = document.getElementById('readBtn');
-const readResultEl = document.getElementById('readResult');
-const dataTableBody = document.getElementById('dataTableBody');
+const readResultEl = document.getElementById('readResult'); // Para mostrar JSON crudo
+const dataTableBody = document.getElementById('dataTableBody'); // Para la tabla
 
+// --- Elementos para la sección de ESCRITURA ---
 const writeSlaveIdInput = document.getElementById('writeSlaveId');
 const writeFunctionSelect = document.getElementById('writeFunction');
 const writeAddressInput = document.getElementById('writeAddress');
@@ -26,15 +31,15 @@ const writeValuesInput = document.getElementById('writeValues');
 const writeBtn = document.getElementById('writeBtn');
 const writeMessageEl = document.getElementById('writeMessage');
 
+// --- Elementos para la sección INFO DISPOSITIVO (si se mantiene) ---
 const readInfoBtn = document.getElementById('readInfoBtn');
-const deviceInfoResultEl = document.getElementById('deviceInfoResult').querySelector('code');
+const deviceInfoResultEl = document.getElementById('deviceInfoResult').querySelector('code'); // El pre > code
 const deviceInfoMessageEl = document.getElementById('deviceInfoMessage');
 
 // --- Estado de la Aplicación ---
-let isConnected = false;
-let readInterval = null; // Para la lectura periódica
+let isConnected = false; // Sigue siendo útil para lógica interna si es necesario
 
-// --- Mapa de registros para la batería Huawei ESM-48150B1 ---
+// --- Mapa de registros (solo si se mantiene displayReadData) ---
 const HUAWEI_BATTERY_REGISTERS = {
     0: { name: "Battery Voltage", unit: "V", factor: 0.01, signed: false },
     1: { name: "Pack Voltage", unit: "V", factor: 0.01, signed: false },
@@ -45,164 +50,109 @@ const HUAWEI_BATTERY_REGISTERS = {
     6: { name: "Reg Unknown 6", unit: "", factor: 1, signed: false }
 };
 
-// --- Funciones para interpretar datos de la batería ---
+// --- Funciones de ayuda (solo si se mantiene displayReadData) ---
 function interpretRegisterValue(address, value) {
-    // Si el registro no está en nuestro mapa, devolver el valor tal cual
     if (!HUAWEI_BATTERY_REGISTERS[address]) {
-        return { 
-            name: `Registro ${address}`,
-            rawValue: value,
-            unit: '',
-            interpretedValue: value.toString()
-        };
+        return { name: `Registro ${address}`, rawValue: value, unit: '', interpretedValue: value.toString() };
     }
-
     const register = HUAWEI_BATTERY_REGISTERS[address];
-    
-    // Convertir valor a formato signed si es necesario
     let processedValue = value;
     if (register.signed && value > 32767) {
-        // Convertir valor de 16 bits con signo (complemento a 2)
         processedValue = value - 65536;
     }
-    
-    // Aplicar factor de escala
     const scaledValue = processedValue * register.factor;
-    
-    return {
-        name: register.name,
-        rawValue: value,
-        unit: register.unit,
-        interpretedValue: scaledValue.toFixed(2).replace(/\.?0+$/, '') // Elimina ceros al final
-    };
+    return { name: register.name, rawValue: value, unit: register.unit, interpretedValue: scaledValue.toFixed(2).replace(/\.?0+$/, '') };
 }
 
 // --- Funciones de Actualización de UI ---
 function showMessage(element, message, type = 'info') {
+    if (!element) return; // Verificar si el elemento existe
     element.textContent = message;
-    element.className = `message-area ${type}`; // Aplica clase para estilo
-    // Opcional: Ocultar mensaje después de unos segundos
-    // setTimeout(() => { element.textContent = ''; element.className = 'message-area'; }, 5000);
+    element.className = `message-area ${type}`;
 }
 
+// Función PRINCIPAL para actualizar estado visual y DISPARAR EVENTO
 function updateConnectionStatusUI(connected) {
-    isConnected = connected;
+    isConnected = connected; // Actualizar estado global
+
+    // --- Lógica de habilitar/deshabilitar botones y mostrar/ocultar secciones ---
     if (connected) {
         connectionStatusEl.className = 'status-indicator connected';
         connectionStatusText.textContent = 'Conectado';
         connectBtn.disabled = true;
         disconnectBtn.disabled = false;
-        readSection.style.display = 'block'; // Mostrar secciones
-        writeSection.style.display = 'block';
-        deviceInfoSection.style.display = 'block';
-        
-        // Dispatch event para notificar al dashboard
-        document.dispatchEvent(new CustomEvent('connection-status-change', { 
-            detail: { connected: true } 
-        }));
+        // Mostrar secciones relevantes (asegúrate que las referencias existan)
+        if(batteryDashboardSection) batteryDashboardSection.style.display = 'block';
+        if(readSection) readSection.style.display = 'block';
+        if(writeSection) writeSection.style.display = 'block';
+        if(deviceInfoSection) deviceInfoSection.style.display = 'block';
     } else {
         connectionStatusEl.className = 'status-indicator disconnected';
         connectionStatusText.textContent = 'Desconectado';
         connectBtn.disabled = false;
         disconnectBtn.disabled = true;
-        readSection.style.display = 'none'; // Ocultar secciones
-        writeSection.style.display = 'none';
-        deviceInfoSection.style.display = 'none';
-        
-        if (readInterval) {
-            clearInterval(readInterval); // Detener lectura periódica
-            readInterval = null;
-        }
-        
-        // Dispatch event para notificar al dashboard
-        document.dispatchEvent(new CustomEvent('connection-status-change', { 
-            detail: { connected: false } 
-        }));
-        
-        // Limpiar resultados al desconectar
-        readResultEl.textContent = '';
-        dataTableBody.innerHTML = '';
-        writeMessageEl.textContent = '';
-        writeMessageEl.className = 'message-area';
-        deviceInfoResultEl.textContent = '';
-        deviceInfoMessageEl.textContent = '';
-        deviceInfoMessageEl.className = 'message-area';
+         // Ocultar secciones relevantes
+        if(batteryDashboardSection) batteryDashboardSection.style.display = 'none';
+        if(readSection) readSection.style.display = 'none';
+        if(writeSection) writeSection.style.display = 'none';
+        if(deviceInfoSection) deviceInfoSection.style.display = 'none';
+
+        // Limpiar resultados de lectura/escritura/info al desconectar (si se mantienen las secciones)
+        if(readResultEl) readResultEl.textContent = '';
+        if(dataTableBody) dataTableBody.innerHTML = '';
+        if(writeMessageEl) { writeMessageEl.textContent = ''; writeMessageEl.className = 'message-area'; }
+        if(deviceInfoResultEl) deviceInfoResultEl.textContent = '';
+        if(deviceInfoMessageEl) { deviceInfoMessageEl.textContent = ''; deviceInfoMessageEl.className = 'message-area'; }
     }
+
+     // --- DISPARAR EL EVENTO ---
+     // Usar console.log aquí es útil para depurar si el evento se dispara
+     console.log(`Main.js: Despachando evento connection-status-change (connected: ${connected})`);
+     document.dispatchEvent(new CustomEvent('connection-status-change', {
+         detail: { connected: connected }
+     }));
+     // --------------------------
 }
 
+// --- Funciones para poblar UI (solo si se mantienen las secciones) ---
 function displayReadData(data, baseAddress) {
-    // Mostrar JSON crudo
-    readResultEl.textContent = JSON.stringify(data, null, 2);
+    if (!readResultEl || !dataTableBody) return; // Salir si los elementos no existen
 
-    // Poblar la tabla
-    dataTableBody.innerHTML = ''; // Limpiar tabla anterior
-    
-    // Crear encabezados de la tabla si no existen
+    readResultEl.textContent = JSON.stringify(data, null, 2);
+    dataTableBody.innerHTML = '';
     const headerRow = document.querySelector('#dataTable thead tr');
-    // Si no hay una columna para el valor interpretado, añadirla
     if (headerRow && headerRow.cells.length < 4) {
         const interpretedHeader = document.createElement('th');
         interpretedHeader.textContent = 'Valor Interpretado';
         headerRow.appendChild(interpretedHeader);
     }
-    
-    // Añadir filas con datos
+
     data.forEach((value, index) => {
         const address = baseAddress + index;
         const row = dataTableBody.insertRow();
+        const interpretation = interpretRegisterValue(address, value); // Necesita interpretRegisterValue
 
-        const addressCell = row.insertCell();
-        
-        // Interpretar el valor según el registro
-        const interpretation = interpretRegisterValue(address, value);
-        
-        // Añadir nombre del registro si está disponible
-        addressCell.textContent = `${address} - ${interpretation.name}`;
-
-        const decimalCell = row.insertCell();
-        decimalCell.textContent = value.toString(); // Mostrar valor decimal
-
+        row.insertCell().textContent = `${address} - ${interpretation.name}`;
+        row.insertCell().textContent = value.toString();
         const hexCell = row.insertCell();
-        // Manejar valores booleanos para Coils/Discrete Inputs si es necesario
-        if (typeof value === 'boolean') {
-            hexCell.textContent = value ? 'TRUE' : 'FALSE';
-        } else {
-            hexCell.textContent = '0x' + value.toString(16).toUpperCase().padStart(4, '0');
-        }
-        
-        // Añadir celda para el valor interpretado
+        hexCell.textContent = (typeof value === 'boolean') ? (value ? 'TRUE' : 'FALSE') : '0x' + value.toString(16).toUpperCase().padStart(4, '0');
         const interpretedCell = row.insertCell();
-        if (interpretation.unit) {
-            interpretedCell.textContent = `${interpretation.interpretedValue} ${interpretation.unit}`;
-        } else {
-            interpretedCell.textContent = interpretation.interpretedValue;
-        }
+        interpretedCell.textContent = interpretation.unit ? `${interpretation.interpretedValue} ${interpretation.unit}` : interpretation.interpretedValue;
     });
 }
 
 function displayDeviceInfo(fragments) {
-    // Parsea los fragmentos para extraer información clave
-    let deviceData = extractDeviceData(fragments);
-    
-    // Muestra información estructurada
+     if (!deviceInfoResultEl) return; // Salir si el elemento no existe
+
+    let deviceData = extractDeviceData(fragments); // Necesita extractDeviceData
     let formattedOutput = "--- Información del Dispositivo ---\n\n";
-    
-    // Información del fabricante y modelo
     formattedOutput += `Fabricante: ${deviceData.manufacturer || 'Desconocido'}\n`;
     formattedOutput += `Modelo: ${deviceData.model || 'Desconocido'}\n`;
     formattedOutput += `S/N: ${deviceData.barcode || 'Desconocido'}\n`;
     formattedOutput += `Fecha Fabricación: ${deviceData.manufactureDate || 'Desconocida'}\n`;
-    
-    // Tipo de batería y especificaciones
-    if (deviceData.description) {
-        formattedOutput += `Descripción: ${deviceData.description}\n`;
-    }
-    
-    // Versiones
+    if (deviceData.description) formattedOutput += `Descripción: ${deviceData.description}\n`;
     formattedOutput += `Versión Info: ${deviceData.infoVersion || 'Desconocida'}\n`;
     formattedOutput += `Versión E-Label: ${deviceData.elabelVersion || 'Desconocida'}\n`;
-    
-    // Datos crudos (opcional - comentar si no se quiere mostrar)
     formattedOutput += "\n--- Datos Crudos ---\n\n";
     for (let i = 0; i <= 5; i++) {
         const fragmentKey = `fragment_${i}`;
@@ -210,103 +160,106 @@ function displayDeviceInfo(fragments) {
             formattedOutput += `[Fragmento ${i}]:\n${fragments[fragmentKey]}\n\n`;
         }
     }
-    
     deviceInfoResultEl.textContent = formattedOutput;
 }
 
-function extractDeviceData(fragments) {
-    let data = {
-        manufacturer: '',
-        model: '',
-        barcode: '',
-        manufactureDate: '',
-        description: '',
-        infoVersion: '',
-        elabelVersion: '',
-    };
-    
-    // Buscar información específica en los fragmentos
+function extractDeviceData(fragments) { // Necesario para displayDeviceInfo
+    let data = { manufacturer: '', model: '', barcode: '', manufactureDate: '', description: '', infoVersion: '', elabelVersion: '' };
     for (const key in fragments) {
         const content = fragments[key];
-        
-        // Buscar información clave usando expresiones regulares
         const manufacturerMatch = content.match(/[vV]endorName=([^\r\n]+)/);
         if (manufacturerMatch) data.manufacturer = manufacturerMatch[1].trim();
-        
         const modelMatch = content.match(/Model=([^\r\n]+)/) || content.match(/BoardType=([^\r\n]+)/);
         if (modelMatch) data.model = modelMatch[1].trim();
-        
         const barcodeMatch = content.match(/BarCode=([^\r\n]+)/);
         if (barcodeMatch) data.barcode = barcodeMatch[1].trim();
-        
         const dateMatch = content.match(/Manufactured=([^\r\n]+)/);
         if (dateMatch) data.manufactureDate = dateMatch[1].trim();
-        
         const descriptionMatch = content.match(/Description=([^\r\n]+)/);
         if (descriptionMatch) data.description = descriptionMatch[1].trim();
-        
         const infoVersionMatch = content.match(/ArchivesInfoVersion=([^\r\n]+)/);
         if (infoVersionMatch) data.infoVersion = infoVersionMatch[1].trim();
-        
         const elabelVersionMatch = content.match(/ElabelVersion=([^\r\n]+)/);
         if (elabelVersionMatch) data.elabelVersion = elabelVersionMatch[1].trim();
     }
-    
     return data;
 }
 
 // --- Manejadores de Eventos ---
 
 async function handleConnect() {
+    if (!connectBtn || !disconnectBtn) return; // Verificar existencia de botones
+
+    // Deshabilitar botón mientras conecta
+    connectBtn.disabled = true;
+    disconnectBtn.disabled = true; // Deshabilitar ambos
+
     const params = {
-        port: document.getElementById('port').value,
-        baudrate: parseInt(document.getElementById('baudrate').value),
-        parity: document.getElementById('parity').value,
-        stopbits: parseInt(document.getElementById('stopbits').value),
-        bytesize: parseInt(document.getElementById('bytesize').value),
-        timeout: parseInt(document.getElementById('timeout').value)
+        port: document.getElementById('port')?.value || 'COM8', // Añadir ? y default
+        baudrate: parseInt(document.getElementById('baudrate')?.value || '9600'),
+        parity: document.getElementById('parity')?.value || 'N',
+        stopbits: parseInt(document.getElementById('stopbits')?.value || '1'),
+        bytesize: parseInt(document.getElementById('bytesize')?.value || '8'),
+        timeout: parseInt(document.getElementById('timeout')?.value || '1')
     };
     showMessage(connectionMessageEl, 'Conectando...', 'info');
+    let connectSuccess = false;
     try {
-        const result = await connectModbus(params);
-        showMessage(connectionMessageEl, result.message, 'success');
-        updateConnectionStatusUI(true);
-        // Iniciar lectura periódica (opcional) - Leer datos en tiempo real cada 5 segundos
-        // startPeriodicRead();
+        // Usar la función de modbusApi.js
+        const result = await connectModbus(params); // Asume que modbusApi.js está cargado
+        showMessage(connectionMessageEl, result.message, result.status || 'info'); // Usa status si existe
+        // Considera éxito si status es 'success' o 'warning' (conectado pero auth falló parcialmente)
+        if (result.status === 'success' || result.status === 'warning') {
+            connectSuccess = true;
+        }
     } catch (error) {
         showMessage(connectionMessageEl, `Error: ${error.message}`, 'error');
-        updateConnectionStatusUI(false);
+        connectSuccess = false;
+    } finally {
+        // Actualizar UI y disparar evento basado en el éxito final
+        updateConnectionStatusUI(connectSuccess);
+        // No es necesario disparar el evento aquí, updateConnectionStatusUI ya lo hace
     }
 }
 
 async function handleDisconnect() {
+     if (!connectBtn || !disconnectBtn) return;
+
+     // Deshabilitar botones mientras desconecta
+    connectBtn.disabled = true;
+    disconnectBtn.disabled = true;
+
      showMessage(connectionMessageEl, 'Desconectando...', 'info');
     try {
+        // Usar la función de modbusApi.js
         const result = await disconnectModbus();
         showMessage(connectionMessageEl, result.message, 'success');
     } catch (error) {
          showMessage(connectionMessageEl, `Error: ${error.message}`, 'error');
     } finally {
-        updateConnectionStatusUI(false); // Asegura que la UI se actualice incluso si falla
+        // Actualizar UI y disparar evento
+        updateConnectionStatusUI(false);
+         // No es necesario disparar el evento aquí, updateConnectionStatusUI ya lo hace
     }
 }
 
-async function handleRead() {
+async function handleRead() { // Si se mantiene la sección de lectura
+    if (!readSlaveIdInput || !readFunctionSelect || !readAddressInput || !readCountInput || !readResultEl || !dataTableBody) return;
+
     const params = {
         slaveId: parseInt(readSlaveIdInput.value),
         function: readFunctionSelect.value,
         address: parseInt(readAddressInput.value),
         count: parseInt(readCountInput.value)
     };
-    readResultEl.textContent = 'Leyendo...'; // Indicador visual
+    readResultEl.textContent = 'Leyendo...';
     dataTableBody.innerHTML = '';
     try {
-        const result = await readModbusRegisters(params);
-        if (result.status === 'success') {
-            displayReadData(result.data, params.address);
+        const result = await readModbusRegisters(params); // Asume modbusApi.js
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            displayReadData(result.data, params.address); // Necesita displayReadData
         } else {
-            // El error ya debería estar en result.message según apiRequest
-             readResultEl.textContent = `Error: ${result.message}`;
+             readResultEl.textContent = `Error: ${result.message || 'Respuesta inválida'}`;
         }
     } catch (error) {
         readResultEl.textContent = `Error: ${error.message}`;
@@ -314,12 +267,13 @@ async function handleRead() {
 }
 
 async function handleWrite() {
+     if (!writeSlaveIdInput || !writeFunctionSelect || !writeAddressInput || !writeValuesInput || !writeMessageEl) return;
+
     const valuesText = writeValuesInput.value;
     let values;
     const writeFunction = writeFunctionSelect.value;
 
     try {
-        // Parsear valores basados en la función
         if (writeFunction === 'coil') {
             values = valuesText.split(',').map(v => {
                 const trimmed = v.trim().toLowerCase();
@@ -327,20 +281,19 @@ async function handleWrite() {
                 if (trimmed === 'false' || trimmed === '0') return false;
                 throw new Error(`Valor inválido para coil: '${v.trim()}'`);
             });
-        } else { // Asumir 'holding'
+        } else {
             values = valuesText.split(',').map(v => {
                 const parsed = parseInt(v.trim());
-                if (isNaN(parsed)) {
-                    throw new Error(`Valor numérico inválido: '${v.trim()}'`);
-                }
+                if (isNaN(parsed)) throw new Error(`Valor numérico inválido: '${v.trim()}'`);
                 return parsed;
             });
         }
+         if (values.length === 0) throw new Error("No se proporcionaron valores.");
+
     } catch (parseError) {
         showMessage(writeMessageEl, `Error en valores: ${parseError.message}`, 'error');
-        return; // Detener si los valores son incorrectos
+        return;
     }
-
 
     const params = {
         slaveId: parseInt(writeSlaveIdInput.value),
@@ -351,76 +304,80 @@ async function handleWrite() {
 
     showMessage(writeMessageEl, 'Escribiendo...', 'info');
     try {
-        const result = await writeModbusRegisters(params);
-         showMessage(writeMessageEl, result.message, result.status); // Usa el status de la API
+        const result = await writeModbusRegisters(params); // Asume modbusApi.js
+        showMessage(writeMessageEl, result.message, result.status || 'info');
     } catch (error) {
         showMessage(writeMessageEl, `Error: ${error.message}`, 'error');
     }
 }
 
-async function handleReadDeviceInfo() {
-     const slaveId = parseInt(readSlaveIdInput.value); // Usar el mismo ID que para lectura
-     const indicesToRead = [0, 1, 2, 3, 4, 5];
-     let accumulatedInfo = {};
-     let errors = [];
+async function handleReadDeviceInfo() { // Si se mantiene la sección de info
+    if (!readSlaveIdInput || !deviceInfoMessageEl || !deviceInfoResultEl) return;
 
-     showMessage(deviceInfoMessageEl, 'Leyendo información del dispositivo (FC41)...', 'info');
-     deviceInfoResultEl.textContent = ''; // Limpiar resultado anterior
+    const slaveId = parseInt(readSlaveIdInput.value); // Usa el ID de la sección de lectura
+    const indicesToRead = [0, 1, 2, 3, 4, 5];
+    let accumulatedInfo = {};
+    let errors = [];
 
-     for (const index of indicesToRead) {
-        try {
-            const result = await readModbusDeviceInfo({ slaveId, index });
-            if (result.status === 'success') {
-                accumulatedInfo[`fragment_${index}`] = result.ascii_data;
-            } else {
-                 errors.push(`Índice ${index}: ${result.message}`);
-                 accumulatedInfo[`fragment_${index}`] = `Error: ${result.message}`;
-            }
-        } catch (error) {
-             errors.push(`Índice ${index}: ${error.message}`);
-             accumulatedInfo[`fragment_${index}`] = `Error de red: ${error.message}`;
-        }
-        // Pequeña pausa para no saturar (opcional)
-        // await new Promise(resolve => setTimeout(resolve, 50));
-     }
+    showMessage(deviceInfoMessageEl, 'Leyendo información del dispositivo (FC41)...', 'info');
+    deviceInfoResultEl.textContent = 'Cargando...';
 
-     displayDeviceInfo(accumulatedInfo); // Muestra lo que se haya podido leer
+    // Leer desde caché del backend (asumiendo que /api/device_info funciona)
+    try {
+         const response = await fetch('/api/device_info'); // O usar helper API
+         if (!response.ok) {
+             throw new Error(`Error HTTP ${response.status} al obtener info del dispositivo`);
+         }
+         const result = await response.json();
 
-     if (errors.length > 0) {
-        showMessage(deviceInfoMessageEl, `Se completó la lectura con errores: ${errors.join('; ')}`, 'error');
-     } else {
-         showMessage(deviceInfoMessageEl, 'Información del dispositivo leída correctamente.', 'success');
-     }
-}
+         if (result.status === 'success' && result.fragments) {
+             accumulatedInfo = result.fragments; // Usar los fragmentos de la caché
+             showMessage(deviceInfoMessageEl, 'Información del dispositivo leída desde caché.', 'success');
+         } else {
+             throw new Error(result.message || 'No se pudo obtener información de caché');
+         }
 
-// --- Lectura Periódica (Opcional) ---
-function startPeriodicRead() {
-    if (readInterval) { // Si ya existe, limpiarlo
-        clearInterval(readInterval);
+    } catch(error) {
+        errors.push(error.message);
+        showMessage(deviceInfoMessageEl, `Error al obtener info: ${error.message}`, 'error');
     }
-    if (isConnected) {
-        // Ejecutar inmediatamente la primera vez
-        handleRead();
-        // Luego ejecutar cada 5 segundos (5000 ms)
-        readInterval = setInterval(handleRead, 5000);
+
+    // Mostrar lo que se haya podido obtener (desde caché o error)
+    displayDeviceInfo(accumulatedInfo); // Necesita displayDeviceInfo y extractDeviceData
+
+    // Mostrar errores acumulados si los hubo
+    if (errors.length > 0) {
+        showMessage(deviceInfoMessageEl, `Se completó la operación con errores: ${errors.join('; ')}`, 'warning'); // Warning, no error si algo se mostró
     }
 }
+
+// --- ELIMINADA LA FUNCIÓN startPeriodicRead ---
 
 // --- Inicialización ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Añadir listeners a los botones
-    connectBtn.addEventListener('click', handleConnect);
-    disconnectBtn.addEventListener('click', handleDisconnect);
-    readBtn.addEventListener('click', handleRead);
-    writeBtn.addEventListener('click', handleWrite);
-    readInfoBtn.addEventListener('click', handleReadDeviceInfo);
+    console.log("Main.js: DOMContentLoaded");
 
-    // Inicializar el dashboard
+    // Añadir listeners a los botones principales
+    if (connectBtn) connectBtn.addEventListener('click', handleConnect);
+    if (disconnectBtn) disconnectBtn.addEventListener('click', handleDisconnect);
+
+    // Añadir listeners para secciones opcionales (si existen)
+    if (readBtn) readBtn.addEventListener('click', handleRead);
+    if (writeBtn) writeBtn.addEventListener('click', handleWrite);
+    if (readInfoBtn) readInfoBtn.addEventListener('click', handleReadDeviceInfo);
+
+    // Inicializar el dashboard (si la función existe en dashboard.js)
     if (typeof initDashboard === 'function') {
+        console.log("Main.js: Llamando a initDashboard...");
         initDashboard();
+    } else {
+        console.warn("Main.js: initDashboard no está definida (asegúrate que dashboard.js se carga correctamente).");
     }
 
-    // Comprobar estado inicial (por si la página se recarga y el backend sigue conectado)
-    // Opcional: podrías llamar a checkStatus() aquí
-    updateConnectionStatusUI(false); // Empezar como desconectado
+    // Establecer estado inicial como desconectado (importante que se haga antes de cualquier posible evento inicial)
+    updateConnectionStatusUI(false);
+    console.log("Main.js: Estado inicial establecido a desconectado.");
+
+    // Opcional: Comprobar estado inicial del backend (si es necesario)
+    // checkBackendStatus(); // Necesitarías implementar esta función y un endpoint /api/status
 });

@@ -1,6 +1,7 @@
 # modbus_app/client.py
 import sys
 from pymodbus.client import ModbusSerialClient
+from . import device_info
 import importlib
 
 # Variable global para mantener la instancia del cliente
@@ -25,7 +26,16 @@ def get_client():
 def connect_client(port, baudrate, parity, stopbits, bytesize, timeout):
     """ Crea y conecta un cliente Modbus Serial RTU. Cierra la conexión anterior si existe. """
     global modbus_client_instance, _is_connected
-
+    from . import device_info  # Importar aquí para evitar importación circular
+    # Guardar parámetros para uso futuro
+    device_info.connection_params = {
+        'port': port,
+        'baudrate': baudrate,
+        'parity': parity,
+        'stopbits': stopbits,
+        'bytesize': bytesize,
+        'timeout': timeout
+    }
     # Cerrar conexión previa si existe
     if is_client_connected():
         disconnect_client()
@@ -61,7 +71,41 @@ def connect_client(port, baudrate, parity, stopbits, bytesize, timeout):
         print(f"Excepción al conectar: {e}") # Log
         modbus_client_instance = None # Limpiar en caso de excepción
         return False, f"Excepción al conectar: {str(e)}"
-
+        
+def wake_up_device(slave_id=217, max_attempts=10):
+    """Intenta despertar el dispositivo leyendo el registro de voltaje (registro 0)."""
+    global modbus_client_instance
+    
+    if not is_client_connected() or not modbus_client_instance:
+        print("No hay conexión activa para despertar el dispositivo")
+        return False
+        
+    print(f"Iniciando secuencia de despertar para dispositivo {slave_id}...")
+    
+    for attempt in range(1, max_attempts + 1):
+        try:
+            print(f"Intento {attempt} de despertar el dispositivo...")
+            # Leer registro 0 (voltaje)
+            result = modbus_client_instance.read_holding_registers(address=0, count=1, slave=slave_id)
+            
+            if not result.isError():
+                voltage = result.registers[0] * 0.01  # Factor de conversión
+                print(f"Dispositivo despertó! Voltaje actual: {voltage:.2f}V")
+                return True
+            else:
+                print(f"Intento {attempt}: Error en lectura - {result}")
+        except Exception as e:
+            print(f"Intento {attempt}: Excepción - {str(e)}")
+        
+        # Aumentar el tiempo de espera progresivamente
+        wait_time = attempt * 1.5  # 1.5, 3, 4.5, 6, 7.5 segundos
+        print(f"Esperando {wait_time:.1f}s antes del siguiente intento...")
+        import time
+        time.sleep(wait_time)
+    
+    print("No se pudo despertar el dispositivo después de múltiples intentos")
+    return False
+    
 def disconnect_client():
     """ Cierra la conexión Modbus si está activa. """
     global modbus_client_instance, _is_connected
@@ -73,6 +117,7 @@ def disconnect_client():
         except Exception as e:
             print(f"Error al desconectar: {e}")
         finally:
+            device_info.reset_device_info()  # Limpiar caché de información
             modbus_client_instance = None
             _is_connected = False
             return True
@@ -157,3 +202,20 @@ def is_client_connected():
         print(f"ERROR INESPERADO al verificar conexión: {e}", file=sys.stderr)
         _is_connected = False
         return False
+
+# CORRECCIÓN: Implementación de get_device_info
+def get_device_info():
+    """
+    Función para obtener información del dispositivo desde caché.
+    
+    Returns:
+        dict: Información del dispositivo o error
+    """
+    if not is_client_connected():
+        return {
+            "status": "error",
+            "message": "No hay conexión activa con el dispositivo"
+        }
+        
+    # Obtener información almacenada en caché
+    return device_info.get_cached_device_info()

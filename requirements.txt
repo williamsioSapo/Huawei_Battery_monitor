@@ -7,5 +7,4 @@ Jinja2==3.1.6
 MarkupSafe==3.0.2
 pymodbus==3.6.7
 pyserial==3.5
-setuptools==65.5.0
 Werkzeug==3.1.3

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Comunicación Modbus RTU (sata.txt) v3</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.5; }
+        h1, h2, h3 { color: #333; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 25px;}
+        h3 { margin-top: 20px; color: #555; }
+        p, li { margin-bottom: 10px; }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            word-wrap: break-word;
+            white-space: pre-wrap; /* Ensure long ASCII strings wrap */
+        }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; table-layout: fixed; } /* Fixed layout helps with wrapping */
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #f2f2f2; }
+        .slave-id, .function-code { color: #0000FF; font-weight: bold; }
+        .address, .quantity { color: #008000; font-weight: bold; }
+        .data-numeric { color: #FF0000; font-weight: bold; }
+        .data-ascii { color: #800080; font-weight: bold; }
+        .exception-code { color: #FFA500; font-weight: bold; }
+        .direction { font-weight: bold; }
+        em { color: #666; }
+        ul { margin-top: 0; padding-left: 20px;}
+        .ascii-block { background-color: #e8e8e8; border: 1px dashed #aaa; padding: 10px; margin-top: 5px; font-size: 0.9em;}
+    </style>
+</head>
+<body>
+
+    <h1>Resumen de Comunicación Modbus RTU sobre TCP (sata.txt) v3</h1>
+
+    <p>
+        <strong>IPs:</strong> [MASTER = 192.168.69.218], [GATEWAY = 192.168.69.230:8235]<br>
+        <strong>Protocolo:</strong> Modbus RTU encapsulado en TCP<br>
+        <strong>Dispositivo Identificado (ID <span class="slave-id">d9</span>):</strong> <span class="data-ascii">Huawei</span> <span class="data-ascii">ESM-48150B1</span> Lithium Battery (S/N: <span class="data-ascii">UB2430002599</span>, Fecha Fab: <span class="data-ascii">2024-03-05</span>)
+    </p>
+
+    <h2>Fase 1: Escaneo Inicial de Dispositivos</h2>
+    <p><em>El maestro (.218) envía una petición simple (<span class="function-code">FC03</span>, Addr <span class="address">0</span>, Qty <span class="quantity">1</span>) a varios IDs de esclavo (<span class="slave-id">d6</span> a <span class="slave-id">e7</span>). Solo el ID <span class="slave-id">d9</span> (217) responde con datos Modbus.</em></p>
+    <p>Pkt 185/988: Petición/Respuesta FC03 a ID <span class="slave-id">d9</span>, Addr <span class="address">0</span>. Respuesta: <code class="data-numeric">133e</code> (4926). Confirma que <span class="slave-id">d9</span> está activo.</p>
+    <p><em>(Se omiten otras peticiones de escaneo y la ausencia de respuestas Modbus para otros IDs)</em></p>
+
+    <h2>Fase 2: Lectura de Datos Detallados de Esclavo d9 (217)</h2>
+
+    <h3>Ciclo de Lectura de Datos en Tiempo Real (FC03)</h3>
+    <p>Pkt 3377 (101.387964) <span class="direction">[GW->MASTER]</span> Respuesta Multi-Registro (Leer 7 registros desde Addr 0)<br>
+       Payload: <code>d9 03 0e 13 3b 13 36 fc 89 00 3f 00 64 00 1c 00 19 28 58</code><br>
+       <em>Datos clave:</em>
+       <ul>
+         <li>Reg <span class="address">0</span>: <code class="data-numeric">133b</code> (4923) -> Bat Voltage</li>
+         <li>Reg <span class="address">1</span>: <code class="data-numeric">1336</code> (4918) -> Pack Voltage</li>
+         <li>Reg <span class="address">2</span>: <code class="data-numeric">fc89</code> (-887) -> Bat Current</li>
+         <li>Reg <span class="address">3</span>: <code class="data-numeric">003f</code> (63)   -> Bat SOC</li>
+         <li>Reg <span class="address">4</span>: <code class="data-numeric">0064</code> (100)  -> Bat SOH</li>
+       </ul>
+    </p>
+
+    <h3>Lectura de Información ASCII (FC 41 - Custom)</h3>
+    <p><em>El maestro usa <span class="function-code">FC41</span> con subcódigos/índices (ej. <code>06 03 04 00 0X ...</code> donde X es el índice) para leer información del dispositivo en bloques ASCII.</em></p>
+
+    <p><strong>Fragmento 0 (Índice <span class="address">0</span>):</strong> Pkt 1747 (73.083490) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 43 04 00 00 2f 24 5b 41 72 63 68 69 76 65 73 49 6e 66 6f 20 56 65 72 73 69 6f 6e 5d 0d 0a 2f 24 41 72 63 68 69 76 65 73 49 6e 66 6f 56 65 72 73 69 6f 6e 3d 33 2e 30 0d 0a 0d 0a 0d 0a 5b 42 6f 61 72 64 20 91 03</code>
+       <div class="ascii-block">
+           <code>/$[ArchivesInfo Version]..</code><br>
+           <code>/$ArchivesInfoVersion=<span class="data-ascii">3.0</span>......</code><br>
+           <code>[Board ...</code>
+       </div>
+    </p>
+    <p><strong>Fragmento 1 (Índice <span class="address">1</span>):</strong> Pkt 1750 (73.222524) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 43 04 00 01 50 72 6f 70 65 72 74 69 65 73 5d 0d 0a 42 6f 61 72 64 54 79 70 65 3d 45 53 4d 2d 34 38 31 35 30 42 31 0d 0a 42 61 72 43 6f 64 65 3d 55 42 32 34 33 30 30 30 32 35 39 39 0d 0a 49 74 65 6d 3d 30 e9 ee</code>
+        <div class="ascii-block">
+           <code>Properties]..</code><br>
+           <code>BoardType=<span class="data-ascii">ESM-48150B1</span>..</code><br>
+           <code>BarCode=<span class="data-ascii">UB2430002599</span>..</code><br>
+           <code>Item=<span class="data-ascii">0</span>...</code>
+       </div>
+    </p>
+    <p><strong>Fragmento 2 (Índice <span class="address">2</span>):</strong> Pkt 1754 (73.361470) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 43 04 00 02 31 30 37 34 38 34 38 2d 30 31 30 0d 0a 44 65 73 63 72 69 70 74 69 6f 6e 3d 4c 69 74 68 69 75 6d 20 42 61 74 74 65 72 79 2c 45 53 4d 2d 34 38 31 35 30 42 31 2c 34 34 32 6d 6d 20 28 57 29 20 2a 9f 7b</code>
+        <div class="ascii-block">
+           <code><span class="data-ascii">1074848-010</span>..</code> <em>(¿Número de Parte/Item?)</em><br>
+           <code>Description=<span class="data-ascii">Lithium Battery,ESM-48150B1,442mm (W) *...</span></code>
+       </div>
+    </p>
+    <p><strong>Fragmento 3 (Índice <span class="address">3</span>):</strong> Pkt 1759 (73.500461) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 43 04 00 03 20 35 36 30 6d 6d 20 28 44 29 20 2a 20 31 33 30 6d 6d 20 28 48 29 2c 34 38 56 2c 31 35 30 41 68 0d 0a 4d 61 6e 75 66 61 63 74 75 72 65 64 3d 32 30 32 34 2d 30 33 2d 30 35 0d 0a 56 65 6e 64 6f 29 a8</code>
+        <div class="ascii-block">
+           <code><span class="data-ascii"> 560mm (D) * 130mm (H),48V,150Ah</span>..</code> <em>(Continuación Descripción/Especificaciones)</em><br>
+           <code>Manufactured=<span class="data-ascii">2024-03-05</span>..</code><br>
+           <code>Vendo...</code> <em>(Vendor/Fabricante cortado)</em>
+       </div>
+    </p>
+    <p><strong>Fragmento 4 (Índice <span class="address">4</span>):</strong> Pkt 1762 (73.640448) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 43 04 00 04 72 4e 61 6d 65 3d 48 75 61 77 65 69 0d 0a 49 73 73 75 65 4e 75 6d 62 65 72 3d 30 30 0d 0a 43 4c 45 49 43 6f 64 65 3d 0d 0a 42 4f 4d 3d 0d 0a 4d 6f 64 65 6c 3d 45 53 4d 2d 34 38 31 35 30 42 31 12 bc</code>
+        <div class="ascii-block">
+           <code>rName=<span class="data-ascii">Huawei</span>..</code> <em>(Confirmación Fabricante)</em><br>
+           <code>IssueNumber=<span class="data-ascii">00</span>..</code><br>
+           <code>CLEICode=..</code><br>
+           <code>BOM=..</code><br>
+           <code>Model=<span class="data-ascii">ESM-48150B1</span>...</code>
+       </div>
+    </p>
+    <p><strong>Fragmento 5 (Índice <span class="address">5</span>):</strong> Pkt 1765 (73.736216) <span class="direction">[GW->MASTER]</span><br>
+       Payload: <code>d9 41 06 1f 04 00 05 0d 0a 2f 24 45 6c 61 62 65 6c 56 65 72 73 69 6f 6e 3d 34 2e 30 0d 0a 00 00 00 00 00 ed e5</code>
+        <div class="ascii-block">
+           <code>../$ElabelVersion=<span class="data-ascii">4.0</span>.........</code>
+       </div>
+    </p>
+
+    <h3>Intento de Lectura y Excepción (FC03)</h3>
+    <p>Pkt 3432/3434: Intento de leer Addr <span class="address">800</span> resulta en <span class="function-code exception-code">FC83</span>, Excepción <span class="exception-code">02</span> (Illegal Data Address).</p>
+
+    <p><em>(Se omiten otras lecturas/escrituras por brevedad)</em></p>
+
+    <h2>Tabla Resumen de Correlación (sata.txt vs. Screenshot)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Campo Herramienta / Descubierto</th>
+                <th>Dirección (Dec)</th>
+                <th>Dirección (Hex)</th>
+                <th>FC</th>
+                <th>Raw Value (Hex/ASCII)</th>
+                <th>Raw Value (Dec)</th>
+                <th>Valor Mostrado/Leído</th>
+                <th>Factor Escala / Notas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Battery Voltage</td>
+                <td><span class="address">0</span></td>
+                <td><span class="address">0000</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code class="data-numeric">133b</code></td>
+                <td>4923</td>
+                <td>49.26 V</td>
+                <td>x 0.01. Coincidencia cercana.</td>
+            </tr>
+            <tr>
+                <td>Pack Voltage</td>
+                <td><span class="address">1</span></td>
+                <td><span class="address">0001</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code class="data-numeric">1336</code></td>
+                <td>4918</td>
+                <td>49.21 V</td>
+                <td>x 0.01. Coincidencia cercana.</td>
+            </tr>
+            <tr>
+                <td>Battery Current</td>
+                <td><span class="address">2</span></td>
+                <td><span class="address">0002</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code class="data-numeric">fc89</code></td>
+                <td>-887 (Signed)</td>
+                <td>-6.76 A</td>
+                <td>x 0.01 (aprox). Coincidencia cercana.</td>
+            </tr>
+            <tr>
+                <td>Battery SOC</td>
+                <td><span class="address">3</span></td>
+                <td><span class="address">0003</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code class="data-numeric">003f</code></td>
+                <td>63</td>
+                <td>63 %</td>
+                <td>x 1. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Battery SOH</td>
+                <td><span class="address">4</span></td>
+                <td><span class="address">0004</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code class="data-numeric">0064</code></td>
+                <td>100</td>
+                <td>100 %</td>
+                <td>x 1. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Software Version</td>
+                <td><em>?</em></td>
+                <td><em>?</em></td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>V117</td>
+                <td><em>No confirmado en captura.</em></td>
+            </tr>
+             <tr>
+                <td>Battery Bar Code (S/N)</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkt 1750</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">UB2430002599</span></td>
+                <td>Texto ASCII via FC41. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Manufacturer</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkt 1762</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">Huawei</span></td>
+                <td>Texto ASCII via FC41. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Model</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkts 1750, 1754, 1762</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">ESM-48150B1</span></td>
+                <td>Texto ASCII via FC41. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Manufacture Date</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkt 1759</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">2024-03-05</span></td>
+                <td>Texto ASCII via FC41. Coincidencia exacta.</td>
+            </tr>
+            <tr>
+                <td>Description / Specs</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkts 1754, 1759</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">Lithium Battery...48V,150Ah...</span></td>
+                <td>Texto ASCII via FC41.</td>
+            </tr>
+             <tr>
+                <td>E-Label Version</td>
+                <td><em>N/A</em></td>
+                <td><em>N/A</em></td>
+                <td><span class="function-code">41</span></td>
+                <td><em>ASCII Pkt 1765</em></td>
+                <td>N/A</td>
+                <td><span class="data-ascii">4.0</span></td>
+                <td>Texto ASCII via FC41.</td>
+            </tr>
+            <tr>
+                <td>(Reg Desconocido 5)</td>
+                <td><span class="address">5</span></td>
+                <td><span class="address">0005</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code>001c</code></td>
+                <td>28</td>
+                <td>N/A</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>(Reg Desconocido 6)</td>
+                <td><span class="address">6</span></td>
+                <td><span class="address">0006</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><code>0019</code></td>
+                <td>25</td>
+                <td>N/A</td>
+                <td>-</td>
+            </tr>
+             <tr>
+                <td>(Dirección Ilegal)</td>
+                <td><span class="address">800</span></td>
+                <td><span class="address">0320</span></td>
+                <td><span class="function-code">03</span></td>
+                <td><em>N/A</em></td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Causa <span class="exception-code">Excepción 02</span>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

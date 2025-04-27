@@ -6,8 +6,33 @@
     <title>Interfaz Modbus RTU - Batería Huawei</title>
     <!-- Enlace a la hoja de estilos CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Favicon (opcional, pero evita el error 404 en consola) -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
+	<!-- Botón de consola persistente -->
+	<div class="console-toggle-button" id="consoleToggleBtn">
+		<i class="console-icon">⚙️</i> Consola
+	</div>
+
+	<!-- Ventana flotante de consola -->
+	<div class="console-modal" id="consoleModal">
+		<div class="console-modal-content">
+			<div class="console-modal-header">
+				<span class="console-title">Consola de Depuración</span>
+				<span class="console-close" id="consoleCloseBtn">×</span>
+			</div>
+			<div class="console-container">
+				<div id="console-output"></div>
+			</div>
+			<div class="console-modal-footer">
+				<button id="clearConsoleBtn">Limpiar</button>
+				<button id="pauseConsoleBtn">Pausar</button>
+			</div>
+		</div>
+	</div>
+
+    <!-- Contenedor Principal -->
     <div class="container">
         <header>
             <h1>Interfaz Modbus RTU - Batería Huawei ESM-48150B1</h1>
@@ -18,6 +43,7 @@
         </header>
 
         <main>
+            <!-- Sección de Conexión -->
             <section id="connection-section" class="section card">
                 <h2>Configuración de Conexión</h2>
                 <div class="form-grid">
@@ -69,39 +95,18 @@
                  <div class="message-area" id="connectionMessage"></div>
             </section>
 
+            <!-- Sección del Panel de Batería (Contenedor React) -->
             <section id="battery-dashboard" class="section card" style="display: none;">
                 <h2>Panel de Control de Batería</h2>
-                <div class="dashboard-grid">
-                    <div class="dashboard-item">
-                        <div class="metric-label">Voltaje Batería</div>
-                        <div class="metric-value" id="battery-voltage">--</div>
-                        <div class="metric-unit">V</div>
-                    </div>
-                    <div class="dashboard-item">
-                        <div class="metric-label">Voltaje Pack</div>
-                        <div class="metric-value" id="pack-voltage">--</div>
-                        <div class="metric-unit">V</div>
-                    </div>
-                    <div class="dashboard-item">
-                        <div class="metric-label">Corriente</div>
-                        <div class="metric-value" id="battery-current">--</div>
-                        <div class="metric-unit">A</div>
-                    </div>
-                    <div class="dashboard-item">
-                        <div class="metric-label">SOC</div>
-                        <div class="metric-value" id="battery-soc">--</div>
-                        <div class="metric-unit">%</div>
-                    </div>
-                    <div class="dashboard-item">
-                        <div class="metric-label">SOH</div>
-                        <div class="metric-value" id="battery-soh">--</div>
-                        <div class="metric-unit">%</div>
-                    </div>
-                    <div class="dashboard-item">
-                        <div class="metric-label">Estado</div>
-                        <div class="metric-value" id="battery-status">--</div>
-                    </div>
+
+                <!-- Contenedor donde se montará el componente React -->
+                <div id="react-battery-panel">
+                    <!-- React generará el contenido aquí -->
+                    <!-- Puedes poner un mensaje de "Cargando panel..." aquí si quieres -->
+                     <!-- <div class="message-area info" style="margin: 10px;">Cargando panel...</div> -->
                 </div>
+
+                <!-- Controles fuera del componente React -->
                 <div class="button-group">
                     <button id="refreshDashboardBtn">Actualizar</button>
                     <button id="startMonitoringBtn">Iniciar Monitoreo</button>
@@ -110,6 +115,7 @@
                 <div class="message-area" id="dashboardMessage"></div>
             </section>
 
+            <!-- Sección de Lectura -->
             <section id="read-section" class="section card" style="display: none;">
                 <h2>Lectura de Registros</h2>
                  <div class="form-grid">
@@ -151,12 +157,13 @@
                             </tr>
                         </thead>
                         <tbody id="dataTableBody">
-                            <!-- Las filas se añadirán dinámicamente -->
+                            <!-- Las filas se añadirán dinámicamente por main.js -->
                         </tbody>
                     </table>
                 </div>
             </section>
 
+            <!-- Sección de Escritura -->
             <section id="write-section" class="section card" style="display: none;">
                 <h2>Escritura de Registros</h2>
                 <div class="form-grid">
@@ -185,15 +192,17 @@
                 </div>
                 <div class="message-area" id="writeMessage"></div>
             </section>
-            
+
+            <!-- Sección de Info Dispositivo (FC41) -->
             <section id="device-info-section" class="section card" style="display: none;">
-                <h2>Información del Dispositivo (FC41)</h2>
+                <h2>Información del Dispositivo (FC41 Cache)</h2>
                 <div class="button-group">
-                    <button id="readInfoBtn">Leer Info Dispositivo</button>
+                    <!-- El botón ahora obtiene info de /api/device_info manejado por main.js -->
+                    <button id="readInfoBtn">Leer Info Dispositivo (Cache)</button>
                 </div>
                 <h3>Datos Obtenidos:</h3>
                 <div class="result" id="deviceInfoResult">
-                    <pre><code><!-- El resultado parseado irá aquí --></code></pre>
+                    <pre><code><!-- El resultado parseado por main.js irá aquí --></code></pre>
                 </div>
                 <div class="message-area" id="deviceInfoMessage"></div>
             </section>
@@ -202,8 +211,22 @@
     </div>
 
     <!-- Scripts JavaScript -->
+    <!-- Librerías React y Babel (Importante: Cargar antes de tu código React) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Scripts de la aplicación (Orden Importante) -->
+    <!-- 1. API Helper (Usado por otros) -->
     <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <!-- 2. Componente React (Define window.updateBatteryPanel, necesita ejecutarse después del div#react-battery-panel) -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
+    <!-- 3. Lógica principal (Maneja conexión, usa API, dispara evento) -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- 4. Lógica del Dashboard (Escucha evento, llama a updateBatteryPanel, usa API) -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <!-- 5. Lógica de la Consola Web -->
+	<script src="{{ url_for('static', filename='js/console.js') }}"></script>
+
 </body>
 </html>

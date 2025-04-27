@@ -1,11 +1,51 @@
 # app.py
+import io
+import sys
+import threading
+import time
+from collections import deque
 from flask import Flask, render_template, request, jsonify
+
+# Cola circular para almacenar los últimos mensajes (limitada a 500 mensajes)
+console_messages = deque(maxlen=500)
+
 # Importar funciones de los módulos separados
-from modbus_app.client import connect_client, disconnect_client, is_client_connected
 from modbus_app.operations import execute_read_operation, execute_write_operation, execute_read_device_info
+# CORRECCIÓN: Importar correctamente las funciones de client
+from modbus_app.client import connect_client, disconnect_client, is_client_connected, wake_up_device, get_device_info
+# CORRECCIÓN: También importamos device_info para acceder a get_cached_device_info
+from modbus_app import device_info
 
 app = Flask(__name__)
 
+# Clase para capturar la salida de print()
+class ConsoleCapturer(io.StringIO):
+    def write(self, text):
+        if text.strip():  # Ignorar líneas vacías
+            console_messages.append(text.rstrip())
+        return super().write(text)
+
+# Reemplazar sys.stdout para capturar todos los print()
+original_stdout = sys.stdout
+sys.stdout = ConsoleCapturer()
+
+# Endpoint para obtener los mensajes de consola
+@app.route('/api/console', methods=['GET'])
+def get_console_messages():
+    # Obtener solo mensajes nuevos desde last_id
+    last_id = request.args.get('last_id', '0')
+    try:
+        last_id = int(last_id)
+    except ValueError:
+        last_id = 0
+    
+    # Devolver los mensajes más recientes con sus IDs
+    messages = list(console_messages)[last_id:]
+    return jsonify({
+        "messages": messages,
+        "last_id": last_id + len(messages)
+    })
+    
 @app.route('/')
 def index():
     """ Sirve la página principal. """
@@ -21,11 +61,34 @@ def connect_api():
     stopbits = int(data.get('stopbits', 1))
     bytesize = int(data.get('bytesize', 8))
     timeout = int(data.get('timeout', 1))
+    slave_id = int(data.get('slaveId', 217))  # Valor por defecto para baterías Huawei
 
+    # Paso 1: Conectar al puerto serial
     success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
-    status = "success" if success else "error"
+    if not success:
+        return jsonify({"status": "error", "message": message})
+    
+    # Paso 2: Despertar dispositivo
+    if not wake_up_device(slave_id=slave_id):
+        disconnect_client()  # Desconectar antes de devolver error
+        return jsonify({
+            "status": "warning", 
+            "message": "Conectado, pero el dispositivo no responde o no ha despertado"
+        })
+    
+    # Paso 3: Autenticar para acceso a FC41 (incluye lectura de información)
+    print("Iniciando autenticación para acceso a funciones avanzadas...")
+    auth_result = device_info.authenticate_and_read_device_info(slave_id)
+    
+    if auth_result.get("status") == "success":
+        status = "success"
+        message = "Conectado y autenticado correctamente. Información del dispositivo cargada."
+    else:
+        status = "warning"
+        message = auth_result.get("message", "Conectado pero la autenticación falló.")
+    
     return jsonify({"status": status, "message": message})
-
+    
 @app.route('/api/disconnect', methods=['POST'])
 def disconnect_api():
     """ Endpoint para desconectar del dispositivo Modbus. """
@@ -41,7 +104,6 @@ def status_api():
     """ Endpoint para verificar el estado de la conexión. """
     connected = is_client_connected()
     return jsonify({"connected": connected})
-
 
 @app.route('/api/read', methods=['POST'])
 def read_api():
@@ -71,11 +133,33 @@ def write_api():
 def read_device_info_api():
     """ Endpoint para leer información del dispositivo usando FC41. """
     data = request.json
-    slave_id = int(data.get('slaveId', 1))
+    slave_id = int(data.get('slaveId', 217))  # CORRECCIÓN: valor por defecto 217
     info_index = int(data.get('index', 0))
 
     result = execute_read_device_info(slave_id, info_index)
     return jsonify(result)
+    
+@app.route('/api/device_info', methods=['GET'])
+def device_info_api():
+    """Endpoint para obtener la información del dispositivo en caché."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error", 
+            "message": "No hay conexión activa con el dispositivo"
+        })
+    
+    # CORRECCIÓN: Llamar a get_device_info correctamente
+    result = get_device_info()
+    return jsonify(result)
+
+# CORRECCIÓN: Implementar get_device_info
+def get_device_info():
+    """
+    Devuelve la información del dispositivo almacenada en caché.
+    Returns:
+        dict: Información del dispositivo o mensaje de error
+    """
+    return device_info.get_cached_device_info()
 
 if __name__ == '__main__':
     # Asegúrate de que la ruta a tus plantillas y archivos estáticos es correcta

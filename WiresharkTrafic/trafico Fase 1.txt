@@ -1,0 +1,2897 @@
+No.     Time           Source                Destination           Protocol Length Info
+     69 2.496398       192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=1 Ack=1 Win=2832 Len=0
+
+Frame 69: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 1, Ack: 1, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+     70 2.496689       192.168.69.218        192.168.69.230        TCP      54     [TCP ACKed unseen segment] 59566 → 8235 [ACK] Seq=1 Ack=2 Win=64090 Len=0
+
+Frame 70: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 1, Ack: 2, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+     78 3.228313       192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=1 Ack=2 Win=64090 Len=8
+
+Frame 78: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 1, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d6 03 00 00 00 01 96 2d                           .......-
+    Data: d60300000001962d
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+     79 3.229357       192.168.69.230        192.168.69.218        TCP      60     [TCP Previous segment not captured] 8235 → 59566 [ACK] Seq=2 Ack=9 Win=2824 Len=0
+
+Frame 79: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 9, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    108 5.402757       192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=9 Ack=2 Win=64090 Len=8
+
+Frame 108: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 9, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d7 03 00 00 00 01 97 fc                           ........
+    Data: d7030000000197fc
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    109 5.403160       192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=17 Win=2816 Len=0
+
+Frame 109: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 17, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    149 7.592074       192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=17 Ack=2 Win=64090 Len=8
+
+Frame 149: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 17, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d8 03 00 00 00 01 97 03                           ........
+    Data: d803000000019703
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    150 7.592948       192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=25 Win=2808 Len=0
+
+Frame 150: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 25, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    185 9.789399       192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=25 Ack=2 Win=64090 Len=8
+
+Frame 185: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 25, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 00 00 01 96 d2                           ........
+    Data: d9030000000196d2
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    186 9.789751       192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=33 Win=2800 Len=0
+
+Frame 186: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 33, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    218 11.980584      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=33 Ack=2 Win=64090 Len=8
+
+Frame 218: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 33, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  da 03 00 00 00 01 96 e1                           ........
+    Data: da030000000196e1
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    219 11.981549      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=41 Win=2792 Len=0
+
+Frame 219: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 41, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    253 14.177153      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=41 Ack=2 Win=64090 Len=8
+
+Frame 253: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 41, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  db 03 00 00 00 01 97 30                           .......0
+    Data: db03000000019730
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    254 14.177340      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=49 Win=2784 Len=0
+
+Frame 254: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 49, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    280 16.370467      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=49 Ack=2 Win=64090 Len=8
+
+Frame 280: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 49, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  dc 03 00 00 00 01 96 87                           ........
+    Data: dc03000000019687
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    281 16.371147      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=57 Win=2776 Len=0
+
+Frame 281: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 57, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    321 18.563045      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=57 Ack=2 Win=64090 Len=8
+
+Frame 321: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 57, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  dd 03 00 00 00 01 97 56                           .......V
+    Data: dd03000000019756
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    322 18.563937      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=65 Win=2768 Len=0
+
+Frame 322: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 65, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    357 20.753643      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=65 Ack=2 Win=64090 Len=8
+
+Frame 357: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 65, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e0 03 00 00 00 01 93 bb                           ........
+    Data: e0030000000193bb
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    358 20.754753      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=73 Win=2760 Len=0
+
+Frame 358: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 73, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    401 22.948010      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=73 Ack=2 Win=64090 Len=8
+
+Frame 401: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 73, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e1 03 00 00 00 01 92 6a                           .......j
+    Data: e10300000001926a
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    402 22.948541      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=81 Win=2752 Len=0
+
+Frame 402: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 81, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    471 25.137492      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=81 Ack=2 Win=64090 Len=8
+
+Frame 471: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 81, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e2 03 00 00 00 01 92 59                           .......Y
+    Data: e203000000019259
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    472 25.138345      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=89 Win=2744 Len=0
+
+Frame 472: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 89, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    511 27.336619      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=89 Ack=2 Win=64090 Len=8
+
+Frame 511: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 89, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e3 03 00 00 00 01 93 88                           ........
+    Data: e303000000019388
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    512 27.337135      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=97 Win=2736 Len=0
+
+Frame 512: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 97, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    579 29.532880      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=97 Ack=2 Win=64090 Len=8
+
+Frame 579: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 97, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e4 03 00 00 00 01 92 3f                           .......?
+    Data: e40300000001923f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    580 29.533934      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=105 Win=2728 Len=0
+
+Frame 580: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 105, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    619 31.744109      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=105 Ack=2 Win=64090 Len=8
+
+Frame 619: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 105, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e5 03 00 00 00 01 93 ee                           ........
+    Data: e5030000000193ee
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    620 31.744725      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=113 Win=2720 Len=0
+
+Frame 620: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 113, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    745 33.918706      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=113 Ack=2 Win=64090 Len=8
+
+Frame 745: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 113, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e6 03 00 00 00 01 93 dd                           ........
+    Data: e6030000000193dd
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    746 33.919532      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=121 Win=2712 Len=0
+
+Frame 746: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 121, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    779 36.112644      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=121 Ack=2 Win=64090 Len=8
+
+Frame 779: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 121, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  e7 03 00 00 00 01 92 0c                           ........
+    Data: e70300000001920c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    780 36.113323      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=129 Win=2704 Len=0
+
+Frame 780: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 129, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    850 38.303121      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=129 Ack=2 Win=64090 Len=8
+
+Frame 850: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 129, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d6 03 00 00 00 01 96 2d                           .......-
+    Data: d60300000001962d
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    851 38.304111      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=137 Win=2696 Len=0
+
+Frame 851: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 137, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    898 40.502932      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=137 Ack=2 Win=64090 Len=8
+
+Frame 898: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 137, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d7 03 00 00 00 01 97 fc                           ........
+    Data: d7030000000197fc
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    899 40.503931      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=145 Win=2688 Len=0
+
+Frame 899: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 145, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    932 42.695070      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=145 Ack=2 Win=64090 Len=8
+
+Frame 932: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 145, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d8 03 00 00 00 01 97 03                           ........
+    Data: d803000000019703
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    933 42.695700      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=153 Win=2680 Len=0
+
+Frame 933: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 153, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    986 44.888582      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=153 Ack=2 Win=64090 Len=8
+
+Frame 986: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 153, Ack: 2, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 00 00 01 96 d2                           ........
+    Data: d9030000000196d2
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    987 44.889515      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=2 Ack=161 Win=2672 Len=0
+
+Frame 987: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 161, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    988 44.917125      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=2 Ack=161 Win=2672 Len=7
+
+Frame 988: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 2, Ack: 161, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 13 3e 14 b7                              ....>..
+    Data: d90302133e14b7
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+    989 44.966209      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=161 Ack=9 Win=64083 Len=0
+
+Frame 989: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 161, Ack: 9, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+    991 45.012507      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=161 Ack=9 Win=64083 Len=8
+
+Frame 991: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 161, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  da 03 00 00 00 01 96 e1                           ........
+    Data: da030000000196e1
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+    992 45.013518      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=169 Win=2664 Len=0
+
+Frame 992: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 169, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1026 47.211937      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=169 Ack=9 Win=64083 Len=8
+
+Frame 1026: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 169, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  db 03 00 00 00 01 97 30                           .......0
+    Data: db03000000019730
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1027 47.212296      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=177 Win=2656 Len=0
+
+Frame 1027: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 177, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1081 49.395174      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=177 Ack=9 Win=64083 Len=8
+
+Frame 1081: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 177, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  dc 03 00 00 00 01 96 87                           ........
+    Data: dc03000000019687
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1082 49.396094      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=185 Win=2648 Len=0
+
+Frame 1082: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 185, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1109 51.581926      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=185 Ack=9 Win=64083 Len=8
+
+Frame 1109: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 185, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  dd 03 00 00 00 01 97 56                           .......V
+    Data: dd03000000019756
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1110 51.582897      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=193 Win=2640 Len=0
+
+Frame 1110: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 193, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1156 53.763536      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=193 Ack=9 Win=64083 Len=8
+
+Frame 1156: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 193, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e0 03 00 00 00 01 93 bb                           ........
+    Data: e0030000000193bb
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1157 53.764709      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=201 Win=2632 Len=0
+
+Frame 1157: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 201, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1185 55.948473      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=201 Ack=9 Win=64083 Len=8
+
+Frame 1185: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 201, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e1 03 00 00 00 01 92 6a                           .......j
+    Data: e10300000001926a
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1186 55.949510      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=209 Win=2624 Len=0
+
+Frame 1186: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 209, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1230 58.132466      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=209 Ack=9 Win=64083 Len=8
+
+Frame 1230: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 209, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e2 03 00 00 00 01 92 59                           .......Y
+    Data: e203000000019259
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1231 58.133281      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=217 Win=2616 Len=0
+
+Frame 1231: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 217, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1262 60.314024      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=217 Ack=9 Win=64083 Len=8
+
+Frame 1262: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 217, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e3 03 00 00 00 01 93 88                           ........
+    Data: e303000000019388
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1263 60.315105      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=225 Win=2608 Len=0
+
+Frame 1263: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 225, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1309 62.496084      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=225 Ack=9 Win=64083 Len=8
+
+Frame 1309: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 225, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e4 03 00 00 00 01 92 3f                           .......?
+    Data: e40300000001923f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1310 62.496884      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=233 Win=2600 Len=0
+
+Frame 1310: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 233, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1441 64.676311      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=233 Ack=9 Win=64083 Len=8
+
+Frame 1441: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 233, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e5 03 00 00 00 01 93 ee                           ........
+    Data: e5030000000193ee
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1442 64.676688      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=241 Win=2592 Len=0
+
+Frame 1442: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 241, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1599 66.856284      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=241 Ack=9 Win=64083 Len=8
+
+Frame 1599: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 241, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e6 03 00 00 00 01 93 dd                           ........
+    Data: e6030000000193dd
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1600 66.856479      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=249 Win=2584 Len=0
+
+Frame 1600: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 249, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1663 69.034506      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=249 Ack=9 Win=64083 Len=8
+
+Frame 1663: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 249, Ack: 9, Len: 8
+Data (8 bytes)
+
+0000  e7 03 00 00 00 01 92 0c                           ........
+    Data: e70300000001920c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1664 69.035286      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=257 Win=2576 Len=0
+
+Frame 1664: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 257, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1709 72.227328      192.168.69.218        192.168.69.230        Modbus/TCP 62     [Malformed Packet]
+
+Frame 1709: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 257, Ack: 9, Len: 8
+[Malformed Packet: Modbus/TCP]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1710 72.227982      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=9 Ack=265 Win=2568 Len=0
+
+Frame 1710: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 265, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1711 72.257781      192.168.69.230        192.168.69.218        TCP      63     8235 → 59566 [PSH, ACK] Seq=9 Ack=265 Win=2568 Len=9
+
+Frame 1711: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 9, Ack: 265, Len: 9
+Data (9 bytes)
+
+0000  d9 03 04 13 3e 13 39 0a 54                        ....>.9.T
+    Data: d90304133e13390a54
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1713 72.304794      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=265 Ack=18 Win=64074 Len=0
+
+Frame 1713: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 265, Ack: 18, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1714 72.352275      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=265 Ack=18 Win=64074 Len=8 [TCP PDU reassembled in 1719]
+
+Frame 1714: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 265, Ack: 18, Len: 8
+
+No.     Time           Source                Destination           Protocol Length Info
+   1715 72.352971      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=18 Ack=273 Win=2560 Len=0
+
+Frame 1715: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 18, Ack: 273, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1717 72.394775      192.168.69.230        192.168.69.218        TCP      73     8235 → 59566 [PSH, ACK] Seq=18 Ack=273 Win=2560 Len=19
+
+Frame 1717: 73 bytes on wire (584 bits), 73 bytes captured (584 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 18, Ack: 273, Len: 19
+Data (19 bytes)
+
+0000  d9 03 0e 13 3e 13 39 fd 4d 00 3f 00 64 00 1c 00   ....>.9.M.?.d...
+0010  19 27 49                                          .'I
+    Data: d9030e133e1339fd4d003f0064001c00192749
+    [Length: 19]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1718 72.444334      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=273 Ack=37 Win=64055 Len=0
+
+Frame 1718: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 273, Ack: 37, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1719 72.475412      192.168.69.218        192.168.69.230        Modbus/TCP 62        Query: Trans: 55555; Unit:  22, Func:  80: Unknown function (80). Exception returned 
+
+Frame 1719: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 273, Ack: 37, Len: 8
+[2 Reassembled TCP Segments (13 bytes): #1714(8), #1719(5)]
+Modbus/TCP
+Function 80:  Unknown Function.  Exception: Unknown Exception Code (217)
+Data (3 bytes)
+
+0000  01 c6 ee                                          ...
+    Data: 01c6ee
+    [Length: 3]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1720 72.475967      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=37 Ack=281 Win=2552 Len=0
+
+Frame 1720: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 37, Ack: 281, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1721 72.503312      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=37 Ack=281 Win=2552 Len=7
+
+Frame 1721: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 37, Ack: 281, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 01 11 59 cb                              .....Y.
+    Data: d90302011159cb
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1723 72.553520      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=281 Ack=44 Win=64048 Len=0
+
+Frame 1723: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 281, Ack: 44, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1724 72.600218      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=281 Ack=44 Win=64048 Len=8
+
+Frame 1724: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 281, Ack: 44, Len: 8
+Data (8 bytes)
+
+0000  d9 03 01 06 00 01 77 2f                           ......w/
+    Data: d90301060001772f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1725 72.600961      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=44 Ack=289 Win=2544 Len=0
+
+Frame 1725: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 44, Ack: 289, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1726 72.628319      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=44 Ack=289 Win=2544 Len=7
+
+Frame 1726: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 44, Ack: 289, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 cb d9 c0                              .......
+    Data: d9030200cbd9c0
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1728 72.678622      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=289 Ack=51 Win=64041 Len=0
+
+Frame 1728: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 289, Ack: 51, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1729 72.725216      192.168.69.218        192.168.69.230        TCP      75     59566 → 8235 [PSH, ACK] Seq=289 Ack=51 Win=64041 Len=21
+
+Frame 1729: 75 bytes on wire (600 bits), 75 bytes captured (600 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 289, Ack: 51, Len: 21
+Data (21 bytes)
+
+0000  d9 10 10 00 00 06 0c 07 e9 00 04 00 15 00 17 00   ................
+0010  26 00 13 33 31                                    &..31
+    Data: d910100000060c07e9000400150017002600133331
+    [Length: 21]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1730 72.725951      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=51 Ack=310 Win=2523 Len=0
+
+Frame 1730: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 51, Ack: 310, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1731 72.768514      192.168.69.230        192.168.69.218        TCP      62     8235 → 59566 [PSH, ACK] Seq=51 Ack=310 Win=2523 Len=8
+
+Frame 1731: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 51, Ack: 310, Len: 8
+Data (8 bytes)
+
+0000  d9 10 10 00 00 06 56 13                           ......V.
+    Data: d910100000065613
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1732 72.817792      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=310 Ack=59 Win=64033 Len=0
+
+Frame 1732: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 310, Ack: 59, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1733 72.848492      192.168.69.218        192.168.69.230        TCP      61     59566 → 8235 [PSH, ACK] Seq=310 Ack=59 Win=64033 Len=7
+
+Frame 1733: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 310, Ack: 59, Len: 7
+Data (7 bytes)
+
+0000  d9 41 05 01 04 3d bd                              .A...=.
+    Data: d9410501043dbd
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1734 72.848940      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=59 Ack=317 Win=2516 Len=0
+
+Frame 1734: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 59, Ack: 317, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1737 72.881680      192.168.69.230        192.168.69.218        TCP      66     8235 → 59566 [PSH, ACK] Seq=59 Ack=317 Win=2516 Len=12
+
+Frame 1737: 66 bytes on wire (528 bits), 66 bytes captured (528 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 59, Ack: 317, Len: 12
+Data (12 bytes)
+
+0000  d9 41 05 06 04 00 00 01 5c 40 56 59               .A......\@VY
+    Data: d9410506040000015c405659
+    [Length: 12]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1741 72.927245      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=317 Ack=71 Win=64021 Len=0
+
+Frame 1741: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 317, Ack: 71, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1743 72.975094      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=317 Ack=71 Win=64021 Len=9
+
+Frame 1743: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 317, Ack: 71, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 00 95 59                        .A......Y
+    Data: d94106030400009559
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1744 72.975913      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=71 Ack=326 Win=2507 Len=0
+
+Frame 1744: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 71, Ack: 326, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1747 73.083490      192.168.69.230        192.168.69.218        TCP      127    8235 → 59566 [PSH, ACK] Seq=71 Ack=326 Win=2507 Len=73
+
+Frame 1747: 127 bytes on wire (1016 bits), 127 bytes captured (1016 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 71, Ack: 326, Len: 73
+Data (73 bytes)
+
+0000  d9 41 06 43 04 00 00 2f 24 5b 41 72 63 68 69 76   .A.C.../$[Archiv
+0010  65 73 49 6e 66 6f 20 56 65 72 73 69 6f 6e 5d 0d   esInfo Version].
+0020  0a 2f 24 41 72 63 68 69 76 65 73 49 6e 66 6f 56   ./$ArchivesInfoV
+0030  65 72 73 69 6f 6e 3d 33 2e 30 0d 0a 0d 0a 0d 0a   ersion=3.0......
+0040  5b 42 6f 61 72 64 20 91 03                        [Board ..
+    Data: d94106430400002f245b4172636869766573496e666f2056657273696f6e5d0d0a2f244172636869766573496e666f56657273696f6e3d332e300d0a0d0a0d0a5b426f617264209103
+    [Length: 73]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1748 73.114069      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=326 Ack=144 Win=63948 Len=9
+
+Frame 1748: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 326, Ack: 144, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 01 54 99                        .A.....T.
+    Data: d94106030400015499
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1749 73.114913      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=144 Ack=335 Win=2498 Len=0
+
+Frame 1749: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 144, Ack: 335, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1750 73.222524      192.168.69.230        192.168.69.218        TCP      127    8235 → 59566 [PSH, ACK] Seq=144 Ack=335 Win=2498 Len=73
+
+Frame 1750: 127 bytes on wire (1016 bits), 127 bytes captured (1016 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 144, Ack: 335, Len: 73
+Data (73 bytes)
+
+0000  d9 41 06 43 04 00 01 50 72 6f 70 65 72 74 69 65   .A.C...Propertie
+0010  73 5d 0d 0a 42 6f 61 72 64 54 79 70 65 3d 45 53   s]..BoardType=ES
+0020  4d 2d 34 38 31 35 30 42 31 0d 0a 42 61 72 43 6f   M-48150B1..BarCo
+0030  64 65 3d 55 42 32 34 33 30 30 30 32 35 39 39 0d   de=UB2430002599.
+0040  0a 49 74 65 6d 3d 30 e9 ee                        .Item=0..
+    Data: d941064304000150726f706572746965735d0d0a426f617264547970653d45534d2d343831353042310d0a426172436f64653d5542323433303030323539390d0a4974656d3d30e9ee
+    [Length: 73]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1751 73.253568      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=335 Ack=217 Win=63875 Len=9
+
+Frame 1751: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 335, Ack: 217, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 02 14 98                        .A.......
+    Data: d94106030400021498
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1752 73.253910      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=217 Ack=344 Win=2489 Len=0
+
+Frame 1752: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 217, Ack: 344, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1754 73.361470      192.168.69.230        192.168.69.218        TCP      127    8235 → 59566 [PSH, ACK] Seq=217 Ack=344 Win=2489 Len=73
+
+Frame 1754: 127 bytes on wire (1016 bits), 127 bytes captured (1016 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 217, Ack: 344, Len: 73
+Data (73 bytes)
+
+0000  d9 41 06 43 04 00 02 31 30 37 34 38 34 38 2d 30   .A.C...1074848-0
+0010  31 30 0d 0a 44 65 73 63 72 69 70 74 69 6f 6e 3d   10..Description=
+0020  4c 69 74 68 69 75 6d 20 42 61 74 74 65 72 79 2c   Lithium Battery,
+0030  45 53 4d 2d 34 38 31 35 30 42 31 2c 34 34 32 6d   ESM-48150B1,442m
+0040  6d 20 28 57 29 20 2a 9f 7b                        m (W) *.{
+    Data: d9410643040002313037343834382d3031300d0a4465736372697074696f6e3d4c69746869756d20426174746572792c45534d2d343831353042312c3434326d6d20285729202a9f7b
+    [Length: 73]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1756 73.392533      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=344 Ack=290 Win=63802 Len=9
+
+Frame 1756: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 344, Ack: 290, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 03 d5 58                        .A......X
+    Data: d9410603040003d558
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1757 73.392894      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=290 Ack=353 Win=2480 Len=0
+
+Frame 1757: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 290, Ack: 353, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1759 73.500461      192.168.69.230        192.168.69.218        TCP      127    8235 → 59566 [PSH, ACK] Seq=290 Ack=353 Win=2480 Len=73
+
+Frame 1759: 127 bytes on wire (1016 bits), 127 bytes captured (1016 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 290, Ack: 353, Len: 73
+Data (73 bytes)
+
+0000  d9 41 06 43 04 00 03 20 35 36 30 6d 6d 20 28 44   .A.C... 560mm (D
+0010  29 20 2a 20 31 33 30 6d 6d 20 28 48 29 2c 34 38   ) * 130mm (H),48
+0020  56 2c 31 35 30 41 68 0d 0a 4d 61 6e 75 66 61 63   V,150Ah..Manufac
+0030  74 75 72 65 64 3d 32 30 32 34 2d 30 33 2d 30 35   tured=2024-03-05
+0040  0d 0a 56 65 6e 64 6f 29 a8                        ..Vendo).
+    Data: d9410643040003203536306d6d20284429202a203133306d6d202848292c3438562c31353041680d0a4d616e7566616374757265643d323032342d30332d30350d0a56656e646f29a8
+    [Length: 73]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1760 73.532001      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=353 Ack=363 Win=63729 Len=9
+
+Frame 1760: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 353, Ack: 363, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 04 94 9a                        .A.......
+    Data: d9410603040004949a
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1761 73.532870      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=363 Ack=362 Win=2471 Len=0
+
+Frame 1761: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 363, Ack: 362, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1762 73.640448      192.168.69.230        192.168.69.218        TCP      127    8235 → 59566 [PSH, ACK] Seq=363 Ack=362 Win=2471 Len=73
+
+Frame 1762: 127 bytes on wire (1016 bits), 127 bytes captured (1016 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 363, Ack: 362, Len: 73
+Data (73 bytes)
+
+0000  d9 41 06 43 04 00 04 72 4e 61 6d 65 3d 48 75 61   .A.C...rName=Hua
+0010  77 65 69 0d 0a 49 73 73 75 65 4e 75 6d 62 65 72   wei..IssueNumber
+0020  3d 30 30 0d 0a 43 4c 45 49 43 6f 64 65 3d 0d 0a   =00..CLEICode=..
+0030  42 4f 4d 3d 0d 0a 4d 6f 64 65 6c 3d 45 53 4d 2d   BOM=..Model=ESM-
+0040  34 38 31 35 30 42 31 12 bc                        48150B1..
+    Data: d9410643040004724e616d653d4875617765690d0a49737375654e756d6265723d30300d0a434c4549436f64653d0d0a424f4d3d0d0a4d6f64656c3d45534d2d3438313530423112bc
+    [Length: 73]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1763 73.671465      192.168.69.218        192.168.69.230        TCP      63     59566 → 8235 [PSH, ACK] Seq=362 Ack=436 Win=63656 Len=9
+
+Frame 1763: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 362, Ack: 436, Len: 9
+Data (9 bytes)
+
+0000  d9 41 06 03 04 00 05 55 5a                        .A.....UZ
+    Data: d9410603040005555a
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1764 73.671864      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=436 Ack=371 Win=2462 Len=0
+
+Frame 1764: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 436, Ack: 371, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1765 73.736216      192.168.69.230        192.168.69.218        TCP      91     8235 → 59566 [PSH, ACK] Seq=436 Ack=371 Win=2462 Len=37
+
+Frame 1765: 91 bytes on wire (728 bits), 91 bytes captured (728 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 436, Ack: 371, Len: 37
+Data (37 bytes)
+
+0000  d9 41 06 1f 04 00 05 0d 0a 2f 24 45 6c 61 62 65   .A......./$Elabe
+0010  6c 56 65 72 73 69 6f 6e 3d 34 2e 30 0d 0a 00 00   lVersion=4.0....
+0020  00 00 00 ed e5                                    .....
+    Data: d941061f0400050d0a2f24456c6162656c56657273696f6e3d342e300d0a0000000000ede5
+    [Length: 37]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1766 73.781765      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=371 Ack=473 Win=63619 Len=0
+
+Frame 1766: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 371, Ack: 473, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1768 73.798137      192.168.69.218        192.168.69.230        TCP      61     59566 → 8235 [PSH, ACK] Seq=371 Ack=473 Win=63619 Len=7
+
+Frame 1768: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 371, Ack: 473, Len: 7
+Data (7 bytes)
+
+0000  d9 41 0c 01 04 ed bf                              .A.....
+    Data: d9410c0104edbf
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1769 73.798846      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=473 Ack=378 Win=2455 Len=0
+
+Frame 1769: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 473, Ack: 378, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1771 73.827811      192.168.69.230        192.168.69.218        TCP      63     8235 → 59566 [PSH, ACK] Seq=473 Ack=378 Win=2455 Len=9
+
+Frame 1771: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 473, Ack: 378, Len: 9
+Data (9 bytes)
+
+0000  d9 41 0c 03 04 2c 87 51 fa                        .A...,.Q.
+    Data: d9410c03042c8751fa
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1773 73.875626      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=378 Ack=482 Win=63610 Len=0
+
+Frame 1773: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 378, Ack: 482, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1777 73.938843      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=378 Ack=482 Win=63610 Len=8
+
+Frame 1777: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 378, Ack: 482, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 46 00 01 77 07                           ...F..w.
+    Data: d903004600017707
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1778 73.939839      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=482 Ack=386 Win=2447 Len=0
+
+Frame 1778: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 482, Ack: 386, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1779 73.967181      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=482 Ack=386 Win=2447 Len=7
+
+Frame 1779: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 482, Ack: 386, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1780 74.015980      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=386 Ack=489 Win=63603 Len=0
+
+Frame 1780: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 386, Ack: 489, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1782 74.048379      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=386 Ack=489 Win=63603 Len=8
+
+Frame 1782: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 386, Ack: 489, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 47 00 01 26 c7                           ...G..&.
+    Data: d9030047000126c7
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1783 74.048818      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=489 Ack=394 Win=2439 Len=0
+
+Frame 1783: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 489, Ack: 394, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1784 74.076209      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=489 Ack=394 Win=2439 Len=7
+
+Frame 1784: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 489, Ack: 394, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1786 74.126819      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=394 Ack=496 Win=63596 Len=0
+
+Frame 1786: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 394, Ack: 496, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1789 74.173349      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=394 Ack=496 Win=63596 Len=8
+
+Frame 1789: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 394, Ack: 496, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 48 00 01 16 c4                           ...H....
+    Data: d9030048000116c4
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1790 74.173809      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=496 Ack=402 Win=2431 Len=0
+
+Frame 1790: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 496, Ack: 402, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1791 74.201156      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=496 Ack=402 Win=2431 Len=7
+
+Frame 1791: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 496, Ack: 402, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1792 74.249603      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=402 Ack=503 Win=63589 Len=0
+
+Frame 1792: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 402, Ack: 503, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1793 74.297150      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=402 Ack=503 Win=63589 Len=8
+
+Frame 1793: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 402, Ack: 503, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 49 00 01 47 04                           ...I..G.
+    Data: d903004900014704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1794 74.297798      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=503 Ack=410 Win=2423 Len=0
+
+Frame 1794: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 503, Ack: 410, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1796 74.325144      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=503 Ack=410 Win=2423 Len=7
+
+Frame 1796: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 503, Ack: 410, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1799 74.374791      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=410 Ack=510 Win=63582 Len=0
+
+Frame 1799: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 410, Ack: 510, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1801 74.423489      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=410 Ack=510 Win=63582 Len=8
+
+Frame 1801: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 410, Ack: 510, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 4a 00 01 b7 04                           ...J....
+    Data: d903004a0001b704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1802 74.423794      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=510 Ack=418 Win=2415 Len=0
+
+Frame 1802: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 510, Ack: 418, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1803 74.451141      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=510 Ack=418 Win=2415 Len=7
+
+Frame 1803: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 510, Ack: 418, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1805 74.500700      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=418 Ack=517 Win=63575 Len=0
+
+Frame 1805: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 418, Ack: 517, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1806 74.546931      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=418 Ack=517 Win=63575 Len=8
+
+Frame 1806: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 418, Ack: 517, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 20 00 01 97 5c                           ... ...\
+    Data: d90303200001975c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1807 74.547779      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=517 Ack=426 Win=2407 Len=0
+
+Frame 1807: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 517, Ack: 426, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1808 74.572748      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [PSH, ACK] Seq=517 Ack=426 Win=2407 Len=5
+
+Frame 1808: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 517, Ack: 426, Len: 5
+Data (5 bytes)
+
+0000  d9 83 02 40 ca                                    ...@.
+    Data: d9830240ca
+    [Length: 5]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1810 74.623871      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=426 Ack=522 Win=63570 Len=0
+
+Frame 1810: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 426, Ack: 522, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1812 74.700971      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=426 Ack=522 Win=63570 Len=8
+
+Frame 1812: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 426, Ack: 522, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 47 00 01 26 83                           ...G..&.
+    Data: d903034700012683
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1813 74.701764      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=522 Ack=434 Win=2399 Len=0
+
+Frame 1813: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 522, Ack: 434, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   1815 74.729134      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=522 Ack=434 Win=2399 Len=7
+
+Frame 1815: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 522, Ack: 434, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   1816 74.779857      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=434 Ack=529 Win=63563 Len=0
+
+Frame 1816: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 434, Ack: 529, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2077 82.617478      192.168.69.218        192.168.69.230        Modbus/TCP 62     [Malformed Packet]
+
+Frame 2077: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 434, Ack: 529, Len: 8
+[Malformed Packet: Modbus/TCP]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2078 82.618032      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=529 Ack=442 Win=2391 Len=0
+
+Frame 2078: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 529, Ack: 442, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2082 82.647610      192.168.69.230        192.168.69.218        TCP      63     8235 → 59566 [PSH, ACK] Seq=529 Ack=442 Win=2391 Len=9
+
+Frame 2082: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 529, Ack: 442, Len: 9
+Data (9 bytes)
+
+0000  d9 03 04 13 3e 13 38 cb 94                        ....>.8..
+    Data: d90304133e1338cb94
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2084 82.693000      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=442 Ack=538 Win=63554 Len=0
+
+Frame 2084: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 442, Ack: 538, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2087 82.739901      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=442 Ack=538 Win=63554 Len=8 [TCP PDU reassembled in 2093]
+
+Frame 2087: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 442, Ack: 538, Len: 8
+
+No.     Time           Source                Destination           Protocol Length Info
+   2088 82.741048      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=538 Ack=450 Win=2383 Len=0
+
+Frame 2088: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 538, Ack: 450, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2091 82.782807      192.168.69.230        192.168.69.218        TCP      73     8235 → 59566 [PSH, ACK] Seq=538 Ack=450 Win=2383 Len=19
+
+Frame 2091: 73 bytes on wire (584 bits), 73 bytes captured (584 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 538, Ack: 450, Len: 19
+Data (19 bytes)
+
+0000  d9 03 0e 13 3e 13 38 fd 42 00 3f 00 64 00 1c 00   ....>.8.B.?.d...
+0010  19 62 45                                          .bE
+    Data: d9030e133e1338fd42003f0064001c00196245
+    [Length: 19]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2092 82.833336      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=450 Ack=557 Win=63535 Len=0
+
+Frame 2092: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 450, Ack: 557, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2093 82.865844      192.168.69.218        192.168.69.230        Modbus/TCP 62        Query: Trans: 55555; Unit:  22, Func:  80: Unknown function (80). Exception returned 
+
+Frame 2093: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 450, Ack: 557, Len: 8
+[2 Reassembled TCP Segments (13 bytes): #2087(8), #2093(5)]
+Modbus/TCP
+Function 80:  Unknown Function.  Exception: Unknown Exception Code (217)
+Data (3 bytes)
+
+0000  01 c6 ee                                          ...
+    Data: 01c6ee
+    [Length: 3]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2094 82.866024      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=557 Ack=458 Win=2375 Len=0
+
+Frame 2094: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 557, Ack: 458, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2097 82.893405      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=557 Ack=458 Win=2375 Len=7
+
+Frame 2097: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 557, Ack: 458, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 01 11 59 cb                              .....Y.
+    Data: d90302011159cb
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2100 82.943191      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=458 Ack=564 Win=63528 Len=0
+
+Frame 2100: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 458, Ack: 564, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2101 82.990638      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=458 Ack=564 Win=63528 Len=8
+
+Frame 2101: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 458, Ack: 564, Len: 8
+Data (8 bytes)
+
+0000  d9 03 01 06 00 01 77 2f                           ......w/
+    Data: d90301060001772f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2102 82.990998      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=564 Ack=466 Win=2367 Len=0
+
+Frame 2102: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 564, Ack: 466, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2103 83.018465      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=564 Ack=466 Win=2367 Len=7
+
+Frame 2103: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 564, Ack: 466, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 cb d9 c0                              .......
+    Data: d9030200cbd9c0
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2104 83.068573      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=466 Ack=571 Win=63521 Len=0
+
+Frame 2104: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 466, Ack: 571, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2105 83.117012      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=466 Ack=571 Win=63521 Len=8
+
+Frame 2105: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 466, Ack: 571, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 46 00 01 77 07                           ...F..w.
+    Data: d903004600017707
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2106 83.117991      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=571 Ack=474 Win=2359 Len=0
+
+Frame 2106: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 571, Ack: 474, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2107 83.145462      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=571 Ack=474 Win=2359 Len=7
+
+Frame 2107: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 571, Ack: 474, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2109 83.194354      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=474 Ack=578 Win=63514 Len=0
+
+Frame 2109: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 474, Ack: 578, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2110 83.240937      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=474 Ack=578 Win=63514 Len=8
+
+Frame 2110: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 474, Ack: 578, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 47 00 01 26 c7                           ...G..&.
+    Data: d9030047000126c7
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2111 83.241984      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=578 Ack=482 Win=2351 Len=0
+
+Frame 2111: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 578, Ack: 482, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2112 83.269330      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=578 Ack=482 Win=2351 Len=7
+
+Frame 2112: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 578, Ack: 482, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2114 83.318704      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=482 Ack=585 Win=63507 Len=0
+
+Frame 2114: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 482, Ack: 585, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2117 83.366103      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=482 Ack=585 Win=63507 Len=8
+
+Frame 2117: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 482, Ack: 585, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 48 00 01 16 c4                           ...H....
+    Data: d9030048000116c4
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2118 83.366962      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=585 Ack=490 Win=2343 Len=0
+
+Frame 2118: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 585, Ack: 490, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2119 83.394246      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=585 Ack=490 Win=2343 Len=7
+
+Frame 2119: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 585, Ack: 490, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2121 83.444629      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=490 Ack=592 Win=63500 Len=0
+
+Frame 2121: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 490, Ack: 592, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2124 83.492033      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=490 Ack=592 Win=63500 Len=8
+
+Frame 2124: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 490, Ack: 592, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 49 00 01 47 04                           ...I..G.
+    Data: d903004900014704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2125 83.492956      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=592 Ack=498 Win=2335 Len=0
+
+Frame 2125: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 592, Ack: 498, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2126 83.520315      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=592 Ack=498 Win=2335 Len=7
+
+Frame 2126: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 592, Ack: 498, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2127 83.568289      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=498 Ack=599 Win=63493 Len=0
+
+Frame 2127: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 498, Ack: 599, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2128 83.615254      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=498 Ack=599 Win=63493 Len=8
+
+Frame 2128: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 498, Ack: 599, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 4a 00 01 b7 04                           ...J....
+    Data: d903004a0001b704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2129 83.615944      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=599 Ack=506 Win=2327 Len=0
+
+Frame 2129: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 599, Ack: 506, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2130 83.643309      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=599 Ack=506 Win=2327 Len=7
+
+Frame 2130: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 599, Ack: 506, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2132 83.693183      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=506 Ack=606 Win=63486 Len=0
+
+Frame 2132: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 506, Ack: 606, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2133 83.741542      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=506 Ack=606 Win=63486 Len=8
+
+Frame 2133: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 506, Ack: 606, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 20 00 01 97 5c                           ... ...\
+    Data: d90303200001975c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2134 83.741927      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=606 Ack=514 Win=2319 Len=0
+
+Frame 2134: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 606, Ack: 514, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2135 83.766911      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [PSH, ACK] Seq=606 Ack=514 Win=2319 Len=5
+
+Frame 2135: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 606, Ack: 514, Len: 5
+Data (5 bytes)
+
+0000  d9 83 02 40 ca                                    ...@.
+    Data: d9830240ca
+    [Length: 5]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2137 83.817366      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=514 Ack=611 Win=63481 Len=0
+
+Frame 2137: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 514, Ack: 611, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2140 83.894415      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=514 Ack=611 Win=63481 Len=8
+
+Frame 2140: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 514, Ack: 611, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 47 00 01 26 83                           ...G..&.
+    Data: d903034700012683
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2141 83.894916      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=611 Ack=522 Win=2311 Len=0
+
+Frame 2141: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 611, Ack: 522, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2143 83.922281      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=611 Ack=522 Win=2311 Len=7
+
+Frame 2143: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 611, Ack: 522, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2145 83.972701      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=522 Ack=618 Win=63474 Len=0
+
+Frame 2145: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 522, Ack: 618, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2379 91.825251      192.168.69.218        192.168.69.230        Modbus/TCP 62     [Malformed Packet]
+
+Frame 2379: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 522, Ack: 618, Len: 8
+[Malformed Packet: Modbus/TCP]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2380 91.826186      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=618 Ack=530 Win=2303 Len=0
+
+Frame 2380: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 618, Ack: 530, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2381 91.856866      192.168.69.230        192.168.69.218        TCP      63     8235 → 59566 [PSH, ACK] Seq=618 Ack=530 Win=2303 Len=9
+
+Frame 2381: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 618, Ack: 530, Len: 9
+Data (9 bytes)
+
+0000  d9 03 04 13 3d 13 38 3b 94                        ....=.8;.
+    Data: d90304133d13383b94
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2382 91.904339      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=530 Ack=627 Win=63465 Len=0
+
+Frame 2382: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 530, Ack: 627, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2386 91.951158      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=530 Ack=627 Win=63465 Len=8 [TCP PDU reassembled in 2392]
+
+Frame 2386: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 530, Ack: 627, Len: 8
+
+No.     Time           Source                Destination           Protocol Length Info
+   2387 91.952210      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=627 Ack=538 Win=2295 Len=0
+
+Frame 2387: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 627, Ack: 538, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2388 91.993827      192.168.69.230        192.168.69.218        TCP      73     8235 → 59566 [PSH, ACK] Seq=627 Ack=538 Win=2295 Len=19
+
+Frame 2388: 73 bytes on wire (584 bits), 73 bytes captured (584 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 627, Ack: 538, Len: 19
+Data (19 bytes)
+
+0000  d9 03 0e 13 3d 13 38 fc dd 00 3f 00 64 00 1c 00   ....=.8...?.d...
+0010  19 db b5                                          ...
+    Data: d9030e133d1338fcdd003f0064001c0019dbb5
+    [Length: 19]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2391 92.046285      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=538 Ack=646 Win=63446 Len=0
+
+Frame 2391: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 538, Ack: 646, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2392 92.079189      192.168.69.218        192.168.69.230        Modbus/TCP 62        Query: Trans: 55555; Unit:  22, Func:  80: Unknown function (80). Exception returned 
+
+Frame 2392: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 538, Ack: 646, Len: 8
+[2 Reassembled TCP Segments (13 bytes): #2386(8), #2392(5)]
+Modbus/TCP
+Function 80:  Unknown Function.  Exception: Unknown Exception Code (217)
+Data (3 bytes)
+
+0000  01 c6 ee                                          ...
+    Data: 01c6ee
+    [Length: 3]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2393 92.080167      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=646 Ack=546 Win=2287 Len=0
+
+Frame 2393: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 646, Ack: 546, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2398 92.107417      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=646 Ack=546 Win=2287 Len=7
+
+Frame 2398: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 646, Ack: 546, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 01 11 59 cb                              .....Y.
+    Data: d90302011159cb
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2410 92.157941      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=546 Ack=653 Win=63439 Len=0
+
+Frame 2410: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 546, Ack: 653, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2439 92.206413      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=546 Ack=653 Win=63439 Len=8
+
+Frame 2439: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 546, Ack: 653, Len: 8
+Data (8 bytes)
+
+0000  d9 03 01 06 00 01 77 2f                           ......w/
+    Data: d90301060001772f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2440 92.207137      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=653 Ack=554 Win=2279 Len=0
+
+Frame 2440: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 653, Ack: 554, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2456 92.234399      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=653 Ack=554 Win=2279 Len=7
+
+Frame 2456: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 653, Ack: 554, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 cb d9 c0                              .......
+    Data: d9030200cbd9c0
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2475 92.286088      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=554 Ack=660 Win=63432 Len=0
+
+Frame 2475: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 554, Ack: 660, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2485 92.334545      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=554 Ack=660 Win=63432 Len=8
+
+Frame 2485: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 554, Ack: 660, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 46 00 01 77 07                           ...F..w.
+    Data: d903004600017707
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2489 92.335129      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=660 Ack=562 Win=2271 Len=0
+
+Frame 2489: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 660, Ack: 562, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2507 92.362384      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=660 Ack=562 Win=2271 Len=7
+
+Frame 2507: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 660, Ack: 562, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2533 92.414075      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=562 Ack=667 Win=63425 Len=0
+
+Frame 2533: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 562, Ack: 667, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2541 92.460530      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=562 Ack=667 Win=63425 Len=8
+
+Frame 2541: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 562, Ack: 667, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 47 00 01 26 c7                           ...G..&.
+    Data: d9030047000126c7
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2542 92.461123      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=667 Ack=570 Win=2263 Len=0
+
+Frame 2542: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 667, Ack: 570, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2543 92.489378      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=667 Ack=570 Win=2263 Len=7
+
+Frame 2543: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 667, Ack: 570, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2548 92.537338      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=570 Ack=674 Win=63418 Len=0
+
+Frame 2548: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 570, Ack: 674, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2551 92.584132      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=570 Ack=674 Win=63418 Len=8
+
+Frame 2551: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 570, Ack: 674, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 48 00 01 16 c4                           ...H....
+    Data: d9030048000116c4
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2552 92.585111      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=674 Ack=578 Win=2255 Len=0
+
+Frame 2552: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 674, Ack: 578, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2555 92.612368      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=674 Ack=578 Win=2255 Len=7
+
+Frame 2555: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 674, Ack: 578, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2558 92.661781      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=578 Ack=681 Win=63411 Len=0
+
+Frame 2558: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 578, Ack: 681, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2560 92.708694      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=578 Ack=681 Win=63411 Len=8
+
+Frame 2560: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 578, Ack: 681, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 49 00 01 47 04                           ...I..G.
+    Data: d903004900014704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2561 92.709107      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=681 Ack=586 Win=2247 Len=0
+
+Frame 2561: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 681, Ack: 586, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2565 92.736354      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=681 Ack=586 Win=2247 Len=7
+
+Frame 2565: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 681, Ack: 586, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2568 92.786786      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=586 Ack=688 Win=63404 Len=0
+
+Frame 2568: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 586, Ack: 688, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2571 92.835348      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=586 Ack=688 Win=63404 Len=8
+
+Frame 2571: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 586, Ack: 688, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 4a 00 01 b7 04                           ...J....
+    Data: d903004a0001b704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2572 92.836087      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=688 Ack=594 Win=2239 Len=0
+
+Frame 2572: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 688, Ack: 594, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2573 92.864345      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=688 Ack=594 Win=2239 Len=7
+
+Frame 2573: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 688, Ack: 594, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2576 92.914944      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=594 Ack=695 Win=63397 Len=0
+
+Frame 2576: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 594, Ack: 695, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2579 92.963454      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=594 Ack=695 Win=63397 Len=8
+
+Frame 2579: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 594, Ack: 695, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 20 00 01 97 5c                           ... ...\
+    Data: d90303200001975c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2580 92.964085      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=695 Ack=602 Win=2231 Len=0
+
+Frame 2580: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 695, Ack: 602, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2583 92.988920      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [PSH, ACK] Seq=695 Ack=602 Win=2231 Len=5
+
+Frame 2583: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 695, Ack: 602, Len: 5
+Data (5 bytes)
+
+0000  d9 83 02 40 ca                                    ...@.
+    Data: d9830240ca
+    [Length: 5]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2586 93.043025      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=602 Ack=700 Win=63392 Len=0
+
+Frame 2586: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 602, Ack: 700, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2591 93.120552      192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=602 Ack=700 Win=63392 Len=8
+
+Frame 2591: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 602, Ack: 700, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 47 00 01 26 83                           ...G..&.
+    Data: d903034700012683
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2592 93.121061      192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=700 Ack=610 Win=2223 Len=0
+
+Frame 2592: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 700, Ack: 610, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   2593 93.149313      192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=700 Ack=610 Win=2223 Len=7
+
+Frame 2593: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 700, Ack: 610, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   2595 93.198064      192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=610 Ack=707 Win=63385 Len=0
+
+Frame 2595: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 610, Ack: 707, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3366 101.220322     192.168.69.218        192.168.69.230        Modbus/TCP 62     [Malformed Packet]
+
+Frame 3366: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 610, Ack: 707, Len: 8
+[Malformed Packet: Modbus/TCP]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3367 101.221323     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=707 Ack=618 Win=2215 Len=0
+
+Frame 3367: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 707, Ack: 618, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3369 101.251772     192.168.69.230        192.168.69.218        TCP      63     8235 → 59566 [PSH, ACK] Seq=707 Ack=618 Win=2215 Len=9
+
+Frame 3369: 63 bytes on wire (504 bits), 63 bytes captured (504 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 707, Ack: 618, Len: 9
+Data (9 bytes)
+
+0000  d9 03 04 13 3b 13 36 5a 51                        ....;.6ZQ
+    Data: d90304133b13365a51
+    [Length: 9]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3372 101.298869     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=618 Ack=716 Win=63376 Len=0
+
+Frame 3372: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 618, Ack: 716, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3375 101.344962     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=618 Ack=716 Win=63376 Len=8 [TCP PDU reassembled in 3380]
+
+Frame 3375: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 618, Ack: 716, Len: 8
+
+No.     Time           Source                Destination           Protocol Length Info
+   3376 101.345304     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=716 Ack=626 Win=2207 Len=0
+
+Frame 3376: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 716, Ack: 626, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3377 101.387964     192.168.69.230        192.168.69.218        TCP      73     8235 → 59566 [PSH, ACK] Seq=716 Ack=626 Win=2207 Len=19
+
+Frame 3377: 73 bytes on wire (584 bits), 73 bytes captured (584 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 716, Ack: 626, Len: 19
+Data (19 bytes)
+
+0000  d9 03 0e 13 3b 13 36 fc 89 00 3f 00 64 00 1c 00   ....;.6...?.d...
+0010  19 28 58                                          .(X
+    Data: d9030e133b1336fc89003f0064001c00192858
+    [Length: 19]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3379 101.440577     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=626 Ack=735 Win=63357 Len=0
+
+Frame 3379: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 626, Ack: 735, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3380 101.473220     192.168.69.218        192.168.69.230        Modbus/TCP 62        Query: Trans: 55555; Unit:  22, Func:  80: Unknown function (80). Exception returned 
+
+Frame 3380: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 626, Ack: 735, Len: 8
+[2 Reassembled TCP Segments (13 bytes): #3375(8), #3380(5)]
+Modbus/TCP
+Function 80:  Unknown Function.  Exception: Unknown Exception Code (217)
+Data (3 bytes)
+
+0000  01 c6 ee                                          ...
+    Data: 01c6ee
+    [Length: 3]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3381 101.474295     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=735 Ack=634 Win=2199 Len=0
+
+Frame 3381: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 735, Ack: 634, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3382 101.502552     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=735 Ack=634 Win=2199 Len=7
+
+Frame 3382: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 735, Ack: 634, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 01 11 59 cb                              .....Y.
+    Data: d90302011159cb
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3384 101.552729     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=634 Ack=742 Win=63350 Len=0
+
+Frame 3384: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 634, Ack: 742, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3385 101.601274     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=634 Ack=742 Win=63350 Len=8
+
+Frame 3385: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 634, Ack: 742, Len: 8
+Data (8 bytes)
+
+0000  d9 03 01 06 00 01 77 2f                           ......w/
+    Data: d90301060001772f
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3386 101.602277     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=742 Ack=642 Win=2191 Len=0
+
+Frame 3386: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 742, Ack: 642, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3389 101.630439     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=742 Ack=642 Win=2191 Len=7
+
+Frame 3389: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 742, Ack: 642, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 cb d9 c0                              .......
+    Data: d9030200cbd9c0
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3390 101.680839     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=642 Ack=749 Win=63343 Len=0
+
+Frame 3390: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 642, Ack: 749, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3392 101.729335     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=642 Ack=749 Win=63343 Len=8
+
+Frame 3392: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 642, Ack: 749, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 46 00 01 77 07                           ...F..w.
+    Data: d903004600017707
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3393 101.730270     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=749 Ack=650 Win=2183 Len=0
+
+Frame 3393: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 749, Ack: 650, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3394 101.758418     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=749 Ack=650 Win=2183 Len=7
+
+Frame 3394: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 749, Ack: 650, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3396 101.809010     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=650 Ack=756 Win=63336 Len=0
+
+Frame 3396: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 650, Ack: 756, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3398 101.858467     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=650 Ack=756 Win=63336 Len=8
+
+Frame 3398: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 650, Ack: 756, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 47 00 01 26 c7                           ...G..&.
+    Data: d9030047000126c7
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3399 101.859263     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=756 Ack=658 Win=2175 Len=0
+
+Frame 3399: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 756, Ack: 658, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3400 101.887512     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=756 Ack=658 Win=2175 Len=7
+
+Frame 3400: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 756, Ack: 658, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3404 101.935341     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=658 Ack=763 Win=63329 Len=0
+
+Frame 3404: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 658, Ack: 763, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3408 101.982021     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=658 Ack=763 Win=63329 Len=8
+
+Frame 3408: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 658, Ack: 763, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 48 00 01 16 c4                           ...H....
+    Data: d9030048000116c4
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3409 101.982240     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=763 Ack=666 Win=2167 Len=0
+
+Frame 3409: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 763, Ack: 666, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3411 102.010397     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=763 Ack=666 Win=2167 Len=7
+
+Frame 3411: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 763, Ack: 666, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3413 102.060710     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=666 Ack=770 Win=63322 Len=0
+
+Frame 3413: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 666, Ack: 770, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3414 102.109130     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=666 Ack=770 Win=63322 Len=8
+
+Frame 3414: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 666, Ack: 770, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 49 00 01 47 04                           ...I..G.
+    Data: d903004900014704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3415 102.110232     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=770 Ack=674 Win=2159 Len=0
+
+Frame 3415: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 770, Ack: 674, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3418 102.138395     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=770 Ack=674 Win=2159 Len=7
+
+Frame 3418: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 770, Ack: 674, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3420 102.184732     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=674 Ack=777 Win=63315 Len=0
+
+Frame 3420: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 674, Ack: 777, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3422 102.231339     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=674 Ack=777 Win=63315 Len=8
+
+Frame 3422: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 674, Ack: 777, Len: 8
+Data (8 bytes)
+
+0000  d9 03 00 4a 00 01 b7 04                           ...J....
+    Data: d903004a0001b704
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3423 102.232221     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=777 Ack=682 Win=2151 Len=0
+
+Frame 3423: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 777, Ack: 682, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3425 102.260475     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=777 Ack=682 Win=2151 Len=7
+
+Frame 3425: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 777, Ack: 682, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3430 102.308899     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=682 Ack=784 Win=63308 Len=0
+
+Frame 3430: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 682, Ack: 784, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3432 102.355425     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=682 Ack=784 Win=63308 Len=8
+
+Frame 3432: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 682, Ack: 784, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 20 00 01 97 5c                           ... ...\
+    Data: d90303200001975c
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3433 102.356211     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=784 Ack=690 Win=2143 Len=0
+
+Frame 3433: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 784, Ack: 690, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3434 102.382132     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [PSH, ACK] Seq=784 Ack=690 Win=2143 Len=5
+
+Frame 3434: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 784, Ack: 690, Len: 5
+Data (5 bytes)
+
+0000  d9 83 02 40 ca                                    ...@.
+    Data: d9830240ca
+    [Length: 5]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3435 102.435049     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=690 Ack=789 Win=63303 Len=0
+
+Frame 3435: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 690, Ack: 789, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3439 102.512788     192.168.69.218        192.168.69.230        TCP      62     59566 → 8235 [PSH, ACK] Seq=690 Ack=789 Win=63303 Len=8
+
+Frame 3439: 62 bytes on wire (496 bits), 62 bytes captured (496 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 690, Ack: 789, Len: 8
+Data (8 bytes)
+
+0000  d9 03 03 47 00 01 26 83                           ...G..&.
+    Data: d903034700012683
+    [Length: 8]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3440 102.513196     192.168.69.230        192.168.69.218        TCP      60     8235 → 59566 [ACK] Seq=789 Ack=698 Win=2135 Len=0
+
+Frame 3440: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 789, Ack: 698, Len: 0
+
+No.     Time           Source                Destination           Protocol Length Info
+   3442 102.541346     192.168.69.230        192.168.69.218        TCP      61     8235 → 59566 [PSH, ACK] Seq=789 Ack=698 Win=2135 Len=7
+
+Frame 3442: 61 bytes on wire (488 bits), 61 bytes captured (488 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38), Dst: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30)
+Internet Protocol Version 4, Src: 192.168.69.230, Dst: 192.168.69.218
+Transmission Control Protocol, Src Port: 8235, Dst Port: 59566, Seq: 789, Ack: 698, Len: 7
+Data (7 bytes)
+
+0000  d9 03 02 00 00 98 57                              ......W
+    Data: d9030200009857
+    [Length: 7]
+
+No.     Time           Source                Destination           Protocol Length Info
+   3445 102.592316     192.168.69.218        192.168.69.230        TCP      54     59566 → 8235 [ACK] Seq=698 Ack=796 Win=63296 Len=0
+
+Frame 3445: 54 bytes on wire (432 bits), 54 bytes captured (432 bits) on interface \Device\NPF_{150B9C73-9A6A-45E3-9512-836F6787EDE2}, id 0
+Ethernet II, Src: MicroStarINT_f4:40:30 (4c:cc:6a:f4:40:30), Dst: JinanUSRIOTT_af:87:38 (d4:ad:20:af:87:38)
+Internet Protocol Version 4, Src: 192.168.69.218, Dst: 192.168.69.230
+Transmission Control Protocol, Src Port: 59566, Dst Port: 8235, Seq: 698, Ack: 796, Len: 0
