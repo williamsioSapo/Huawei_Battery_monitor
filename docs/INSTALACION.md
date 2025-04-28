@@ -19,8 +19,8 @@ Esta guía te ayudará a configurar tu entorno e instalar las dependencias neces
     cd ModbusReader_SR # O el nombre de tu directorio
     ```
 
-2.  **Revisar Archivo `requirements.txt`:**
-        *Nota: La versión 3.6.7 de pymodbus fue usada durante el desarrollo y análisis. Otras versiones podrían requerir ajustes en `client.py`.*
+2.  **Revisar que exista el Archivo `requirements.txt`:**
+        
 
 3.  **Crear y Activar Entorno Virtual:**
     *   **Windows (cmd/powershell):**
