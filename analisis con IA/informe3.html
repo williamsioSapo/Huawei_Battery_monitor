@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe: Proceso de Escaneo de Dispositivos Modbus RTU</title>
+    <style>
+        /* --- (Estilos CSS sin cambios - Omitido por brevedad) --- */
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #c7254e; /* Bootstrap code color */
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit; /* Inherit color from pre */
+        }
+        .config-section {
+            background-color: #e9ecef; /* Light gray background */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        ul {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong {
+            color: #0056b3; /* Darker blue for emphasis */
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-info {
+            color: #31708f;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+        }
+        .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Informe: Proceso de Escaneo de Dispositivos Modbus RTU</h1>
+
+    <!-- --- (Secciones Introducción, Por qué es necesario, Configuración - Sin cambios) --- -->
+    <h2>Introducción</h2>
+    <p>
+        Este proyecto está diseñado para monitorizar equipos que se comunican usando el protocolo <strong>Modbus RTU</strong>. Modbus RTU es un protocolo de comunicación serie comúnmente utilizado en entornos industriales para conectar dispositivos electrónicos. Funciona sobre una conexión física (como RS485) donde un dispositivo "Maestro" (nuestro programa) se comunica con uno o varios dispositivos "Esclavos" (como las baterías Huawei, sensores, etc.).
+    </p>
+    <p>
+        Cada dispositivo esclavo en una red Modbus debe tener una <strong>dirección única</strong>, conocida como "ID de Esclavo" (Slave ID), que suele ser un número entre 1 y 247. Para poder leer datos de un dispositivo específico, el maestro necesita conocer su ID.
+    </p>
+    <p>
+        El script <code>scan_modbus_devices.py</code> tiene como objetivo principal <strong>descubrir automáticamente qué IDs de esclavo están activos</strong> y respondiendo en la red Modbus conectada a nuestro sistema.
+    </p>
+
+    <h2>¿Por qué es necesario escanear?</h2>
+    <div class="alert alert-info">
+        <strong>Importante:</strong> No podemos comunicarnos con un dispositivo si no conocemos su dirección (ID). Realizar el escaneo es el primer paso fundamental para identificar los dispositivos disponibles antes de intentar leer datos específicos con la interfaz web principal.
+    </div>
+    <p>
+        En una instalación nueva, o si no estamos seguros de las direcciones de los dispositivos conectados, el escaneo nos permite:
+    </p>
+    <ul>
+        <li>Verificar qué dispositivos están correctamente conectados y encendidos.</li>
+        <li>Confirmar los IDs de esclavo que están en uso.</li>
+        <li>Diagnosticar problemas básicos de conexión si no se encuentra ningún dispositivo esperado.</li>
+    </ul>
+    <p>
+        Ejecutar este escaneo asegura que la interfaz web posterior tenga la información correcta (o sepa qué buscar) para monitorizar los equipos deseados.
+    </p>
+
+    <h2>Configuración Requerida</h2>
+    <div class="config-section">
+        <p>
+            Antes de ejecutar el escaneo, es <strong>crucial</strong> configurar correctamente los parámetros de comunicación en el archivo <code>config.json</code>. El script de escaneo utiliza principalmente dos valores de este archivo:
+        </p>
+        <ul>
+            <li><code>serial_port</code>: Define el puerto serie físico al que está conectado el adaptador USB-RS485 o la interfaz Modbus. Ejemplos: <code>COM3</code> en Windows, <code>/dev/ttyUSB0</code> en Linux. <strong>Debe coincidir con tu sistema.</strong></li>
+            <li><code>scan_range</code>: Es una lista con dos números que definen el rango de IDs de esclavo que el script intentará contactar. Por ejemplo, <code>[1, 10]</code> hará que el script pruebe los IDs del 1 al 10 (ambos inclusive).</li>
+        </ul>
+        <p>Ejemplo de la sección relevante en <code>config.json</code>:</p>
+        <pre><code class="language-json">{
+  "serial_port": "/dev/ttyUSB0",  // <-- ¡Asegúrate de que este sea el correcto!
+  "baud_rate": 9600,
+  "parity": "N",
+  "stop_bits": 1,
+  "byte_size": 8,
+  "timeout": 1,
+  "scan_range": [1, 10],          // <-- Rango de IDs a escanear
+  "web_host": "0.0.0.0",
+  "web_port": 5000
+}</code></pre>
+        <div class="alert alert-warning">
+            <strong>¡Atención!</strong> Una configuración incorrecta del <code>serial_port</code> o un <code>scan_range</code> que no incluya los IDs de tus dispositivos resultará en que no se detecte ningún equipo.
+        </div>
+    </div>
+
+    <h2>¿Cómo funciona el escaneo?</h2>
+    <p>
+        El script <code>scan_modbus_devices.py</code> sigue un proceso lógico:
+    </p>
+    <ol>
+        <li><strong>Leer Configuración:</strong> Carga los parámetros del archivo <code>config.json</code>, especialmente el puerto serie, la velocidad (baud rate), paridad, etc., y el rango de escaneo.</li>
+        <li><strong>Abrir Puerto Serie:</strong> Intenta establecer una conexión con el puerto serie especificado. Si falla (p.ej., el puerto no existe o no hay permisos), el script terminará con un error.</li>
+        <li><strong>Iterar sobre IDs:</strong> Recorre cada número (ID de esclavo) dentro del rango definido en <code>scan_range</code>.</li>
+        <li><strong>Enviar Petición Modbus:</strong> Para cada ID, envía una petición Modbus muy simple. Usualmente, se intenta leer un registro conocido y común (como el registro de "Holding Register" 0 o 1) o simplemente se establece comunicación básica. El objetivo no es leer datos complejos, sino solo verificar si el dispositivo con ese ID responde.</li>
+        <li><strong>Esperar Respuesta:</strong> Espera una respuesta del dispositivo durante el tiempo definido en <code>timeout</code> (en <code>config.json</code>).</li>
+        <li><strong>Evaluar Respuesta:</strong>
+            <ul>
+                <li>Si recibe una respuesta válida y sin errores Modbus desde ese ID, significa que un dispositivo está activo en esa dirección. El script registra este ID como "encontrado".</li>
+                <li>Si no recibe respuesta dentro del tiempo de espera (timeout), o si recibe una respuesta con error, asume que no hay ningún dispositivo activo en ese ID o que hay un problema de comunicación con él.</li>
+            </ul>
+        </li>
+        <li><strong>Informar Resultados:</strong> Una vez probado todo el rango, el script imprime en la consola una lista de todos los IDs de esclavo que respondieron correctamente.</li>
+        <li><strong>Cerrar Puerto Serie:</strong> Libera el puerto serie para que otras aplicaciones (como la interfaz web principal) puedan usarlo.</li>
+    </ol>
+
+
+    <!-- --- Sección Uso Modificada --- -->
+    <h2>Uso</h2>
+    <p>
+        El proceso correcto para iniciar es: <strong>Primero escanear</strong> para encontrar los dispositivos Modbus disponibles, y <strong>luego iniciar</strong> la interfaz web.
+    </p>
+
+    <h3>Paso 1: Escanear IDs Modbus</h3>
+    <p>
+        Este script intentará comunicarse con los IDs de esclavo definidos en el <code>scan_range</code> dentro de <code>config.json</code> para detectar qué dispositivos responden.
+    </p>
+    <ol>
+        <li>Asegúrate de haber completado la instalación (clonado, entorno virtual activado, dependencias instaladas) y de haber editado correctamente <code>config.json</code>.</li>
+        <li>Asegúrate de que tu entorno virtual esté activado (<code>(env)</code> visible).</li>
+        <li>Ejecuta el script de escaneo:
+            <pre><code>python scan_modbus_devices.py</code></pre>
+        </li>
+        <li>El script imprimirá en la consola los IDs de los dispositivos que respondieron. Anótalos o tenlos en cuenta.</li>
+    </ol>
+
+    <h3>Paso 2: Iniciar la Interfaz Web</h3>
+    <p>
+        Una vez que conoces los IDs o has verificado la comunicación, puedes iniciar la aplicación web principal.
+    </p>
+    <ol>
+        <li>Asegúrate de que tu entorno virtual esté activado (<code>(env)</code> visible).</li>
+        <li>Ejecuta el script principal de la aplicación Flask. El comando estándar (funciona en Linux, macOS y Windows) es:
+            <pre><code>python app.py</code></pre>
+        </li>
+        <li>
+            <p><strong>Alternativa para Windows:</strong> Si estás utilizando Windows, puedes usar el archivo de conveniencia <code>arranca_webui.bat</code>. Simplemente haz doble clic en él o ejecútalo desde la consola:</p>
+            <pre><code>.\arranca_webui.bat</code></pre>
+            <p>(Este archivo <code>.bat</code> internamente ejecuta los comandos necesarios, incluyendo probablemente <code>python app.py</code>).</p>
+        </li>
+        <li>
+            Abre tu navegador web y ve a la dirección: <code>http://localhost:5000</code> (o la IP de la máquina donde corre el script si <code>web_host</code> en <code>config.json</code> es diferente, usando el puerto definido allí).
+        </li>
+    </ol>
+    <p>Ahora deberías poder interactuar con la interfaz web.</p>
+
+
+    <!-- --- (Secciones Interpretando Resultados y Problemas - Sin cambios) --- -->
+    <h2>Interpretando los Resultados</h2>
+    <p>
+        La salida del script será algo similar a esto (dependiendo de los dispositivos encontrados):
+    </p>
+    <pre><code>Iniciando escaneo Modbus en el puerto: /dev/ttyUSB0...
+Rango de IDs a escanear: 1 a 10
+Intentando ID 1... Sin respuesta.
+Intentando ID 2... ¡Dispositivo encontrado en ID 2!
+Intentando ID 3... Sin respuesta.
+Intentando ID 4... Sin respuesta.
+Intentando ID 5... ¡Dispositivo encontrado en ID 5!
+... (continúa hasta el final del rango) ...
+Escaneo completado.
+--- Dispositivos Encontrados ---
+ID: 2
+ID: 5
+-------------------------------
+</code></pre>
+    <p>
+        La sección "Dispositivos Encontrados" te indica qué IDs están activos y listos para ser monitorizados por la interfaz web principal.
+    </p>
+
+    <h2>Posibles Problemas y Soluciones</h2>
+    <ul>
+        <li><strong>No se encuentra ningún dispositivo:</strong>
+            <ul>
+                <li>Verifica el cableado físico RS485 (conexiones A/B).</li>
+                <li>Asegúrate de que los dispositivos Modbus estén encendidos.</li>
+                <li>Confirma que el <code>serial_port</code> en <code>config.json</code> es el correcto.</li>
+                <li>Verifica que los IDs reales de los dispositivos estén dentro del <code>scan_range</code> en <code>config.json</code>.</li>
+                <li>Comprueba que los parámetros Modbus (baud rate, parity, etc.) en <code>config.json</code> coincidan con los de los dispositivos.</li>
+            </ul>
+        </li>
+        <li><strong>Errores al ejecutar el script:</strong>
+            <ul>
+                <li>"Permission denied" o "Acceso denegado" al puerto serie: En Linux, puede que necesites añadir tu usuario al grupo <code>dialout</code> (<code>sudo usermod -a -G dialout $USER</code> y reiniciar sesión). En Windows, asegúrate de que ningún otro programa esté usando el puerto COM.</li>
+                <li>"FileNotFoundError" o "Puerto no encontrado": El nombre del <code>serial_port</code> en <code>config.json</code> es incorrecto.</li>
+                <li>Errores de comunicación Modbus (CRC error, framing error): Puede indicar problemas de cableado, interferencias eléctricas, o terminación incorrecta de la línea RS485.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- --- Sección Siguientes Pasos Modificada --- -->
+    <h2>Siguientes Pasos</h2>
+    <p>
+        Una vez que hayas ejecutado el escaneo y confirmado los IDs de los dispositivos activos (o al menos verificado que la comunicación Modbus funciona), estás listo para iniciar la aplicación web principal. El comando estándar para hacerlo es:
+    </p>
+    <pre><code>python app.py</code></pre>
+    <p>
+        Si estás utilizando Windows, también puedes ejecutar el archivo <code>arranca_webui.bat</code>, que ha sido preparado para iniciar la aplicación de forma conveniente.
+    </p>
+    <p>
+        La interfaz web utilizará la misma configuración de <code>config.json</code> para conectarse y mostrar los datos de los dispositivos Modbus.
+    </p>
+
+</body>
+</html>
