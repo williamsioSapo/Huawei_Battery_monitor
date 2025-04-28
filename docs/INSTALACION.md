@@ -19,14 +19,8 @@ Esta guía te ayudará a configurar tu entorno e instalar las dependencias neces
     cd ModbusReader_SR # O el nombre de tu directorio
     ```
 
-2.  **Crear Archivo `requirements.txt`:**
-    Crea un archivo llamado `requirements.txt` en la raíz del proyecto con el siguiente contenido (ajusta las versiones si es necesario, especialmente `pymodbus`):
-    ```txt
-    Flask>=2.0
-    pymodbus==3.6.7 # Versión específica usada/testeada
-    pyserial>=3.5   # Requerido por pymodbus serial
-    ```
-    *Nota: La versión 3.6.7 de pymodbus fue usada durante el desarrollo y análisis. Otras versiones podrían requerir ajustes en `client.py`.*
+2.  **Revisar Archivo `requirements.txt`:**
+        *Nota: La versión 3.6.7 de pymodbus fue usada durante el desarrollo y análisis. Otras versiones podrían requerir ajustes en `client.py`.*
 
 3.  **Crear y Activar Entorno Virtual:**
     *   **Windows (cmd/powershell):**
