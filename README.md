@@ -159,7 +159,7 @@ La comunicación con la función personalizada `FC41` de Huawei **requiere** una
 
 #### Dispositivos USB/Seriales Compatibles
 Para comunicarte con la batería Huawei ESM-48150B1, necesitarás un **adaptador USB-a-RS485/RS232** compatible con Modbus RTU:
-
+Que puedes comprar aqui.
 <a href="https://s.click.aliexpress.com/e/_olRVIXb" target="_blank"><img src="//ae01.alicdn.com/kf/HTB198uGE29TBuNjy0Fcq6zeiFXaL.jpg_140x140.jpg" /></a>
 
 En este caso en particular se uso un adaptador RS485-ETH para capturar los paquetes con Wireshark y realizar ingenieria inversa.
