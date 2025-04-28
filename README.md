@@ -17,6 +17,20 @@ Este proyecto proporciona una interfaz web (Flask/JavaScript) para interactuar v
 - **Dashboard de Batería** - Visualización en tiempo real (Voltaje, Corriente, SOC, SOH, Estado)
 - **Consola de Depuración Web**
 
+## Vista de la interface
+La interfaz web permite monitorear y controlar las baterías Huawei ESM-48150B1 de forma intuitiva.
+
+<div align="center">
+  <h3>Interfaz Principal</h3>
+  <img src="static/images/web1.jpg" alt="Interfaz principal de la aplicación" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Panel principal de monitoreo con información en tiempo real</i></p>
+</div>
+
+<div align="center">
+  <h3>Configuración y Control</h3>
+  <img src="static/images/web2.jpg" alt="Pantalla de configuración" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Panel de configuración y control avanzado de la batería</i></p>
+</div>
 ## Motivación
 
 La comunicación avanzada con la batería Huawei ESM-48150B1 requiere una lógica específica (autenticación + FC41) no cubierta por herramientas Modbus genéricas. Este proyecto implementa esa lógica.
