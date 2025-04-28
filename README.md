@@ -172,11 +172,8 @@ En este caso en particular se uso un adaptador RS485-ETH para capturar los paque
 - **Propósito:** Ingeniería inversa y captura de paquetes con Wireshark  
 - **Configuración:**  
 
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 20px 0;">
-  <div style="flex: 1; text-align: center;">
-    <img src="static/images/RS485_ETH_converter.jpg" alt="Conversor físico" style="width: 50%; max-width: 350px; border: 1px solid #ddd; border-radius: 8px;">
-    <p style="font-size: 0.9em; color: #666;">Conversor RS485-ETH (Modelo USR-TCP232-304)</p>
-  </div>
+[https://s.click.aliexpress.com/e/_olRVIXb](https://s.click.aliexpress.com/e/_olRVIXb)
+[![Adaptador de ethernet a RS485](https://ae01.alicdn.com/kf/HTB198uGE29TBuNjy0Fcq6zeiFXaL.jpg_140x140.jpg)](https://s.click.aliexpress.com/e/_olRVIXb)
   <div style="flex: 1; text-align: center;">
     <img src="static/images/usr_config_1.jpg" alt="Interfaz web" style="width: 50%; max-width: 450px; border: 1px solid #ddd; border-radius: 8px;">
     <p style="font-size: 0.9em; color: #666;">Interfaz web de configuración (Baudrate: 9600, 8N1)</p>
