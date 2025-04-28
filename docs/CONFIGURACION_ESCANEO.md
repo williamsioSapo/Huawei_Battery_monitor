@@ -54,9 +54,14 @@ El sistema utiliza un archivo `config.json` en la raíz del proyecto para almace
 El script `scan_modbus_devices.py` permite descubrir automáticamente dispositivos Modbus RTU en el bus, identificando especialmente baterías Huawei.
 
 <div align="center">
-  <img src="../static/images/scan_example.png" alt="Ejemplo de escaneo" style="width: 80%; max-width: 600px; border: 2px solid #ddd; border-radius: 8px;">
+  <img src="../static/images/scan_example.jpg" alt="Ejemplo de escaneo" style="width: 80%; max-width: 600px; border: 2px solid #ddd; border-radius: 8px;">
   <p><i>Ejemplo: Resultado de escaneo con dispositivos encontrados</i></p>
 </div>
+<div align="center">
+  <img src="../static/images/escaneo2.jpg" alt="Ejemplo de escaneo" style="width: 80%; max-width: 600px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Ejemplo: Resultado de escaneo con dispositivos encontrados</i></p>
+</div>
+
 
 > ⚠️ **Nota**: Si la imagen anterior no aparece, debes capturar una pantalla del proceso de escaneo y guardarla como `static/images/scan_example.png`
 
