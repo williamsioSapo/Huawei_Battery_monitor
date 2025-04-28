@@ -1,0 +1,126 @@
+DEBUG: is_client_connected - Verificando conexión para: None
+DEBUG: is_client_connected - Cliente es None.
+Intentando conectar a COM8 (9600,8N1 T:1s)
+Conexión Modbus establecida.
+DEBUG: is_client_connected - Verificando conexión para: ModbusSerialClient COM8:0
+DEBUG: is_client_connected - Usando estado interno _is_connected = True
+Iniciando secuencia de despertar para dispositivo 217...
+Intento 1 de despertar el dispositivo...
+Intento 1: Error en lectura - Modbus Error: [Input/Output] Modbus Error: [Invalid Message] No response received, expected at least 4 bytes (0 received)
+Esperando 1.5s antes del siguiente intento...
+Intento 2 de despertar el dispositivo...
+Dispositivo despertó! Voltaje actual: 50.03V
+Iniciando autenticación para acceso a funciones avanzadas...
+INFO: Iniciando proceso completo de autenticación y lectura para slave 217
+INFO: Caché de información del dispositivo reiniciada
+INFO: Iniciando autenticación de bajo nivel para dispositivo 217
+---- PRINT: Entrando en authenticate_device ----
+DEBUG: is_client_connected - Verificando conexión para: ModbusSerialClient COM8:0
+DEBUG: is_client_connected - Usando estado interno _is_connected = True
+Cliente Modbus desconectado.
+INFO: Caché de información del dispositivo reiniciada
+INFO: Cliente Modbus desconectado temporalmente para autenticación
+DEBUG: Intentando conexión serial directa a COM8 (9600,8N1 T:1s)
+INFO: Conexión serial directa establecida con COM8
+INFO: Paso 1: Enviando comando de desbloqueo (FC03 especial)
+DEBUG: Enviado Paso 1: d9 03 01 06 00 01 77 2f
+DEBUG: Paso 1 - Recibido (len=7): d9 03 02 00 cb d9 c0
+DEBUG: Paso 1 - Validando respuesta...
+INFO: Paso 1 completado exitosamente
+INFO: Paso 2: Enviando sincronización de fecha/hora (FC10)
+DEBUG: Enviado Paso 2: 2025-04-27T19:22:33.035809 : d9 10 10 00 00 06 0c 07 e9 00 04 00 1b 00 13 00 16 00 21 ac eb
+DEBUG: Paso 2 - Recibido (len=8): d9 10 10 00 00 06 56 13
+DEBUG: Paso 2 - Validando respuesta...
+INFO: Paso 2 completado exitosamente
+INFO: Paso 3: Enviando validación de acceso (FC41 inicial)
+DEBUG: Enviado Paso 3: d9 41 05 01 04 3d bd
+DEBUG: Paso 3 - Recibido (len=12): d9 41 05 06 04 00 00 01 5c 40 56 59
+DEBUG: Paso 3 - Validando respuesta...
+INFO: Paso 3 completado exitosamente
+INFO: Leyendo información del dispositivo tras autenticación (FC41, índices 0-5)
+INFO: --- Leyendo información, índice 0 ---
+DEBUG: Enviada solicitud FC41 para índice 0: d9 41 06 03 04 00 00 95 59
+DEBUG: FC41 Índice 0 - Cabecera recibida (len=7): d9 41 06 43 04 00 00
+DEBUG: FC41 Índice 0 - Validando cabecera...
+DEBUG: FC41 Índice 0 - Datos adicionales (tipo 43) recibidos (len=66): 2f 24 5b 41 72 63 68 69 76 65 73 49 6e 66 6f 20 56 65 72 73 69 6f 6e 5d 0d 0a 2f 24 41 72...
+DEBUG: FC41 Índice 0 - Respuesta completa (len=73): d9 41 06 43 04 00 00 2f 24 5b 41 72 63 68 69 76 65 73 49 6e 66 6f 20 56 65 72 73 69 6f 6e 5d 0d 0a 2f 24 41 72 63 68 69 76 65 73 49 6e 66 6f 56 65 72 73 69 6f 6e 3d 33 2e 30 0d 0a 0d 0a 0d 0a 5b 42 6f 61 72 64 20 91 03
+DEBUG: FC41 Índice 0 - Bytes de datos brutos a decodificar (len=64): 2f 24 5b 41 72 63 68 69 76 65 73 49 6e 66 6f 20 56 65 72 73 69 6f 6e 5d 0d 0a 2f 24 41 72 63 68 69 76 65 73 49 6e 66 6f 56 65 72 73 69 6f 6e 3d 33 2e 30 0d 0a 0d 0a 0d 0a 5b 42 6f 61 72 64 20
+DEBUG: FC41 Índice 0 - Datos decodificados (UTF-8 replace): '/$[ArchivesInfo Version][NL]/$ArchivesInfoVersion=3.0[NL][NL][NL][Board '...
+INFO: Datos índice 0 leídos y decodificados correctamente (64 bytes)
+INFO: --- Leyendo información, índice 1 ---
+DEBUG: Enviada solicitud FC41 para índice 1: d9 41 06 03 04 00 01 54 99
+DEBUG: FC41 Índice 1 - Cabecera recibida (len=7): d9 41 06 43 04 00 01
+DEBUG: FC41 Índice 1 - Validando cabecera...
+DEBUG: FC41 Índice 1 - Datos adicionales (tipo 43) recibidos (len=66): 50 72 6f 70 65 72 74 69 65 73 5d 0d 0a 42 6f 61 72 64 54 79 70 65 3d 45 53 4d 2d 34 38 31...
+DEBUG: FC41 Índice 1 - Respuesta completa (len=73): d9 41 06 43 04 00 01 50 72 6f 70 65 72 74 69 65 73 5d 0d 0a 42 6f 61 72 64 54 79 70 65 3d 45 53 4d 2d 34 38 31 35 30 42 31 0d 0a 42 61 72 43 6f 64 65 3d 55 42 32 34 33 30 30 30 32 35 39 39 0d 0a 49 74 65 6d 3d 30 e9 ee
+DEBUG: FC41 Índice 1 - Bytes de datos brutos a decodificar (len=64): 50 72 6f 70 65 72 74 69 65 73 5d 0d 0a 42 6f 61 72 64 54 79 70 65 3d 45 53 4d 2d 34 38 31 35 30 42 31 0d 0a 42 61 72 43 6f 64 65 3d 55 42 32 34 33 30 30 30 32 35 39 39 0d 0a 49 74 65 6d 3d 30
+DEBUG: FC41 Índice 1 - Datos decodificados (UTF-8 replace): 'Properties][NL]BoardType=ESM-48150B1[NL]BarCode=UB2430002599[NL]Item=0'...
+INFO: Datos índice 1 leídos y decodificados correctamente (64 bytes)
+INFO: --- Leyendo información, índice 2 ---
+DEBUG: Enviada solicitud FC41 para índice 2: d9 41 06 03 04 00 02 14 98
+DEBUG: FC41 Índice 2 - Cabecera recibida (len=7): d9 41 06 43 04 00 02
+DEBUG: FC41 Índice 2 - Validando cabecera...
+DEBUG: FC41 Índice 2 - Datos adicionales (tipo 43) recibidos (len=66): 31 30 37 34 38 34 38 2d 30 31 30 0d 0a 44 65 73 63 72 69 70 74 69 6f 6e 3d 4c 69 74 68 69...
+DEBUG: FC41 Índice 2 - Respuesta completa (len=73): d9 41 06 43 04 00 02 31 30 37 34 38 34 38 2d 30 31 30 0d 0a 44 65 73 63 72 69 70 74 69 6f 6e 3d 4c 69 74 68 69 75 6d 20 42 61 74 74 65 72 79 2c 45 53 4d 2d 34 38 31 35 30 42 31 2c 34 34 32 6d 6d 20 28 57 29 20 2a 9f 7b
+DEBUG: FC41 Índice 2 - Bytes de datos brutos a decodificar (len=64): 31 30 37 34 38 34 38 2d 30 31 30 0d 0a 44 65 73 63 72 69 70 74 69 6f 6e 3d 4c 69 74 68 69 75 6d 20 42 61 74 74 65 72 79 2c 45 53 4d 2d 34 38 31 35 30 42 31 2c 34 34 32 6d 6d 20 28 57 29 20 2a
+DEBUG: FC41 Índice 2 - Datos decodificados (UTF-8 replace): '1074848-010[NL]Description=Lithium Battery,ESM-48150B1,442mm (W) *'...
+INFO: Datos índice 2 leídos y decodificados correctamente (64 bytes)
+INFO: --- Leyendo información, índice 3 ---
+DEBUG: Enviada solicitud FC41 para índice 3: d9 41 06 03 04 00 03 d5 58
+DEBUG: FC41 Índice 3 - Cabecera recibida (len=7): d9 41 06 43 04 00 03
+DEBUG: FC41 Índice 3 - Validando cabecera...
+DEBUG: FC41 Índice 3 - Datos adicionales (tipo 43) recibidos (len=66): 20 35 36 30 6d 6d 20 28 44 29 20 2a 20 31 33 30 6d 6d 20 28 48 29 2c 34 38 56 2c 31 35 30...
+DEBUG: FC41 Índice 3 - Respuesta completa (len=73): d9 41 06 43 04 00 03 20 35 36 30 6d 6d 20 28 44 29 20 2a 20 31 33 30 6d 6d 20 28 48 29 2c 34 38 56 2c 31 35 30 41 68 0d 0a 4d 61 6e 75 66 61 63 74 75 72 65 64 3d 32 30 32 34 2d 30 33 2d 30 35 0d 0a 56 65 6e 64 6f 29 a8
+DEBUG: FC41 Índice 3 - Bytes de datos brutos a decodificar (len=64): 20 35 36 30 6d 6d 20 28 44 29 20 2a 20 31 33 30 6d 6d 20 28 48 29 2c 34 38 56 2c 31 35 30 41 68 0d 0a 4d 61 6e 75 66 61 63 74 75 72 65 64 3d 32 30 32 34 2d 30 33 2d 30 35 0d 0a 56 65 6e 64 6f
+DEBUG: FC41 Índice 3 - Datos decodificados (UTF-8 replace): ' 560mm (D) * 130mm (H),48V,150Ah[NL]Manufactured=2024-03-05[NL]Vendo'...
+INFO: Datos índice 3 leídos y decodificados correctamente (64 bytes)
+INFO: --- Leyendo información, índice 4 ---
+DEBUG: Enviada solicitud FC41 para índice 4: d9 41 06 03 04 00 04 94 9a
+DEBUG: FC41 Índice 4 - Cabecera recibida (len=7): d9 41 06 43 04 00 04
+DEBUG: FC41 Índice 4 - Validando cabecera...
+DEBUG: FC41 Índice 4 - Datos adicionales (tipo 43) recibidos (len=66): 72 4e 61 6d 65 3d 48 75 61 77 65 69 0d 0a 49 73 73 75 65 4e 75 6d 62 65 72 3d 30 30 0d 0a...
+DEBUG: FC41 Índice 4 - Respuesta completa (len=73): d9 41 06 43 04 00 04 72 4e 61 6d 65 3d 48 75 61 77 65 69 0d 0a 49 73 73 75 65 4e 75 6d 62 65 72 3d 30 30 0d 0a 43 4c 45 49 43 6f 64 65 3d 0d 0a 42 4f 4d 3d 0d 0a 4d 6f 64 65 6c 3d 45 53 4d 2d 34 38 31 35 30 42 31 12 bc
+DEBUG: FC41 Índice 4 - Bytes de datos brutos a decodificar (len=64): 72 4e 61 6d 65 3d 48 75 61 77 65 69 0d 0a 49 73 73 75 65 4e 75 6d 62 65 72 3d 30 30 0d 0a 43 4c 45 49 43 6f 64 65 3d 0d 0a 42 4f 4d 3d 0d 0a 4d 6f 64 65 6c 3d 45 53 4d 2d 34 38 31 35 30 42 31
+DEBUG: FC41 Índice 4 - Datos decodificados (UTF-8 replace): 'rName=Huawei[NL]IssueNumber=00[NL]CLEICode=[NL]BOM=[NL]Model=ESM-48150B1'...
+INFO: Datos índice 4 leídos y decodificados correctamente (64 bytes)
+INFO: --- Leyendo información, índice 5 ---
+DEBUG: Enviada solicitud FC41 para índice 5: d9 41 06 03 04 00 05 55 5a
+DEBUG: FC41 Índice 5 - Cabecera recibida (len=7): d9 41 06 1f 04 00 05
+DEBUG: FC41 Índice 5 - Validando cabecera...
+DEBUG: FC41 Índice 5 - Datos adicionales (tipo 1f) recibidos (len=30): 0d 0a 2f 24 45 6c 61 62 65 6c 56 65 72 73 69 6f 6e 3d 34 2e 30 0d 0a 00 00 00 00 00 ed e5...
+DEBUG: FC41 Índice 5 - Respuesta completa (len=37): d9 41 06 1f 04 00 05 0d 0a 2f 24 45 6c 61 62 65 6c 56 65 72 73 69 6f 6e 3d 34 2e 30 0d 0a 00 00 00 00 00 ed e5
+DEBUG: FC41 Índice 5 - Bytes de datos brutos a decodificar (len=28): 0d 0a 2f 24 45 6c 61 62 65 6c 56 65 72 73 69 6f 6e 3d 34 2e 30 0d 0a 00 00 00 00 00
+DEBUG: FC41 Índice 5 - Datos decodificados (UTF-8 replace): '[NL]/$ElabelVersion=4.0[NL]'...
+INFO: Datos índice 5 leídos y decodificados correctamente (28 bytes)
+INFO: Puerto serial directo cerrado después de autenticación y lectura
+DEBUG: Texto combinado para parsear (primeros 200 chars): /$[ArchivesInfo Version]
+[NL]/$ArchivesInfoVersion=3.0
+[NL]
+[NL]
+[NL][Board [NL]Properties]
+[NL]BoardType=ESM-48150B1
+[NL]BarCode=UB2430002599
+[NL]Item=0[NL]1074848-010
+[NL]Description=Lithium Battery,ESM-48150B1,442mm (W) *[NL] 560m
+DEBUG: Parseado: manufacturer = 'Huawei' (usando patrón 'rName=')
+DEBUG: Parseado: model = 'ESM-48150B1' (usando patrón 'Model=')
+DEBUG: Parseado: barcode = 'UB2430002599' (usando patrón 'BarCode=')
+DEBUG: Parseado: manufactured_date = '2024-03-05' (usando patrón 'Manufactured=')
+DEBUG: Parseado: info_version = '3.0' (usando patrón 'ArchivesInfoVersion=')
+DEBUG: Parseado: elabel_version = '4.0' (usando patrón 'ElabelVersion=')
+DEBUG: Parseado: description = 'Lithium Battery,ESM-48150B1,442mm (W) * 560mm (D) * 130mm (H),48V,150Ah'
+INFO: Información parseada final: {'manufacturer': 'Huawei', 'model': 'ESM-48150B1', 'barcode': 'UB2430002599', 'manufactured_date': '2024-03-05', 'description': 'Lithium Battery,ESM-48150B1,442mm (W) * 560mm (D) * 130mm (H),48V,150Ah', 'info_version': '3.0', 'elabel_version': '4.0'}
+INFO: Dispositivo compatible detectado (Fabricante: 'huawei', Modelo: 'esm-48150b1')
+INFO: Autenticación y lectura de información completada. Intentando reconectar cliente pymodbus con config: {'port': 'COM8', 'baudrate': 9600, 'parity': 'N', 'stopbits': 1, 'bytesize': 8, 'timeout': 1}
+DEBUG: is_client_connected - Verificando conexión para: None
+DEBUG: is_client_connected - Cliente es None.
+Intentando conectar a COM8 (9600,8N1 T:1s)
+Conexión Modbus establecida.
+INFO: Retornando True desde authenticate_device.
+INFO: Autenticación/lectura directa exitosa. Obteniendo info de caché.
+DEBUG: Devolviendo información del dispositivo desde caché.
+DEBUG: is_client_connected - Verificando conexión para: ModbusSerialClient COM8:0
+DEBUG: is_client_connected - Usando estado interno _is_connected = True
+DEBUG: is_client_connected - Verificando conexión para: ModbusSerialClient COM8:0
+DEBUG: is_client_connected - Usando estado interno _is_connected = True
+DEBUG: Devolviendo información del dispositivo desde caché.
