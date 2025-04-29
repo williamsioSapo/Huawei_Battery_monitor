@@ -33,6 +33,7 @@ function determineBatteryStatus(currentValue) { // Based on numeric current
 async function updateDashboard() {
     console.log("Dashboard: updateDashboard - Iniciando actualización de datos.");
     showDashboardMessage('Actualizando datos...', 'info');
+    const activeSlaveId = parseInt(document.getElementById('slaveId')?.value || '217');
     let propsForReact = {
         batteryData: {},
         deviceInfo: {},
@@ -43,7 +44,7 @@ async function updateDashboard() {
         // Ejecutar ambas peticiones en paralelo
         console.log("Dashboard: updateDashboard - Realizando llamadas API (read y device_info)...");
         const [modbusResult, deviceInfoResponse] = await Promise.all([
-            readModbusRegisters({ slaveId: 217, function: 'holding', address: 0, count: 7 }),
+            readModbusRegisters({ slaveId: activeSlaveId, function: 'holding', address: 0, count: 7 }),
             fetch('/api/device_info')
         ]);
         console.log("Dashboard: updateDashboard - Llamadas API completadas.");

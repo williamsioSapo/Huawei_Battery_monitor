@@ -45,6 +45,72 @@ function initConsole() {
     
     // Iniciar actualización periódica
     consoleUpdateInterval = setInterval(updateConsole, 1000);
+    
+    // Añadir botón de verificación de celdas (temporal)
+    addVerifyCellsButton();
+}
+
+// Añadir botón de verificación de celdas (función auxiliar)
+function addVerifyCellsButton() {
+    // Verificar si ya existe en el DOM
+    if (document.getElementById('verifyCellsBtn')) return;
+    
+    // Obtener el pie de la consola
+    const consoleFooter = document.querySelector('.console-modal-footer');
+    if (!consoleFooter) return;
+    
+    // Crear el botón
+    const verifyCellsBtn = document.createElement('button');
+    verifyCellsBtn.id = 'verifyCellsBtn';
+    verifyCellsBtn.textContent = 'Verificar Celdas';
+    verifyCellsBtn.style.backgroundColor = '#2ecc71'; // Verde distintivo
+    
+    // Añadir el botón al pie
+    consoleFooter.appendChild(verifyCellsBtn);
+    
+    // Añadir evento de clic
+    verifyCellsBtn.addEventListener('click', async () => {
+        try {
+            // Deshabilitar el botón durante la verificación
+            verifyCellsBtn.disabled = true;
+            verifyCellsBtn.textContent = 'Verificando...';
+            
+            // Llamar a la API (definida en modbusApi.js)
+            if (typeof verifyCellData === 'function') {
+                // Usar el ID de esclavo predeterminado (217) si no esta seteado el valor
+                const activeSlaveId = parseInt(document.getElementById('slaveId')?.value || '217');
+                const result = await verifyCellData(activeSlaveId);
+                
+                // Mostrar mensaje de éxito
+                const message = document.createElement('div');
+                message.className = 'console-line console-success';
+                message.textContent = `Verificación de celdas iniciada. Ver resultados a continuación...`;
+                consoleOutput.appendChild(message);
+                
+                // Auto-scroll al final
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            } else {
+                console.error('Error: función verifyCellData no encontrada');
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'console-line console-error';
+                errorMsg.textContent = 'Error: función verifyCellData no encontrada';
+                consoleOutput.appendChild(errorMsg);
+            }
+        } catch (error) {
+            // Mostrar error en la consola
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'console-line console-error';
+            errorMsg.textContent = `Error al verificar celdas: ${error.message}`;
+            consoleOutput.appendChild(errorMsg);
+            
+            // Auto-scroll al final
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        } finally {
+            // Restablecer el botón
+            verifyCellsBtn.disabled = false;
+            verifyCellsBtn.textContent = 'Verificar Celdas';
+        }
+    });
 }
 
 // Actualizar contenido de la consola

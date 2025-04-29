@@ -126,9 +126,11 @@ def authenticate_device(slave_id=217):
         # --- Reemplazo de logger.info ---
         print("INFO: Paso 1: Enviando comando de desbloqueo (FC03 especial)")
 
-        request_step1 = bytearray([
-            slave_id, 0x03, 0x01, 0x06, 0x00, 0x01, 0x77, 0x2F
+        message_step1 = bytearray([
+        slave_id, 0x03, 0x01, 0x06, 0x00, 0x01
         ])
+        crc = compute_crc16(message_step1)
+        request_step1 = message_step1 + crc
 
         ser.reset_input_buffer()
         ser.reset_output_buffer()
@@ -204,9 +206,11 @@ def authenticate_device(slave_id=217):
         # Paso 3: Validación de acceso (FC41 inicial)
         # --- Reemplazo de logger.info ---
         print("INFO: Paso 3: Enviando validación de acceso (FC41 inicial)")
-        request_step3 = bytearray([
-            slave_id, 0x41, 0x05, 0x01, 0x04, 0x3D, 0xBD
+        message_step3 = bytearray([
+        slave_id, 0x41, 0x05, 0x01, 0x04
         ])
+        crc = compute_crc16(message_step3)
+        request_step3 = message_step3 + crc
 
         ser.reset_input_buffer()
         ser.reset_output_buffer()
@@ -526,3 +530,8 @@ def authenticate_and_read_device_info(slave_id=217):
      # --- Reemplazo de logger.info ---
     print("INFO: Autenticación/lectura directa exitosa. Obteniendo info de caché.")
     return get_cached_device_info() # Ya usa print
+
+def get_default_slave_id():
+    """Obtiene el ID de esclavo predeterminado de la configuración."""
+    from . import config_manager
+    return config_manager.get_default_slave_id()

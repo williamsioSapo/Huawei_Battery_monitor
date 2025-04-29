@@ -48,6 +48,12 @@
                 <h2>Configuración de Conexión</h2>
                 <div class="form-grid">
                     <div>
+                        <label for="slaveId">ID Batería:</label>
+                        <select id="slaveId">
+                            <!-- Se poblará dinámicamente -->
+                        </select>
+                    </div>
+                    <div>
                         <label for="port">Puerto:</label>
                         <input type="text" id="port" value="COM8">
                     </div>
@@ -225,8 +231,8 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <!-- 4. Lógica del Dashboard (Escucha evento, llama a updateBatteryPanel, usa API) -->
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    <!-- 5. Lógica de la Consola Web -->
-	<script src="{{ url_for('static', filename='js/console.js') }}"></script>
+    <!-- 5. Lógica de la Consola Web (ACTUALIZACIÓN: Ahora carga después de modbusApi.js para acceder a verifyCellData) -->
+    <script src="{{ url_for('static', filename='js/console.js') }}"></script>
 
 </body>
 </html>

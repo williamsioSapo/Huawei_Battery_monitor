@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, jsonify
 console_messages = deque(maxlen=500)
 
 # Importar funciones de los módulos separados
-from modbus_app.operations import execute_read_operation, execute_write_operation, execute_read_device_info
+from modbus_app.operations import execute_read_operation, execute_write_operation, execute_read_device_info, verify_battery_cell_data
 # CORRECCIÓN: Importar correctamente las funciones de client
 from modbus_app.client import connect_client, disconnect_client, is_client_connected, wake_up_device, get_device_info
 # CORRECCIÓN: También importamos device_info para acceder a get_cached_device_info
@@ -51,6 +51,12 @@ def index():
     """ Sirve la página principal. """
     return render_template('index.html')
 
+@app.route('/api/batteries', methods=['GET'])
+def list_batteries_api():
+    """Endpoint para obtener las baterías disponibles configuradas."""
+    from modbus_app import config_manager  # Nuevo módulo a crear
+    return jsonify(config_manager.get_available_batteries())
+
 @app.route('/api/connect', methods=['POST'])
 def connect_api():
     """ Endpoint para conectar al dispositivo Modbus. """
@@ -61,7 +67,7 @@ def connect_api():
     stopbits = int(data.get('stopbits', 1))
     bytesize = int(data.get('bytesize', 8))
     timeout = int(data.get('timeout', 1))
-    slave_id = int(data.get('slaveId', 217))  # Valor por defecto para baterías Huawei
+    slave_id = int(data.get('slaveId', device_info.get_default_slave_id()))
 
     # Paso 1: Conectar al puerto serial
     success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
@@ -151,6 +157,39 @@ def device_info_api():
     # CORRECCIÓN: Llamar a get_device_info correctamente
     result = get_device_info()
     return jsonify(result)
+
+# Nuevo endpoint para verificar datos de celdas
+@app.route('/api/verify_cells', methods=['POST'])
+def verify_cells_api():
+    """
+    Endpoint para verificar datos de celdas individuales.
+    Solo imprime los resultados en la consola para diagnóstico.
+    """
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el dispositivo"
+        })
+    
+    data = request.json
+    slave_id = int(data.get('slaveId', device_info.get_default_slave_id()))
+    
+    print("\n============ VERIFICACIÓN DE CELDAS INDIVIDUALES ============")
+    print(f"Iniciando verificación para dispositivo {slave_id}")
+    
+    # Ejecutar la función de verificación (imprime resultados en consola)
+    result = verify_battery_cell_data(slave_id)
+    
+    # Devolver datos simplificados (el detalle completo está en la consola)
+    return jsonify({
+        "status": result.get("status", "error"),
+        "message": "Verificación completada. Ver resultados en la consola.",
+        "summary": {
+            "cells_count": len(result.get("cell_data", [])),
+            "has_voltage_data": result.get("cell_voltages_raw") is not None,
+            "has_temp_data": result.get("cell_temps_raw") is not None
+        }
+    })
 
 # CORRECCIÓN: Implementar get_device_info
 def get_device_info():

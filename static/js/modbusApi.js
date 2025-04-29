@@ -46,8 +46,13 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
 }
 
 // Funciones específicas para cada endpoint
+function getAvailableBatteries() {
+    return apiRequest('/api/batteries', 'GET');
+}
 
+// Modificar función de conexión
 function connectModbus(params) {
+    // Si no se especifica slaveId, usar el predeterminado (se resolverá en el backend)
     return apiRequest('/api/connect', 'POST', params);
 }
 
@@ -69,4 +74,9 @@ function writeModbusRegisters(params) {
 
 function readModbusDeviceInfo(params) {
     return apiRequest('/api/read_device_info', 'POST', params);
+}
+
+// Nueva función para verificar datos de celdas individuales
+function verifyCellData(slaveId = 217) {
+    return apiRequest('/api/verify_cells', 'POST', { slaveId: slaveId });
 }

@@ -193,15 +193,16 @@ async function handleConnect() {
     // Deshabilitar botón mientras conecta
     connectBtn.disabled = true;
     disconnectBtn.disabled = true; // Deshabilitar ambos
-
     const params = {
-        port: document.getElementById('port')?.value || 'COM8', // Añadir ? y default
+        port: document.getElementById('port')?.value || 'COM8',
         baudrate: parseInt(document.getElementById('baudrate')?.value || '9600'),
         parity: document.getElementById('parity')?.value || 'N',
         stopbits: parseInt(document.getElementById('stopbits')?.value || '1'),
         bytesize: parseInt(document.getElementById('bytesize')?.value || '8'),
-        timeout: parseInt(document.getElementById('timeout')?.value || '1')
+        timeout: parseInt(document.getElementById('timeout')?.value || '1'),
+        slaveId: parseInt(document.getElementById('slaveId')?.value || 217)  // Usar valor del campo
     };
+
     showMessage(connectionMessageEl, 'Conectando...', 'info');
     let connectSuccess = false;
     try {
@@ -350,6 +351,35 @@ async function handleReadDeviceInfo() { // Si se mantiene la sección de info
         showMessage(deviceInfoMessageEl, `Se completó la operación con errores: ${errors.join('; ')}`, 'warning'); // Warning, no error si algo se mostró
     }
 }
+async function initBatterySelector() {
+    const slaveIdSelect = document.getElementById('slaveId');
+    if (!slaveIdSelect) return;
+    
+    try {
+        // Obtener baterías disponibles
+        const result = await getAvailableBatteries();
+        if (result && result.batteries && Array.isArray(result.batteries)) {
+            // Limpiar opciones existentes
+            slaveIdSelect.innerHTML = '';
+            
+            // Añadir opciones basadas en config
+            result.batteries.forEach(id => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = `Batería ${id}`;
+                // Seleccionar la predeterminada
+                if (id === result.default_id) {
+                    option.selected = true;
+                }
+                slaveIdSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error al cargar baterías disponibles:', error);
+        // Añadir opción predeterminada en caso de error
+        slaveIdSelect.innerHTML = '<option value="217">Batería 217</option>';
+    }
+}
 
 // --- ELIMINADA LA FUNCIÓN startPeriodicRead ---
 
@@ -376,6 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Establecer estado inicial como desconectado (importante que se haga antes de cualquier posible evento inicial)
     updateConnectionStatusUI(false);
+    initBatterySelector();
     console.log("Main.js: Estado inicial establecido a desconectado.");
 
     // Opcional: Comprobar estado inicial del backend (si es necesario)

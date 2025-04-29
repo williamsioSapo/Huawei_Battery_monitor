@@ -146,3 +146,137 @@ def execute_read_device_info(slave_id, info_index):
         "raw_bytes": list(fragment_data.encode('utf-8', errors='ignore')),
         "cached": True
     }
+
+# Nueva función para verificar datos de celdas individuales
+def verify_battery_cell_data(slave_id=217):
+    """
+    Función para verificar los datos de celdas individuales de la batería.
+    Lee los registros de voltajes y temperaturas de celdas y devuelve
+    un resultado formateado para análisis.
+    
+    Args:
+        slave_id (int): ID del esclavo Modbus (por defecto 217)
+        
+    Returns:
+        dict: Resultados con estado y datos de celdas si están disponibles
+    """
+    if not is_client_connected():
+        return {"status": "error", "message": "No hay conexión activa"}
+    
+    print("Iniciando verificación de datos de celdas individuales...")
+    
+    # Constantes para direcciones de registros (basadas en código C#)
+    CELL_VOLTAGES_START = 0x22  # 34 decimal
+    CELL_TEMPS_START = 0x12     # 18 decimal
+    NUM_CELLS = 15
+    
+    # Paso 1: Leer voltajes de celdas individuales
+    print(f"Leyendo voltajes de celdas (registros {CELL_VOLTAGES_START}-{CELL_VOLTAGES_START+NUM_CELLS-1})...")
+    voltage_result = execute_read_operation(
+        slave_id=slave_id,
+        function='holding',
+        address=CELL_VOLTAGES_START,
+        count=NUM_CELLS
+    )
+    
+    # Paso 2: Leer temperaturas de celdas individuales
+    print(f"Leyendo temperaturas de celdas (registros {CELL_TEMPS_START}-{CELL_TEMPS_START+NUM_CELLS-1})...")
+    temp_result = execute_read_operation(
+        slave_id=slave_id,
+        function='holding',
+        address=CELL_TEMPS_START,
+        count=NUM_CELLS
+    )
+
+    # Leer voltajes extendidos (posibles celdas 12-22)
+    print(f"Leyendo voltajes de celdas extendidos (registros 0x32-0x3D)...")
+    extended_voltage_result = execute_read_operation(
+        slave_id=slave_id,
+        function='holding',
+        address=0x32,  # 50 decimal
+        count=12       # Hasta 12 celdas adicionales
+    )
+    
+    # Leer temperaturas extendidas (posibles celdas 12-22)
+    print(f"Leyendo temperaturas de celdas extendidas (registros 0x22-0x2D)...")
+    extended_temp_result = execute_read_operation(
+        slave_id=slave_id,
+        function='holding',
+        address=0x22,  # 34 decimal
+        count=12       # Hasta 12 celdas adicionales
+    )
+    
+    # Verificar resultados y procesar datos
+    result = {
+        "status": "error",
+        "message": "Error al leer datos de celdas",
+        "cell_voltages_raw": None,
+        "cell_temps_raw": None,
+        "cell_data": None
+    }
+    
+    # Procesar voltajes
+    if voltage_result.get("status") == "success" and voltage_result.get("data"):
+        result["status"] = "partial"
+        result["cell_voltages_raw"] = voltage_result["data"]
+        
+        # Convertir valores usando factor 0.001V (según código C#)
+        voltages = [round(value * 0.001, 3) for value in voltage_result["data"]]
+        min_v = min(voltages)
+        max_v = max(voltages)
+        avg_v = round(sum(voltages) / len(voltages), 3)
+        
+        print("Voltajes de celdas procesados correctamente:")
+        print(f"  Valores brutos: {voltage_result['data']}")
+        print(f"  Voltajes (V): {voltages}")
+        print(f"  Mínimo: {min_v}V, Máximo: {max_v}V, Promedio: {avg_v}V, Diferencia: {round(max_v - min_v, 3)}V")
+    else:
+        print(f"Error al leer voltajes: {voltage_result.get('message', 'Error desconocido')}")
+    
+    # Procesar temperaturas
+    if temp_result.get("status") == "success" and temp_result.get("data"):
+        result["status"] = "partial" if result["status"] == "error" else "success"
+        result["cell_temps_raw"] = temp_result["data"]
+        
+        # Las temperaturas parecen ser valores directos en °C (según código C#)
+        temperatures = temp_result["data"]
+        min_t = min(temperatures)
+        max_t = max(temperatures)
+        avg_t = round(sum(temperatures) / len(temperatures), 1)
+        
+        print("Temperaturas de celdas procesadas correctamente:")
+        print(f"  Valores brutos: {temperatures}")
+        print(f"  Mínima: {min_t}°C, Máxima: {max_t}°C, Promedio: {avg_t}°C, Diferencia: {max_t - min_t}°C")
+    else:
+        print(f"Error al leer temperaturas: {temp_result.get('message', 'Error desconocido')}")
+    
+    # Si tenemos ambos conjuntos de datos, crear estructura completa
+    if (result["status"] == "success" or result["status"] == "partial") and \
+       result["cell_voltages_raw"] and result["cell_temps_raw"]:
+        
+        # Combinar datos en una estructura clara para análisis
+        cell_data = []
+        for i in range(NUM_CELLS):
+            voltage = round(result["cell_voltages_raw"][i] * 0.001, 3) if i < len(result["cell_voltages_raw"]) else None
+            temp = result["cell_temps_raw"][i] if i < len(result["cell_temps_raw"]) else None
+            
+            cell_data.append({
+                "cell_number": i + 1,
+                "voltage": voltage,
+                "temperature": temp
+            })
+        
+        result["cell_data"] = cell_data
+        
+        # Mostrar datos tabulados para mejor visualización
+        print("\nResumen de datos de celdas:")
+        print("-" * 40)
+        print("| Celda | Voltaje (V) | Temperatura (°C) |")
+        print("-" * 40)
+        
+        for cell in cell_data:
+            print(f"| {cell['cell_number']:^5} | {cell['voltage']:^11.3f} | {cell['temperature']:^16} |")
+        
+        print("-" * 40)
+    
+    return result

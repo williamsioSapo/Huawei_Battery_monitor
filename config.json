@@ -17,94 +17,73 @@
   "application": {
     "auto_connect": true,
     "last_connected_id": 214,
+    "available_battery_ids": [214, 216, 217, 218],
     "discovered_devices": [
       {
         "id": 214,
-        "register_0": 5222,
-        "discovery_date": "2025-04-27T11:17:05",
-        "last_seen": "2025-04-27T11:17:05",
+        "register_0": 5337,
+        "discovery_date": "2025-04-28T13:33:30",
+        "last_seen": "2025-04-28T13:33:30",
         "custom_name": "Batería Huawei 214",
         "registers": {
-          "battery_voltage": 52.22,
-          "pack_voltage": 51.92,
-          "current": 11.23,
-          "soc": 12,
+          "battery_voltage": 53.370000000000005,
+          "pack_voltage": 53.07,
+          "current": 7.74,
+          "soc": 30,
           "soh": 94
         },
         "raw_values": [
-          5222,
-          5192,
-          1123,
-          12,
+          5337,
+          5307,
+          774,
+          30,
           94
         ],
         "type": "huawei_battery"
       },
       {
-        "id": 215,
-        "register_0": 5228,
-        "discovery_date": "2025-04-27T11:17:05",
-        "last_seen": "2025-04-27T11:17:05",
-        "custom_name": "Batería Huawei 215",
-        "registers": {
-          "battery_voltage": 52.28,
-          "pack_voltage": 51.95,
-          "current": 9.64,
-          "soc": 13,
-          "soh": 96
-        },
-        "raw_values": [
-          5228,
-          5195,
-          964,
-          13,
-          96
-        ],
-        "type": "huawei_battery"
-      },
-      {
         "id": 216,
-        "register_0": 5225,
-        "discovery_date": "2025-04-27T11:17:06",
-        "last_seen": "2025-04-27T11:17:06",
+        "register_0": 5337,
+        "discovery_date": "2025-04-28T13:33:41",
+        "last_seen": "2025-04-28T13:33:41",
         "custom_name": "Batería Huawei 216",
         "registers": {
-          "battery_voltage": 52.25,
-          "pack_voltage": 51.84,
-          "current": 0.0,
-          "soc": 99,
+          "battery_voltage": 53.370000000000005,
+          "pack_voltage": 50.49,
+          "current": 14.99,
+          "soc": 72,
           "soh": 100
         },
         "raw_values": [
-          5225,
-          5184,
-          0,
-          99,
+          5337,
+          5049,
+          1499,
+          72,
           100
         ],
         "type": "huawei_battery"
       },
       {
         "id": 217,
-        "register_0": 65535,
-        "discovery_date": "2025-04-27T11:17:07",
-        "last_seen": "2025-04-27T11:17:07",
-        "custom_name": "Dispositivo 217",
+        "register_0": 5339,
+        "discovery_date": "2025-04-28T13:33:42",
+        "last_seen": "2025-04-28T13:33:42",
+        "custom_name": "Batería Huawei 217",
         "registers": {
-          "battery_voltage": 655.35,
-          "pack_voltage": 655.35,
-          "current": -0.01,
-          "soc": 65535,
-          "soh": 65535
+          "battery_voltage": 53.39,
+          "pack_voltage": 50.550000000000004,
+          "current": 16.5,
+          "soc": 78,
+          "soh": 100
         },
         "raw_values": [
-          65535,
-          65535,
-          65535,
-          65535,
-          65535
+          5339,
+          5055,
+          1650,
+          78,
+          100
         ],
-        "type": "unknown_device"
+        "type": "huawei_battery"
       }
     ]
   },
