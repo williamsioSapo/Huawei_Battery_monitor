@@ -242,6 +242,9 @@ def authenticate_device(slave_id=217):
         # --- Reemplazo de logger.info ---
         print("INFO: Leyendo información del dispositivo tras autenticación (FC41, índices 0-5)")
         fragments = {}
+        # Almacenar también bytes crudos para combinarlos después
+        raw_bytes_all = bytearray()
+        
         for index in range(6):
              # --- Reemplazo de logger.info ---
             print(f"INFO: --- Leyendo información, índice {index} ---")
@@ -304,6 +307,10 @@ def authenticate_device(slave_id=217):
                 data_bytes = full_response[7:-2]
                  # --- Reemplazo de logger.debug ---
                 print(f"DEBUG: FC41 Índice {index} - Bytes de datos brutos a decodificar (len={len(data_bytes)}): {' '.join([f'{b:02x}' for b in data_bytes])}")
+                
+                # Añadir los bytes a nuestra colección completa
+                raw_bytes_all.extend(data_bytes)
+                
                 try:
                     text_data = data_bytes.decode('utf-8', errors='replace')
                     # --- Reemplazo de logger.debug ---
@@ -321,13 +328,34 @@ def authenticate_device(slave_id=217):
                 print(f"WARNING: FC41 Índice {index}: Respuesta sin suficientes datos (len={len(full_response)}). {' '.join([f'{b:02x}' for b in full_response])}")
                 fragments[f"fragment_{index}"] = f"ERROR: Respuesta corta (len={len(full_response)})"
             time.sleep(0.5)
+        
+        # Ahora, intentar decodificar todos los bytes juntos
+        all_combined_text = ""
+        try:
+            all_combined_text = raw_bytes_all.decode('utf-8', errors='replace')
+            all_combined_text = ''.join(c if (ord(c) >= 32 and ord(c) <= 126) or c in ['\n', '\r', '\t'] else '' for c in all_combined_text)
+            print(f"INFO: Todos los bytes combinados decodificados exitosamente ({len(all_combined_text)} caracteres)")
+        except Exception as e:
+            print(f"WARNING: Error al decodificar todos los bytes combinados: {str(e)}")
+        
+        # Analizar los índices para depuración
+        try:
+            analyze_modbus_indices(fragments)
+        except Exception as e:
+            print(f"WARNING: Error al analizar índices Modbus: {str(e)}")
 
         ser.close()
         # --- Reemplazo de logger.info ---
         print("INFO: Puerto serial directo cerrado después de autenticación y lectura")
         time.sleep(0.5)
 
-        parsed_info = parse_device_info(fragments)
+        # Si tenemos el texto combinado, intentar usarlo
+        if all_combined_text:
+            parsed_info = parse_device_info_from_combined(all_combined_text)
+        else:
+            # Volver al método original de análisis por fragmentos
+            parsed_info = parse_device_info(fragments)
+            
         global device_info_cache
         device_info_cache["is_authenticated"] = True
         device_info_cache["fragments"] = fragments
@@ -376,66 +404,96 @@ def authenticate_device(slave_id=217):
 def parse_device_info(fragments):
     """
     Procesa los fragmentos para extraer información estructurada.
+    Esta versión combina primero los fragmentos y luego los analiza.
+    
+    Args:
+        fragments (dict): Diccionario con los fragmentos obtenidos del dispositivo
+        
+    Returns:
+        dict: Información estructurada del dispositivo
+    """
+    # Combinar todos los fragmentos en una sola cadena
+    combined_text = ""
+    for i in range(6):  # Procesar índices 0-5
+        fragment_key = f"fragment_{i}"
+        if fragment_key in fragments and isinstance(fragments[fragment_key], str):
+            # Ignorar fragmentos que son mensajes de error
+            if not fragments[fragment_key].startswith("ERROR"):
+                combined_text += fragments[fragment_key] + "\n"
+    
+    # Usar la nueva función para analizar el texto combinado
+    return parse_device_info_from_combined(combined_text, fragments)
+
+def parse_device_info_from_combined(combined_text, fragments=None):
+    """
+    Procesa el texto combinado de todos los índices ya decodificado.
+    
+    Args:
+        combined_text (str): Texto combinado de todos los índices
+        fragments (dict, optional): Fragmentos originales para compatibilidad
+        
+    Returns:
+        dict: Información estructurada del dispositivo
     """
     parsed_info = {
-        "manufacturer": "", "model": "", "barcode": "",
-        "manufactured_date": "", "description": "",
-        "info_version": "", "elabel_version": ""
+        "manufacturer": "",
+        "model": "",
+        "barcode": "",
+        "manufactured_date": "",
+        "description": "",
+        "info_version": "",
+        "elabel_version": ""
     }
-    combined_text = ""
-    for i in range(6):
-        key = f"fragment_{i}"
-        if key in fragments and isinstance(fragments[key], str) and not fragments[key].startswith("ERROR"):
-             combined_text += fragments[key] + "\n"
-
-    # --- Reemplazo de logger.debug ---
-    print(f"DEBUG: Texto combinado para parsear (primeros 200 chars): {combined_text[:200].replace(chr(10), '[NL]')}")
-
+    
+    print(f"DEBUG: Analizando texto combinado ({len(combined_text)} caracteres)")
+    
+    # Definir patrones de búsqueda para cada campo
     patterns = {
-        "manufacturer": ["VendorName=", "rName="], "model": ["Model=", "BoardType="],
-        "barcode": ["BarCode="], "manufactured_date": ["Manufactured="],
-        "info_version": ["ArchivesInfoVersion="], "elabel_version": ["ElabelVersion="]
+        "manufacturer": ["VendorName="],
+        "model": ["BoardType=", "Model="],
+        "barcode": ["BarCode="],
+        "manufactured_date": ["Manufactured="],
+        "description": ["Description="],
+        "info_version": ["ArchivesInfoVersion="],
+        "elabel_version": ["ElabelVersion=", "/$ElabelVersion="]
     }
-
-    for key, search_patterns in patterns.items():
+    
+    # Extraer cada campo usando los patrones
+    for field, search_patterns in patterns.items():
         for pattern in search_patterns:
-            pattern_pos = combined_text.lower().find(pattern.lower())
-            if pattern_pos != -1:
-                start_idx = pattern_pos + len(pattern)
-                end_idx_lf = combined_text.find("\n", start_idx)
-                end_idx_cr = combined_text.find("\r", start_idx)
-                if end_idx_lf != -1 and end_idx_cr != -1: end_idx = min(end_idx_lf, end_idx_cr)
-                elif end_idx_lf != -1: end_idx = end_idx_lf
-                elif end_idx_cr != -1: end_idx = end_idx_cr
-                else: end_idx = len(combined_text)
-                value = combined_text[start_idx:end_idx].strip()
+            pos = combined_text.find(pattern)
+            if pos != -1:
+                # Extraer desde el patrón hasta el siguiente salto de línea
+                start_pos = pos + len(pattern)
+                end_pos = combined_text.find("\n", start_pos)
+                if end_pos == -1:
+                    end_pos = combined_text.find("\r", start_pos)
+                if end_pos == -1:
+                    end_pos = len(combined_text)
+                
+                value = combined_text[start_pos:end_pos].strip()
+                
+                # Limpiar el valor
                 value = ''.join(c for c in value if (ord(c) >= 32 and ord(c) <= 126))
+                
                 if value:
-                    parsed_info[key] = value
-                     # --- Reemplazo de logger.debug ---
-                    print(f"DEBUG: Parseado: {key} = '{value}' (usando patrón '{pattern}')")
+                    parsed_info[field] = value
+                    print(f"DEBUG: {field} = '{value}' (usando patrón '{pattern}')")
                     break
-
-    desc_pattern = "Description="
-    desc_pattern_pos = combined_text.lower().find(desc_pattern.lower())
-    if desc_pattern_pos != -1:
-        start_idx = desc_pattern_pos + len(desc_pattern)
-        remaining_text = combined_text[start_idx:]
-        end_markers = ["Manufactured=", "VendorName=", "rName=", "IssueNumber=", "CLEICode=", "BOM=", "Model=", "["]
-        end_idx = len(remaining_text)
-        for marker in end_markers:
-            marker_pos = remaining_text.lower().find(marker.lower())
-            if marker_pos != -1: end_idx = min(end_idx, marker_pos)
-        description = remaining_text[:end_idx].strip()
-        description = ' '.join(description.split())
-        description = ''.join(c for c in description if (ord(c) >= 32 and ord(c) <= 126) or c == ' ')
-        if description:
-             parsed_info["description"] = description
-              # --- Reemplazo de logger.debug ---
-             print(f"DEBUG: Parseado: description = '{description}'")
-
-    # --- Reemplazo de logger.info ---
-    print(f"INFO: Información parseada final: {parsed_info}")
+    
+    # Normalizar la fecha de fabricación si es necesario
+    if parsed_info["manufactured_date"]:
+        date_value = parsed_info["manufactured_date"]
+        normalized_date = normalize_manufacture_date(date_value)
+        if normalized_date != date_value:
+            parsed_info["manufactured_date"] = normalized_date
+            print(f"DEBUG: Fecha normalizada: '{normalized_date}' (original: '{date_value}')")
+    
+    # Mantener la función original para compatibilidad
+    if fragments is not None:
+        # Guardar esto para compatibilidad con el resto del código
+        device_info_cache["parsed_info"] = parsed_info
+    
     return parsed_info
 
 def validate_device_manufacturer(parsed_info):
@@ -535,3 +593,168 @@ def get_default_slave_id():
     """Obtiene el ID de esclavo predeterminado de la configuración."""
     from . import config_manager
     return config_manager.get_default_slave_id()
+
+def analyze_modbus_indices(fragments):
+    """
+    Analiza el contenido de los índices Modbus, combinándolos primero para
+    mostrar una vista unificada de la información.
+    
+    Args:
+        fragments (dict): Fragmentos obtenidos del dispositivo
+        
+    Returns:
+        dict: Resumen del análisis para uso programático
+    """
+    # Resultados para devolver
+    results = {
+        "valid_fragments": 0,
+        "error_fragments": 0,
+        "combined_fields": {}
+    }
+    
+    print("\n========== ANÁLISIS DE ÍNDICES MODBUS FC41 ==========")
+    
+    # Primero mostrar un resumen de cada índice individual
+    print("\n----- RESUMEN POR ÍNDICE -----")
+    for index in range(6):
+        fragment_key = f"fragment_{index}"
+        content = fragments.get(fragment_key, "")
+        is_error = isinstance(content, str) and content.startswith("ERROR")
+        
+        if is_error:
+            print(f"Índice {index}: ERROR - {content[:50]}...")
+            results["error_fragments"] += 1
+        elif not content:
+            print(f"Índice {index}: VACÍO")
+        else:
+            # Contar campos
+            field_count = 0
+            if isinstance(content, str):
+                lines = content.split('\n')
+                for line in lines:
+                    if '=' in line:
+                        field_count += 1
+                results["valid_fragments"] += 1
+            
+            print(f"Índice {index}: VÁLIDO - Contiene {field_count} campos")
+    
+    # Combinar todos los fragmentos
+    combined_text = ""
+    for i in range(6):
+        fragment_key = f"fragment_{i}"
+        if fragment_key in fragments and isinstance(fragments[fragment_key], str):
+            if not fragments[fragment_key].startswith("ERROR"):
+                combined_text += fragments[fragment_key] + "\n"
+    
+    # Extraer todos los campos del texto combinado
+    extracted_fields = {}
+    field_previews = []
+    
+    if combined_text:
+        lines = combined_text.split('\n')
+        for line in lines:
+            if '=' in line:
+                parts = line.split('=', 1)
+                key = parts[0].strip()
+                value = parts[1].strip()
+                extracted_fields[key] = value
+                # Preparar vista previa limitada a 40 caracteres
+                preview = f"{key}={value[:40]}" + ("..." if len(value) > 40 else "")
+                field_previews.append(preview)
+    
+    results["combined_fields"] = extracted_fields
+    
+    # Mostrar análisis del contenido combinado
+    print("\n----- ANÁLISIS DEL CONTENIDO COMBINADO -----")
+    print(f"Total de campos encontrados: {len(extracted_fields)}")
+    if field_previews:
+        print("\nCampos en el texto combinado:")
+        for preview in field_previews:
+            print(f"  • {preview}")
+    
+    # Verificar fecha de fabricación en el texto combinado
+    if "Manufactured" in extracted_fields:
+        raw_date = extracted_fields["Manufactured"]
+        print(f"\n¡IMPORTANTE! Fecha de fabricación en texto combinado:")
+        print(f"  • Valor: '{raw_date}'")
+        print(f"  • Formato detectado: {detect_date_format(raw_date)}")
+        normalized_date = normalize_manufacture_date(raw_date)
+        if normalized_date != raw_date:
+            print(f"  • Fecha normalizada: '{normalized_date}'")
+    else:
+        print("\n¡ALERTA! No se encontró 'Manufactured=' en el texto combinado.")
+    
+    # Mostrar el texto combinado completo para referencia
+    print("\n----- TEXTO COMBINADO COMPLETO -----")
+    print(combined_text[:1000] + ("..." if len(combined_text) > 1000 else ""))
+    
+    print("\n========== FIN DEL ANÁLISIS ==========")
+    return results
+
+# Esta función ya la habíamos definido antes, se incluye por completitud
+
+def detect_date_format(date_str):
+    """
+    Detecta el formato de una cadena de fecha y devuelve una descripción.
+    
+    Args:
+        date_str (str): Cadena de fecha a analizar
+        
+    Returns:
+        str: Descripción del formato detectado
+    """
+    if not date_str:
+        return "VACÍO"
+        
+    if date_str.isdigit():
+        if len(date_str) == 2:
+            return f"Año corto (20{date_str})"
+        elif len(date_str) == 4:
+            return f"Año completo ({date_str})"
+        elif len(date_str) >= 8:
+            return "Posible timestamp numérico"
+    
+    if "-" in date_str:
+        parts = date_str.split("-")
+        if len(parts) == 3:
+            return f"Fecha ISO (YYYY-MM-DD)"
+    
+    if "/" in date_str:
+        return "Fecha con separador /"
+    
+    return "Formato desconocido"
+
+def normalize_manufacture_date(date_str):
+    """
+    Normaliza el formato de la fecha de fabricación.
+    
+    Args:
+        date_str (str): Fecha en formato original
+        
+    Returns:
+        str: Fecha normalizada o la original si no se pudo normalizar
+    """
+    # Si está vacía, devolver vacío
+    if not date_str:
+        return ""
+    
+    # Si es solo un año corto (ej: "20")
+    if date_str.isdigit() and len(date_str) == 2:
+        return f"20{date_str}"  # Asumir 2000s (ej: "2020")
+    
+    # Si es solo un año completo (ej: "2020")
+    if date_str.isdigit() and len(date_str) == 4:
+        return date_str
+    
+    # Si ya tiene formato YYYY-MM-DD, dejarlo como está
+    if len(date_str) == 10 and date_str[4] == '-' and date_str[7] == '-':
+        return date_str
+    
+    # Si tiene formato YY-MM-DD, convertir a YYYY-MM-DD
+    if len(date_str) == 8 and date_str[2] == '-' and date_str[5] == '-':
+        year_part = date_str[0:2]
+        rest_part = date_str[2:]
+        return f"20{year_part}{rest_part}"
+    
+    # Para cualquier otro formato, devolver el original
+    return date_str
