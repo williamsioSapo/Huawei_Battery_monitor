@@ -80,3 +80,19 @@ function readModbusDeviceInfo(params) {
 function verifyCellData(slaveId = 217) {
     return apiRequest('/api/verify_cells', 'POST', { slaveId: slaveId });
 }
+// Funciones para monitoreo de múltiples baterías
+function startMultiBatteryMonitoring(batteryIds = []) {
+    return apiRequest('/api/batteries/start_monitoring', 'POST', { battery_ids: batteryIds });
+}
+
+function stopMultiBatteryMonitoring() {
+    return apiRequest('/api/batteries/stop_monitoring', 'POST');
+}
+
+function getAllBatteriesStatus() {
+    return apiRequest('/api/batteries/status', 'GET');
+}
+
+function getBatteryStatus(batteryId) {
+    return apiRequest(`/api/batteries/status/${batteryId}`, 'GET');
+}

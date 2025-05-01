@@ -20,7 +20,8 @@ connection_params = {
 # Variable global para almacenar la información del dispositivo
 device_info_cache = {
     "is_authenticated": False,
-    "fragments": {},
+    "fragments": {},  # Mantener por compatibilidad
+    "combined_text": "",  # Añadir texto combinado
     "parsed_info": {
         "manufacturer": "",
         "model": "",
@@ -39,7 +40,8 @@ def reset_device_info():
     global device_info_cache
     device_info_cache = {
         "is_authenticated": False,
-        "fragments": {},
+        "fragments": {},  # Mantener por compatibilidad
+        "combined_text": "",  # Añadir texto combinado
         "parsed_info": {
             "manufacturer": "",
             "model": "",
@@ -52,7 +54,7 @@ def reset_device_info():
         "is_huawei": False,
         "timestamp": None
     }
-    # --- Reemplazo de logger.info ---
+    
     print("INFO: Caché de información del dispositivo reiniciada")
 
 def compute_crc16(data):
@@ -73,14 +75,10 @@ def authenticate_device(slave_id=217):
     Ejecuta la secuencia de autenticación de 3 pasos usando conexión serial directa.
     UTILIZA print() PARA LOGS VISIBLES EN CONSOLA WEB.
     """
-    # --- Reemplazo de logger.info ---
     print(f"INFO: Iniciando autenticación de bajo nivel para dispositivo {slave_id}")
-    # --- Log de prueba ---
-    print("---- PRINT: Entrando en authenticate_device ----")
 
     # Verificar que tenemos parámetros de conexión
     if not connection_params['port']:
-         # --- Reemplazo de logger.error ---
         print("ERROR: No hay parámetros de conexión disponibles para autenticación directa.")
         return False
 
@@ -93,23 +91,19 @@ def authenticate_device(slave_id=217):
     timeout = connection_params['timeout']
 
     # Cerrar temporalmente el cliente actual para liberar el puerto serial
-    was_connected = client.is_client_connected() # Verificar si estaba conectado antes
+    was_connected = client.is_client_connected()
     try:
         if was_connected:
-            # Nota: disconnect_client ya usa print()
             client.disconnect_client()
-            # --- Reemplazo de logger.info ---
             print("INFO: Cliente Modbus desconectado temporalmente para autenticación")
-            time.sleep(0.5) # Pequeña pausa para asegurar liberación del puerto
+            time.sleep(0.5)
     except Exception as e:
-        # --- Reemplazo de logger.warning ---
         print(f"WARNING: Error al desconectar cliente existente: {str(e)}")
 
     # Crear una conexión serial directa
     ser = None
     try:
         # Conectar directamente al puerto serial
-        # --- Reemplazo de logger.debug ---
         print(f"DEBUG: Intentando conexión serial directa a {port} ({baudrate},{bytesize}{parity}{stopbits} T:{timeout}s)")
         ser = serial.Serial(
             port=port,
@@ -119,292 +113,54 @@ def authenticate_device(slave_id=217):
             bytesize=bytesize,
             timeout=timeout
         )
-        # --- Reemplazo de logger.info ---
+        
         print(f"INFO: Conexión serial directa establecida con {port}")
 
-        # Paso 1: Comando de desbloqueo especial (FC03)
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 1: Enviando comando de desbloqueo (FC03 especial)")
-
-        message_step1 = bytearray([
-        slave_id, 0x03, 0x01, 0x06, 0x00, 0x01
-        ])
-        crc = compute_crc16(message_step1)
-        request_step1 = message_step1 + crc
-
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()
-        ser.write(request_step1)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Enviado Paso 1: {' '.join([f'{b:02x}' for b in request_step1])}")
-        time.sleep(0.2)
-        response_step1 = ser.read(7)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 1 - Recibido (len={len(response_step1)}): {' '.join([f'{b:02x}' for b in response_step1])}")
-
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 1 - Validando respuesta...")
-        if len(response_step1) != 7:
-            # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 1: Longitud inválida. Esperada: 7, Recibida: {len(response_step1)}. Datos: {' '.join([f'{b:02x}' for b in response_step1])}")
+        # Ejecutar la secuencia de autenticación
+        if not authenticate_huawei_device(ser, slave_id):
             ser.close()
             return False
-        if response_step1[0] != slave_id or response_step1[1] != 0x03:
-            # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 1: ID/FC inválido. Esperado: {slave_id:02x} 03, Recibido: {response_step1[0]:02x} {response_step1[1]:02x}. Datos: {' '.join([f'{b:02x}' for b in response_step1])}")
-            ser.close()
-            return False
-        if response_step1[2] != 0x02 or response_step1[3] != 0x00:
-            # --- Reemplazo de logger.error ---
-             print(f"ERROR: Error Paso 1: Formato inesperado. Bytes[2,3] esperados: 02 00, Recibidos: {response_step1[2]:02x} {response_step1[3]:02x}. Datos: {' '.join([f'{b:02x}' for b in response_step1])}")
-             ser.close()
-             return False
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 1 completado exitosamente")
-        time.sleep(0.5)
-
-        # Paso 2: Sincronización de fecha/hora (FC10)
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 2: Enviando sincronización de fecha/hora (FC10)")
-        now = datetime.datetime.now()
-        message_step2 = bytearray([
-            slave_id, 0x10, 0x10, 0x00, 0x00, 0x06, 0x0C,
-            (now.year >> 8) & 0xFF, now.year & 0xFF,
-            0x00, now.month, 0x00, now.day, 0x00, now.hour,
-            0x00, now.minute, 0x00, now.second
-        ])
-        crc = compute_crc16(message_step2)
-        request_step2 = message_step2 + crc
-
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()
-        ser.write(request_step2)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Enviado Paso 2: {now.isoformat()} : {' '.join([f'{b:02x}' for b in request_step2])}")
-        time.sleep(0.2)
-        response_step2 = ser.read(8)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 2 - Recibido (len={len(response_step2)}): {' '.join([f'{b:02x}' for b in response_step2])}")
-
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 2 - Validando respuesta...")
-        if len(response_step2) != 8 or response_step2[0] != slave_id or response_step2[1] != 0x10:
-            # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 2: Longitud/ID/FC inválido. Esperado: len=8, ID={slave_id:02x}, FC=10. Recibido: len={len(response_step2)}, ID={response_step2[0]:02x}, FC={response_step2[1]:02x}. Datos: {' '.join([f'{b:02x}' for b in response_step2])}")
-            ser.close()
-            return False
-        if (response_step2[2] != 0x10 or response_step2[3] != 0x00 or
-            response_step2[4] != 0x00 or response_step2[5] != 0x06):
-             # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 2: Formato inesperado. Bytes[2:6] esperados: 10 00 00 06. Recibidos: {' '.join(f'{b:02x}' for b in response_step2[2:6])}. Datos: {' '.join([f'{b:02x}' for b in response_step2])}")
-            ser.close()
-            return False
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 2 completado exitosamente")
-        time.sleep(0.8)
-
-        # Paso 3: Validación de acceso (FC41 inicial)
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 3: Enviando validación de acceso (FC41 inicial)")
-        message_step3 = bytearray([
-        slave_id, 0x41, 0x05, 0x01, 0x04
-        ])
-        crc = compute_crc16(message_step3)
-        request_step3 = message_step3 + crc
-
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()
-        ser.write(request_step3)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Enviado Paso 3: {' '.join([f'{b:02x}' for b in request_step3])}")
-        time.sleep(0.3)
-        response_step3 = ser.read(12)
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 3 - Recibido (len={len(response_step3)}): {' '.join([f'{b:02x}' for b in response_step3])}")
-
-        # --- Reemplazo de logger.debug ---
-        print(f"DEBUG: Paso 3 - Validando respuesta...")
-        if len(response_step3) < 9 or response_step3[0] != slave_id or response_step3[1] != 0x41:
-            # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 3: Longitud/ID/FC inválido. Esperado: len>=9, ID={slave_id:02x}, FC=41. Recibido: len={len(response_step3)}, ID={response_step3[0]:02x}, FC={response_step3[1]:02x}. Datos: {' '.join([f'{b:02x}' for b in response_step3])}")
-            ser.close()
-            return False
-        if response_step3[2] != 0x05 or response_step3[3] != 0x06:
-            # --- Reemplazo de logger.error ---
-            print(f"ERROR: Error Paso 3: Formato inesperado. Bytes[2,3] esperados: 05 06. Recibidos: {response_step3[2]:02x} {response_step3[3]:02x}. Datos: {' '.join([f'{b:02x}' for b in response_step3])}")
-            ser.close()
-            return False
-        # --- Reemplazo de logger.info ---
-        print("INFO: Paso 3 completado exitosamente")
-        time.sleep(1.0)
-
+        
         # Leer datos del dispositivo directamente
-        # --- Reemplazo de logger.info ---
-        print("INFO: Leyendo información del dispositivo tras autenticación (FC41, índices 0-5)")
-        fragments = {}
-        # Almacenar también bytes crudos para combinarlos después
-        raw_bytes_all = bytearray()
+        device_data = read_device_information(ser, slave_id)
         
-        for index in range(6):
-             # --- Reemplazo de logger.info ---
-            print(f"INFO: --- Leyendo información, índice {index} ---")
-            message = bytearray([
-                slave_id, 0x41, 0x06, 0x03, 0x04, 0x00, index
-            ])
-            crc = compute_crc16(message)
-            request = message + crc
-
-            ser.reset_input_buffer()
-            ser.reset_output_buffer()
-            ser.write(request)
-             # --- Reemplazo de logger.debug ---
-            print(f"DEBUG: Enviada solicitud FC41 para índice {index}: {' '.join([f'{b:02x}' for b in request])}")
-            time.sleep(0.3)
-            header = ser.read(7)
-            # --- Reemplazo de logger.debug ---
-            print(f"DEBUG: FC41 Índice {index} - Cabecera recibida (len={len(header)}): {' '.join([f'{b:02x}' for b in header])}")
-
-            # --- Reemplazo de logger.debug ---
-            print(f"DEBUG: FC41 Índice {index} - Validando cabecera...")
-            if len(header) < 7:
-                # --- Reemplazo de logger.warning ---
-                print(f"WARNING: FC41 Índice {index}: Cabecera incompleta. Esperada: >=7, Recibida: {len(header)}. Datos: {' '.join([f'{b:02x}' for b in header])}")
-                fragments[f"fragment_{index}"] = f"ERROR: Cabecera incompleta (len={len(header)})"
-                time.sleep(0.5)
-                continue
-            if header[0] != slave_id:
-                # --- Reemplazo de logger.warning ---
-                print(f"WARNING: FC41 Índice {index}: ID de esclavo incorrecto en cabecera. Esperado: {slave_id:02x}, Recibido: {header[0]:02x}. Cabecera: {' '.join([f'{b:02x}' for b in header])}")
-                fragments[f"fragment_{index}"] = f"ERROR: ID incorrecto ({header[0]:02x})"
-                time.sleep(0.5)
-                continue
-            if header[1] == 0xC1:
-                error_payload = ser.read(2)
-                full_error_response = header + error_payload
-                error_code_hex = f"{error_payload[0]:02x}" if error_payload else "N/A"
-                # --- Reemplazo de logger.warning ---
-                print(f"WARNING: FC41 Índice {index}: Respuesta de error (0xC1). Código: {error_code_hex}. Respuesta completa aprox.: {' '.join([f'{b:02x}' for b in full_error_response])}")
-                fragments[f"fragment_{index}"] = f"ERROR: Código {error_code_hex}"
-                time.sleep(0.5)
-                continue
-            if header[1] != 0x41:
-                 # --- Reemplazo de logger.warning ---
-                print(f"WARNING: FC41 Índice {index}: Código de función inesperado. Esperado: 41, Recibido: {header[1]:02x}. Cabecera: {' '.join([f'{b:02x}' for b in header])}")
-                fragments[f"fragment_{index}"] = f"ERROR: FC inesperada ({header[1]:02x})"
-                time.sleep(0.5)
-                continue
-
-            response_type = header[3]
-            additional_data = ser.read(100)
-             # --- Reemplazo de logger.debug ---
-            print(f"DEBUG: FC41 Índice {index} - Datos adicionales (tipo {response_type:02x}) recibidos (len={len(additional_data)}): {' '.join([f'{b:02x}' for b in additional_data[:30]])}...")
-
-            full_response = header + additional_data
-             # --- Reemplazo de logger.debug ---
-            print(f"DEBUG: FC41 Índice {index} - Respuesta completa (len={len(full_response)}): {' '.join([f'{b:02x}' for b in full_response])}")
-
-            if len(full_response) > 9:
-                data_bytes = full_response[7:-2]
-                 # --- Reemplazo de logger.debug ---
-                print(f"DEBUG: FC41 Índice {index} - Bytes de datos brutos a decodificar (len={len(data_bytes)}): {' '.join([f'{b:02x}' for b in data_bytes])}")
-                
-                # Añadir los bytes a nuestra colección completa
-                raw_bytes_all.extend(data_bytes)
-                
-                try:
-                    text_data = data_bytes.decode('utf-8', errors='replace')
-                    # --- Reemplazo de logger.debug ---
-                    print(f"DEBUG: FC41 Índice {index} - Datos decodificados (UTF-8 replace): '{text_data[:80].replace(chr(13), '').replace(chr(10), '[NL]')}'...")
-                    cleaned_text_data = ''.join(c if (ord(c) >= 32 and ord(c) <= 126) or c in ['\n', '\r', '\t'] else '' for c in text_data)
-                    fragments[f"fragment_{index}"] = cleaned_text_data
-                     # --- Reemplazo de logger.info ---
-                    print(f"INFO: Datos índice {index} leídos y decodificados correctamente ({len(data_bytes)} bytes)")
-                except Exception as e:
-                    # --- Reemplazo de logger.warning ---
-                    print(f"WARNING: Error al decodificar/procesar datos índice {index}: {str(e)}. Bytes crudos: {' '.join([f'{b:02x}' for b in data_bytes])}")
-                    fragments[f"fragment_{index}"] = f"ERROR DE DECODIFICACIÓN: {str(e)}"
-            else:
-                 # --- Reemplazo de logger.warning ---
-                print(f"WARNING: FC41 Índice {index}: Respuesta sin suficientes datos (len={len(full_response)}). {' '.join([f'{b:02x}' for b in full_response])}")
-                fragments[f"fragment_{index}"] = f"ERROR: Respuesta corta (len={len(full_response)})"
-            time.sleep(0.5)
-        
-        # Ahora, intentar decodificar todos los bytes juntos
-        all_combined_text = ""
-        try:
-            all_combined_text = raw_bytes_all.decode('utf-8', errors='replace')
-            all_combined_text = ''.join(c if (ord(c) >= 32 and ord(c) <= 126) or c in ['\n', '\r', '\t'] else '' for c in all_combined_text)
-            print(f"INFO: Todos los bytes combinados decodificados exitosamente ({len(all_combined_text)} caracteres)")
-        except Exception as e:
-            print(f"WARNING: Error al decodificar todos los bytes combinados: {str(e)}")
-        
-        # Analizar los índices para depuración
-        try:
-            analyze_modbus_indices(fragments)
-        except Exception as e:
-            print(f"WARNING: Error al analizar índices Modbus: {str(e)}")
-
+        # Cerrar la conexión serial directa
         ser.close()
-        # --- Reemplazo de logger.info ---
         print("INFO: Puerto serial directo cerrado después de autenticación y lectura")
         time.sleep(0.5)
+        
+        # Actualizar caché con la información obtenida
+        update_device_cache(device_data)
 
-        # Si tenemos el texto combinado, intentar usarlo
-        if all_combined_text:
-            parsed_info = parse_device_info_from_combined(all_combined_text)
-        else:
-            # Volver al método original de análisis por fragmentos
-            parsed_info = parse_device_info(fragments)
-            
-        global device_info_cache
-        device_info_cache["is_authenticated"] = True
-        device_info_cache["fragments"] = fragments
-        device_info_cache["parsed_info"] = parsed_info
-        device_info_cache["timestamp"] = time.time()
-        device_info_cache["is_huawei"] = validate_device_manufacturer(parsed_info)
+        # Reconectar el cliente Modbus si estaba conectado
+        if was_connected:
+            port_config = connection_params.copy()
+            print(f"INFO: Intentando reconectar cliente pymodbus con config: {port_config}")
+            success, recon_msg = client.connect_client(**port_config)
+            if not success:
+                print(f"WARNING: ¡Fallo al reconectar el cliente PyModbus después de la autenticación! Mensaje: {recon_msg}")
 
-        port_config = connection_params.copy()
-        # --- Reemplazo de logger.info ---
-        print(f"INFO: Autenticación y lectura de información completada. Intentando reconectar cliente pymodbus con config: {port_config}")
-        success, recon_msg = client.connect_client(**port_config) # connect_client ya usa print
-        if not success:
-            # --- Reemplazo de logger.warning ---
-            # El mensaje ya viene de connect_client via print
-            print(f"WARNING: ¡Fallo al reconectar el cliente PyModbus después de la autenticación! Mensaje: {recon_msg}")
-        else:
-            # --- Reemplazo de logger.info ---
-            # El mensaje ya viene de connect_client via print
-            # print("INFO: Cliente PyModbus reconectado exitosamente.")
-            pass
-
-        # --- Reemplazo de logger.info ---
         print("INFO: Retornando True desde authenticate_device.")
         return True
 
     except Exception as e:
-        # --- Reemplazo de logger.error ---
         print(f"ERROR: Excepción CRÍTICA en authenticate_device: {str(e)}")
-        # Imprimir traceback si es posible (solo funciona si sys está importado y se usa sys.exc_info())
-        # import sys
-        # print(f"ERROR: Traceback: {sys.exc_info()}")
         if ser and ser.is_open:
-             # --- Reemplazo de logger.warning ---
             print("WARNING: Cerrando puerto serial debido a excepción.")
             ser.close()
         if port and was_connected:
-             # --- Reemplazo de logger.warning ---
             print("WARNING: Intentando reconectar cliente PyModbus después de excepción...")
             port_config = connection_params.copy()
             client.connect_client(**port_config)
 
-        # --- Reemplazo de logger.error ---
         print(f"ERROR: Retornando False desde authenticate_device debido a excepción: {e}")
         return False
 
 def parse_device_info(fragments):
     """
     Procesa los fragmentos para extraer información estructurada.
-    Esta versión combina primero los fragmentos y luego los analiza.
+    NOTA: Esta función ahora simplemente combina los fragmentos y
+    redirige a parse_device_info_from_combined.
     
     Args:
         fragments (dict): Diccionario con los fragmentos obtenidos del dispositivo
@@ -421,16 +177,16 @@ def parse_device_info(fragments):
             if not fragments[fragment_key].startswith("ERROR"):
                 combined_text += fragments[fragment_key] + "\n"
     
-    # Usar la nueva función para analizar el texto combinado
-    return parse_device_info_from_combined(combined_text, fragments)
+    # Redirigir directamente a la función principal de análisis
+    # Nota: Eliminamos el parámetro 'fragments' que era redundante
+    return parse_device_info_from_combined(combined_text)
 
-def parse_device_info_from_combined(combined_text, fragments=None):
+def parse_device_info_from_combined(combined_text):
     """
     Procesa el texto combinado de todos los índices ya decodificado.
     
     Args:
         combined_text (str): Texto combinado de todos los índices
-        fragments (dict, optional): Fragmentos originales para compatibilidad
         
     Returns:
         dict: Información estructurada del dispositivo
@@ -489,10 +245,8 @@ def parse_device_info_from_combined(combined_text, fragments=None):
             parsed_info["manufactured_date"] = normalized_date
             print(f"DEBUG: Fecha normalizada: '{normalized_date}' (original: '{date_value}')")
     
-    # Mantener la función original para compatibilidad
-    if fragments is not None:
-        # Guardar esto para compatibilidad con el resto del código
-        device_info_cache["parsed_info"] = parsed_info
+    # Actualizar el caché global con la información parseada
+    device_info_cache["parsed_info"] = parsed_info
     
     return parsed_info
 
@@ -517,7 +271,7 @@ def validate_device_manufacturer(parsed_info):
     is_huawei_model = model.startswith("esm")
 
     if is_huawei_manufacturer or is_huawei_model:
-         # --- Reemplazo de logger.info ---
+         
         print(f"INFO: Dispositivo compatible detectado (Fabricante: '{manufacturer}', Modelo: '{model}')")
         return True
     else:
@@ -532,21 +286,18 @@ def get_cached_device_info():
     global device_info_cache
 
     if not device_info_cache.get("is_authenticated", False):
-        # --- Reemplazo de logger.warning ---
         print("WARNING: Intento de obtener info de caché sin autenticación previa.")
         return {
             "status": "error", "message": "Información no disponible. Se requiere autenticación.",
             "is_authenticated": False, "is_huawei": False
         }
-    if not device_info_cache.get("fragments"):
-         # --- Reemplazo de logger.warning ---
-        print("WARNING: Info de caché solicitada, pero los fragmentos están vacíos.")
+    if not device_info_cache.get("combined_text"):
+        print("WARNING: Info de caché solicitada, pero el texto combinado está vacío.")
         return {
             "status": "error", "message": "Información no disponible. No se pudo leer la información del dispositivo durante la autenticación.",
             "is_authenticated": True, "is_huawei": False
         }
     if not device_info_cache.get("is_huawei", False):
-        # --- Reemplazo de logger.error ---
         print("ERROR: ERROR FATAL: Dispositivo incompatible detectado en caché.")
         parsed = device_info_cache.get('parsed_info', {})
         mf = parsed.get('manufacturer', 'Desconocido')
@@ -557,11 +308,11 @@ def get_cached_device_info():
             "is_authenticated": True, "is_huawei": False, "parsed_info": parsed
         }
 
-     # --- Reemplazo de logger.debug ---
     print("DEBUG: Devolviendo información del dispositivo desde caché.")
     cache_copy = {
         "status": "success", "message": "Información del dispositivo disponible desde caché",
-        "fragments": device_info_cache["fragments"].copy(),
+        "fragments": device_info_cache["fragments"].copy(),  # Mantener por compatibilidad
+        "combined_text": device_info_cache["combined_text"],  # Añadir texto combinado
         "parsed_info": device_info_cache["parsed_info"].copy(),
         "timestamp": device_info_cache["timestamp"],
         "is_authenticated": True, "is_huawei": True
@@ -572,7 +323,7 @@ def authenticate_and_read_device_info(slave_id=217):
     """
     Función completa que realiza la autenticación y lectura de información.
     """
-     # --- Reemplazo de logger.info ---
+     
     print(f"INFO: Iniciando proceso completo de autenticación y lectura para slave {slave_id}")
     reset_device_info() # Ya usa print
     auth_success = authenticate_device(slave_id) # Ya usa print
@@ -585,7 +336,7 @@ def authenticate_and_read_device_info(slave_id=217):
             "is_authenticated": False, "is_huawei": False
         }
 
-     # --- Reemplazo de logger.info ---
+     
     print("INFO: Autenticación/lectura directa exitosa. Obteniendo info de caché.")
     return get_cached_device_info() # Ya usa print
 
@@ -594,57 +345,33 @@ def get_default_slave_id():
     from . import config_manager
     return config_manager.get_default_slave_id()
 
-def analyze_modbus_indices(fragments):
+def analyze_modbus_indices(fragments=None):
     """
-    Analiza el contenido de los índices Modbus, combinándolos primero para
-    mostrar una vista unificada de la información.
+    Analiza la información del dispositivo almacenada en caché.
+    Esta función ahora trabaja directamente con el texto combinado en el caché.
     
     Args:
-        fragments (dict): Fragmentos obtenidos del dispositivo
+        fragments (dict, opcional): Para compatibilidad, no se usa
         
     Returns:
         dict: Resumen del análisis para uso programático
     """
+    # Obtener texto combinado del caché
+    combined_text = device_info_cache.get("combined_text", "")
+    if not combined_text:
+        print("\n========== ANÁLISIS DE ÍNDICES MODBUS FC41 ==========")
+        print("¡AVISO! No hay texto combinado disponible en caché.")
+        print("========== FIN DEL ANÁLISIS ==========")
+        return {"valid_fragments": 0, "error_fragments": 0, "combined_fields": {}}
+    
     # Resultados para devolver
     results = {
-        "valid_fragments": 0,
+        "valid_fragments": 1 if combined_text else 0,
         "error_fragments": 0,
         "combined_fields": {}
     }
     
-    print("\n========== ANÁLISIS DE ÍNDICES MODBUS FC41 ==========")
-    
-    # Primero mostrar un resumen de cada índice individual
-    print("\n----- RESUMEN POR ÍNDICE -----")
-    for index in range(6):
-        fragment_key = f"fragment_{index}"
-        content = fragments.get(fragment_key, "")
-        is_error = isinstance(content, str) and content.startswith("ERROR")
-        
-        if is_error:
-            print(f"Índice {index}: ERROR - {content[:50]}...")
-            results["error_fragments"] += 1
-        elif not content:
-            print(f"Índice {index}: VACÍO")
-        else:
-            # Contar campos
-            field_count = 0
-            if isinstance(content, str):
-                lines = content.split('\n')
-                for line in lines:
-                    if '=' in line:
-                        field_count += 1
-                results["valid_fragments"] += 1
-            
-            print(f"Índice {index}: VÁLIDO - Contiene {field_count} campos")
-    
-    # Combinar todos los fragmentos
-    combined_text = ""
-    for i in range(6):
-        fragment_key = f"fragment_{i}"
-        if fragment_key in fragments and isinstance(fragments[fragment_key], str):
-            if not fragments[fragment_key].startswith("ERROR"):
-                combined_text += fragments[fragment_key] + "\n"
+    print("\n========== ANÁLISIS DE INFORMACIÓN MODBUS FC41 ==========")
     
     # Extraer todos los campos del texto combinado
     extracted_fields = {}
@@ -665,28 +392,28 @@ def analyze_modbus_indices(fragments):
     results["combined_fields"] = extracted_fields
     
     # Mostrar análisis del contenido combinado
-    print("\n----- ANÁLISIS DEL CONTENIDO COMBINADO -----")
+    print("\n----- ANÁLISIS DEL CONTENIDO -----")
     print(f"Total de campos encontrados: {len(extracted_fields)}")
     if field_previews:
-        print("\nCampos en el texto combinado:")
+        print("\nCampos encontrados:")
         for preview in field_previews:
             print(f"  • {preview}")
     
     # Verificar fecha de fabricación en el texto combinado
     if "Manufactured" in extracted_fields:
         raw_date = extracted_fields["Manufactured"]
-        print(f"\n¡IMPORTANTE! Fecha de fabricación en texto combinado:")
+        print(f"\n¡IMPORTANTE! Fecha de fabricación:")
         print(f"  • Valor: '{raw_date}'")
         print(f"  • Formato detectado: {detect_date_format(raw_date)}")
         normalized_date = normalize_manufacture_date(raw_date)
         if normalized_date != raw_date:
             print(f"  • Fecha normalizada: '{normalized_date}'")
     else:
-        print("\n¡ALERTA! No se encontró 'Manufactured=' en el texto combinado.")
+        print("\n¡ALERTA! No se encontró 'Manufactured=' en el texto.")
     
-    # Mostrar el texto combinado completo para referencia
-    print("\n----- TEXTO COMBINADO COMPLETO -----")
-    print(combined_text[:1000] + ("..." if len(combined_text) > 1000 else ""))
+    # Mostrar el texto combinado completo para referencia (limitado a 500 caracteres)
+    print("\n----- TEXTO COMPLETO (PRIMEROS 500 CARACTERES) -----")
+    print(combined_text[:500] + ("..." if len(combined_text) > 500 else ""))
     
     print("\n========== FIN DEL ANÁLISIS ==========")
     return results
@@ -758,3 +485,195 @@ def normalize_manufacture_date(date_str):
     
     # Para cualquier otro formato, devolver el original
     return date_str
+
+def authenticate_huawei_device(ser, slave_id):
+    """
+    Ejecuta la secuencia completa de tres pasos de autenticación para dispositivos Huawei.
+    
+    Args:
+        ser: Objeto de conexión serial activa
+        slave_id: ID del esclavo Modbus
+        
+    Returns:
+        bool: True si la autenticación fue exitosa, False si falló
+    """
+    print(f"INFO: Iniciando secuencia de autenticación de 3 pasos para dispositivo {slave_id}")
+    
+    # Paso 1: Comando de desbloqueo especial (FC03)
+    print("INFO: Paso 1: Enviando comando de desbloqueo (FC03 especial)")
+    message_step1 = bytearray([slave_id, 0x03, 0x01, 0x06, 0x00, 0x01])
+    crc = compute_crc16(message_step1)
+    request_step1 = message_step1 + crc
+
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
+    ser.write(request_step1)
+    print(f"DEBUG: Enviado Paso 1: {' '.join([f'{b:02x}' for b in request_step1])}")
+    time.sleep(0.2)
+    response_step1 = ser.read(7)
+    print(f"DEBUG: Paso 1 - Recibido (len={len(response_step1)}): {' '.join([f'{b:02x}' for b in response_step1])}")
+
+    if len(response_step1) != 7:
+        print(f"ERROR: Error Paso 1: Longitud inválida. Esperada: 7, Recibida: {len(response_step1)}")
+        return False
+    if response_step1[0] != slave_id or response_step1[1] != 0x03:
+        print(f"ERROR: Error Paso 1: ID/FC inválido. Esperado: {slave_id:02x} 03, Recibido: {response_step1[0]:02x} {response_step1[1]:02x}")
+        return False
+    if response_step1[2] != 0x02 or response_step1[3] != 0x00:
+        print(f"ERROR: Error Paso 1: Formato inesperado. Bytes[2,3] esperados: 02 00, Recibidos: {response_step1[2]:02x} {response_step1[3]:02x}")
+        return False
+    
+    print("INFO: Paso 1 completado exitosamente")
+    time.sleep(0.5)
+
+    # Paso 2: Sincronización de fecha/hora (FC10)
+    print("INFO: Paso 2: Enviando sincronización de fecha/hora (FC10)")
+    now = datetime.datetime.now()
+    message_step2 = bytearray([
+        slave_id, 0x10, 0x10, 0x00, 0x00, 0x06, 0x0C,
+        (now.year >> 8) & 0xFF, now.year & 0xFF,
+        0x00, now.month, 0x00, now.day, 0x00, now.hour,
+        0x00, now.minute, 0x00, now.second
+    ])
+    crc = compute_crc16(message_step2)
+    request_step2 = message_step2 + crc
+
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
+    ser.write(request_step2)
+    print(f"DEBUG: Enviado Paso 2: {now.isoformat()} : {' '.join([f'{b:02x}' for b in request_step2])}")
+    time.sleep(0.2)
+    response_step2 = ser.read(8)
+    print(f"DEBUG: Paso 2 - Recibido (len={len(response_step2)}): {' '.join([f'{b:02x}' for b in response_step2])}")
+
+    if len(response_step2) != 8 or response_step2[0] != slave_id or response_step2[1] != 0x10:
+        print(f"ERROR: Error Paso 2: Longitud/ID/FC inválido. Esperado: len=8, ID={slave_id:02x}, FC=10")
+        return False
+    if (response_step2[2] != 0x10 or response_step2[3] != 0x00 or response_step2[4] != 0x00 or response_step2[5] != 0x06):
+        print(f"ERROR: Error Paso 2: Formato inesperado. Bytes[2:6] esperados: 10 00 00 06")
+        return False
+    
+    print("INFO: Paso 2 completado exitosamente")
+    time.sleep(0.8)
+
+    # Paso 3: Validación de acceso (FC41 inicial)
+    print("INFO: Paso 3: Enviando validación de acceso (FC41 inicial)")
+    message_step3 = bytearray([slave_id, 0x41, 0x05, 0x01, 0x04])
+    crc = compute_crc16(message_step3)
+    request_step3 = message_step3 + crc
+
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
+    ser.write(request_step3)
+    print(f"DEBUG: Enviado Paso 3: {' '.join([f'{b:02x}' for b in request_step3])}")
+    time.sleep(0.3)
+    response_step3 = ser.read(12)
+    print(f"DEBUG: Paso 3 - Recibido (len={len(response_step3)}): {' '.join([f'{b:02x}' for b in response_step3])}")
+
+    if len(response_step3) < 9 or response_step3[0] != slave_id or response_step3[1] != 0x41:
+        print(f"ERROR: Error Paso 3: Longitud/ID/FC inválido. Esperado: len>=9, ID={slave_id:02x}, FC=41")
+        return False
+    if response_step3[2] != 0x05 or response_step3[3] != 0x06:
+        print(f"ERROR: Error Paso 3: Formato inesperado. Bytes[2,3] esperados: 05 06")
+        return False
+    
+    print("INFO: Secuencia de autenticación completada exitosamente")
+    return True
+
+def read_device_information(ser, slave_id):
+    """
+    Lee la información del dispositivo (FC41, índices 0-5).
+    
+    Args:
+        ser: Objeto de conexión serial autenticado
+        slave_id: ID del esclavo Modbus
+        
+    Returns:
+        dict: Información del dispositivo obtenida
+    """
+    print("INFO: Leyendo información del dispositivo tras autenticación (FC41, índices 0-5)")
+    
+    # Preparar contenedores para almacenar datos
+    raw_bytes_all = bytearray()
+    fragments = {}
+    
+    # Leer los 6 fragmentos de información (índices 0-5)
+    for index in range(6):
+        print(f"INFO: Leyendo información, índice {index}")
+        
+        # Crear mensaje para leer el fragmento actual
+        message = bytearray([slave_id, 0x41, 0x06, 0x03, 0x04, 0x00, index])
+        crc = compute_crc16(message)
+        request = message + crc
+
+        # Enviar solicitud y leer respuesta
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
+        ser.write(request)
+        print(f"DEBUG: Enviada solicitud FC41 para índice {index}")
+        time.sleep(0.3)
+        
+        # Leer la respuesta (cabecera + datos)
+        header = ser.read(7)
+        if len(header) < 7 or header[0] != slave_id or header[1] != 0x41:
+            print(f"WARNING: FC41 Índice {index}: Respuesta inválida o incompleta")
+            fragments[f"fragment_{index}"] = f"ERROR: Respuesta inválida"
+            time.sleep(0.5)
+            continue
+            
+        # Leer datos adicionales después de la cabecera
+        additional_data = ser.read(100)
+        full_response = header + additional_data
+        
+        # Extraer solo los bytes de datos (ignorando cabecera y CRC)
+        if len(full_response) > 9:
+            data_bytes = full_response[7:-2]
+            raw_bytes_all.extend(data_bytes)
+            print(f"INFO: Datos índice {index} leídos ({len(data_bytes)} bytes)")
+            fragments[f"fragment_{index}"] = f"DATOS LEÍDOS ({len(data_bytes)} bytes)"
+        else:
+            print(f"WARNING: FC41 Índice {index}: Respuesta sin suficientes datos")
+            fragments[f"fragment_{index}"] = f"ERROR: Respuesta corta"
+        
+        time.sleep(0.5)
+    
+    # Decodificar todos los bytes juntos
+    all_combined_text = ""
+    try:
+        all_combined_text = raw_bytes_all.decode('utf-8', errors='replace')
+        all_combined_text = ''.join(c if (ord(c) >= 32 and ord(c) <= 126) or c in ['\n', '\r', '\t'] else '' for c in all_combined_text)
+        print(f"INFO: Todos los bytes combinados decodificados exitosamente ({len(all_combined_text)} caracteres)")
+    except Exception as e:
+        print(f"WARNING: Error al decodificar todos los bytes combinados: {str(e)}")
+    
+    # Devolver la información obtenida
+    return {
+        "raw_bytes": raw_bytes_all,
+        "combined_text": all_combined_text, 
+        "fragments": fragments  # Para compatibilidad
+    }
+def update_device_cache(device_data):
+    """
+    Actualiza la caché con la información del dispositivo.
+    
+    Args:
+        device_data: Diccionario con la información del dispositivo
+        
+    Returns:
+        None
+    """
+    # Extraer datos
+    fragments = device_data.get("fragments", {})
+    combined_text = device_data.get("combined_text", "")
+    
+    # Analizar el texto combinado
+    parsed_info = parse_device_info_from_combined(combined_text)
+    
+    # Actualizar caché global
+    global device_info_cache
+    device_info_cache["is_authenticated"] = True
+    device_info_cache["fragments"] = fragments  # Mantener por compatibilidad
+    device_info_cache["combined_text"] = combined_text
+    device_info_cache["parsed_info"] = parsed_info
+    device_info_cache["timestamp"] = time.time()
+    device_info_cache["is_huawei"] = validate_device_manufacturer(parsed_info)

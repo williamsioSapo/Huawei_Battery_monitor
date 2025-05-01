@@ -103,6 +103,7 @@ def execute_read_device_info(slave_id, info_index):
     """
     Ejecuta la operación personalizada FC41 para leer info del dispositivo.
     Utiliza la caché cargada durante la autenticación.
+    Ahora devuelve una sección del texto combinado en lugar de fragmentos individuales.
     """
     if not is_client_connected():
         return {"status": "error", "message": "No hay conexión activa"}
@@ -118,35 +119,39 @@ def execute_read_device_info(slave_id, info_index):
             "message": cached_info.get("message", "Información no disponible")
         }
     
-    # Verificar que existe el fragmento solicitado
-    fragments = cached_info.get("fragments", {})
-    fragment_key = f"fragment_{info_index}"
-    
-    if fragment_key not in fragments:
+    # Obtener el texto combinado
+    combined_text = cached_info.get("combined_text", "")
+    if not combined_text:
         return {
             "status": "error",
-            "message": f"Índice {info_index} no disponible"
+            "message": "Información del dispositivo no disponible en caché"
         }
     
-    # Devolver el fragmento solicitado
-    fragment_data = fragments[fragment_key]
+    # Para mantener compatibilidad, dividimos el texto combinado en partes
+    # y devolvemos la parte solicitada según el índice
+    lines = combined_text.split('\n')
+    section_size = max(1, len(lines) // 6)  # Aproximadamente 6 secciones
     
-    # Verificar si es un mensaje de error
-    if fragment_data.startswith("ERROR"):
+    start_idx = info_index * section_size
+    end_idx = min(start_idx + section_size, len(lines))
+    
+    if start_idx >= len(lines):
         return {
             "status": "error",
-            "message": fragment_data
+            "message": f"Índice {info_index} fuera de rango"
         }
+    
+    # Extraer la sección solicitada
+    section_text = '\n'.join(lines[start_idx:end_idx])
     
     # Todo bien, devolver datos
     return {
         "status": "success",
         "index": info_index,
-        "ascii_data": fragment_data,
-        "raw_bytes": list(fragment_data.encode('utf-8', errors='ignore')),
+        "ascii_data": section_text,
+        "raw_bytes": list(section_text.encode('utf-8', errors='ignore')),
         "cached": True
     }
-
 # Nueva función para verificar datos de celdas individuales
 def verify_battery_cell_data(slave_id=217):
     """

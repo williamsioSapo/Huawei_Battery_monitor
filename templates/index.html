@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz Modbus RTU - Batería Huawei</title>
-    <!-- Enlace a la hoja de estilos CSS -->
+    <title>Interfaz Modbus RTU - Sistema de Baterías Huawei</title>
+    <!-- Enlace a hojas de estilos CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
     <!-- Favicon (opcional, pero evita el error 404 en consola) -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
@@ -35,7 +36,7 @@
     <!-- Contenedor Principal -->
     <div class="container">
         <header>
-            <h1>Interfaz Modbus RTU - Batería Huawei ESM-48150B1</h1>
+            <h1>Interfaz Modbus RTU - Sistema de Baterías Huawei ESM</h1>
             <div class="status-indicator disconnected" id="connectionStatus">
                 <span class="dot"></span>
                 <span class="text">Desconectado</span>
@@ -48,7 +49,7 @@
                 <h2>Configuración de Conexión</h2>
                 <div class="form-grid">
                     <div>
-                        <label for="slaveId">ID Batería:</label>
+                        <label for="slaveId">ID Batería Principal:</label>
                         <select id="slaveId">
                             <!-- Se poblará dinámicamente -->
                         </select>
@@ -101,15 +102,13 @@
                  <div class="message-area" id="connectionMessage"></div>
             </section>
 
-            <!-- Sección del Panel de Batería (Contenedor React) -->
+            <!-- Sección de Panel de Batería Individual (Original) -->
             <section id="battery-dashboard" class="section card" style="display: none;">
-                <h2>Panel de Control de Batería</h2>
+                <h2>Panel de Control de Batería Individual</h2>
 
                 <!-- Contenedor donde se montará el componente React -->
                 <div id="react-battery-panel">
                     <!-- React generará el contenido aquí -->
-                    <!-- Puedes poner un mensaje de "Cargando panel..." aquí si quieres -->
-                     <!-- <div class="message-area info" style="margin: 10px;">Cargando panel...</div> -->
                 </div>
 
                 <!-- Controles fuera del componente React -->
@@ -119,6 +118,18 @@
                     <button id="stopMonitoringBtn" disabled>Detener Monitoreo</button>
                 </div>
                 <div class="message-area" id="dashboardMessage"></div>
+            </section>
+
+            <!-- NUEVA SECCIÓN: Panel Multi-Batería -->
+            <section id="multi-battery-section" class="section card" style="display: none;">
+                <h2>Monitoreo de Múltiples Baterías</h2>
+                
+                <!-- Contenedor para el componente React de múltiples baterías -->
+                <div id="multi-battery-dashboard">
+                    <!-- React de multiBatteryDashboard.js se montará aquí -->
+                </div>
+                
+                <div class="message-area" id="multiBatteryMessage"></div>
             </section>
 
             <!-- Sección de Lectura -->
@@ -203,7 +214,6 @@
             <section id="device-info-section" class="section card" style="display: none;">
                 <h2>Información del Dispositivo (FC41 Cache)</h2>
                 <div class="button-group">
-                    <!-- El botón ahora obtiene info de /api/device_info manejado por main.js -->
                     <button id="readInfoBtn">Leer Info Dispositivo (Cache)</button>
                 </div>
                 <h3>Datos Obtenidos:</h3>
@@ -216,23 +226,28 @@
         </main>
     </div>
 
-    <!-- Scripts JavaScript -->
-    <!-- Librerías React y Babel (Importante: Cargar antes de tu código React) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+   <!-- Scripts JavaScript -->
+<!-- Librerías React y Babel -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-    <!-- Scripts de la aplicación (Orden Importante) -->
-    <!-- 1. API Helper (Usado por otros) -->
-    <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
-    <!-- 2. Componente React (Define window.updateBatteryPanel, necesita ejecutarse después del div#react-battery-panel) -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
-    <!-- 3. Lógica principal (Maneja conexión, usa API, dispara evento) -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <!-- 4. Lógica del Dashboard (Escucha evento, llama a updateBatteryPanel, usa API) -->
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    <!-- 5. Lógica de la Consola Web (ACTUALIZACIÓN: Ahora carga después de modbusApi.js para acceder a verifyCellData) -->
-    <script src="{{ url_for('static', filename='js/console.js') }}"></script>
+<!-- Scripts de la aplicación (Orden Importante) -->
+<!-- 1. API Helper -->
+<script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
+<!-- 2. Módulos refactorizados (NUEVOS) -->
+<script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
+<script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
+<!-- 3. Componente React para batería individual -->
+<script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
+<!-- 4. Componente React para múltiples baterías -->
+<script type="text/babel" src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
+<!-- 5. Lógica principal (ACTUALIZADO) -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- 6. Lógica del Dashboard individual -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<!-- 7. Lógica de la Consola Web -->
+<script src="{{ url_for('static', filename='js/console.js') }}"></script>
 
 </body>
 </html>

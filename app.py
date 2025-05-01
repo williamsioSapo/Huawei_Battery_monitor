@@ -5,10 +5,10 @@ import threading
 import time
 from collections import deque
 from flask import Flask, render_template, request, jsonify
-
+from modbus_app.battery_monitor import BatteryMonitor
 # Cola circular para almacenar los últimos mensajes (limitada a 500 mensajes)
 console_messages = deque(maxlen=500)
-
+battery_monitor = BatteryMonitor()
 # Importar funciones de los módulos separados
 from modbus_app.operations import execute_read_operation, execute_write_operation, execute_read_device_info, verify_battery_cell_data
 # CORRECCIÓN: Importar correctamente las funciones de client
@@ -190,7 +190,70 @@ def verify_cells_api():
             "has_temp_data": result.get("cell_temps_raw") is not None
         }
     })
+@app.route('/api/batteries/start_monitoring', methods=['POST'])
+def start_battery_monitoring():
+    """Endpoint para iniciar el monitoreo de múltiples baterías."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus"
+        })
+    
+    data = request.json
+    battery_ids = data.get('battery_ids', [])
+    
+    if not battery_ids:
+        # Si no se especifican IDs, obtener todas las disponibles
+        from modbus_app import config_manager
+        battery_info = config_manager.get_available_batteries()
+        battery_ids = battery_info.get('batteries', [])
+    
+    if not battery_ids:
+        return jsonify({
+            "status": "error",
+            "message": "No hay baterías disponibles para monitorizar"
+        })
+    
+    # Iniciar monitoreo con los IDs seleccionados
+    success = battery_monitor.start_polling(battery_ids)
+    
+    return jsonify({
+        "status": "success" if success else "error",
+        "message": f"Monitoreo iniciado para {len(battery_ids)} baterías" if success else "El monitoreo ya está activo",
+        "battery_ids": battery_ids
+    })
 
+@app.route('/api/batteries/stop_monitoring', methods=['POST'])
+def stop_battery_monitoring():
+    """Endpoint para detener el monitoreo de baterías."""
+    success = battery_monitor.stop_polling()
+    return jsonify({
+        "status": "success" if success else "warning",
+        "message": "Monitoreo de baterías detenido" if success else "No había monitoreo activo"
+    })
+
+@app.route('/api/batteries/status', methods=['GET'])
+def get_all_batteries_status():
+    """Endpoint para obtener el estado de todas las baterías monitorizadas."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus",
+            "batteries": []
+        })
+    
+    return jsonify(battery_monitor.get_all_battery_status())
+
+@app.route('/api/batteries/status/<int:battery_id>', methods=['GET'])
+def get_battery_status(battery_id):
+    """Endpoint para obtener el estado de una batería específica."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus"
+        })
+    
+    return jsonify(battery_monitor.get_battery_status(battery_id))
 # CORRECCIÓN: Implementar get_device_info
 def get_device_info():
     """

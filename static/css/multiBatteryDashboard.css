@@ -1,0 +1,400 @@
+/* static/css/multiBatteryDashboard.css */
+
+/* Estilos para el dashboard de baterías múltiples */
+.multi-battery-dashboard {
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.start-btn, .stop-btn, .refresh-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.start-btn {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.start-btn:hover {
+    background-color: #27ae60;
+}
+
+.stop-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.stop-btn:hover {
+    background-color: #c0392b;
+}
+
+.refresh-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+.refresh-btn:hover {
+    background-color: #2980b9;
+}
+
+.view-filters {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.view-filters span {
+    margin-right: 8px;
+    font-weight: 500;
+}
+
+.view-filters select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Sistema Overview */
+.system-overview {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.system-overview h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.system-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.metric {
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+}
+
+.metric-label {
+    font-size: 0.8em;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.metric-value.critical {
+    color: #e74c3c;
+}
+
+.metric-value.warning {
+    color: #f39c12;
+}
+
+.metric-value.charging {
+    color: #2ecc71;
+}
+
+.metric-value.discharging {
+    color: #e67e22;
+}
+
+/* Grid de mini-paneles de baterías */
+.batteries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.battery-mini-panel {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.battery-mini-panel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.battery-mini-panel.critical {
+    border-left: 4px solid #e74c3c;
+}
+
+.battery-mini-panel.warning {
+    border-left: 4px solid #f39c12;
+}
+
+.battery-mini-panel.charging {
+    border-left: 4px solid #2ecc71;
+}
+
+.battery-mini-panel.discharging {
+    border-left: 4px solid #e67e22;
+}
+
+.battery-mini-panel.error {
+    border-left: 4px solid #7f8c8d;
+    background-color: #f7f7f7;
+}
+
+.mini-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.battery-id {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95em;
+}
+
+.battery-status {
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+}
+
+.battery-status.charging {
+    background-color: #2ecc71;
+}
+
+.battery-status.discharging {
+    background-color: #e67e22;
+}
+
+.battery-status.critical {
+    background-color: #e74c3c;
+}
+
+.battery-status.warning {
+    background-color: #f39c12;
+}
+
+.battery-status.normal {
+    background-color: #3498db;
+}
+
+.battery-status.error {
+    background-color: #7f8c8d;
+}
+
+.mini-panel-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+}
+
+.mini-metric {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-label {
+    font-size: 0.7em;
+    color: #7f8c8d;
+    margin-bottom: 2px;
+}
+
+.mini-value {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95em;
+}
+
+.no-data-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.error-message {
+    background-color: #feeaea;
+    color: #e74c3c;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #f4c0c0;
+}
+
+/* Ventana modal para vista detallada de batería */
+.battery-detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.battery-detail-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.detail-body {
+    padding: 20px;
+}
+
+.detail-section {
+    margin-bottom: 25px;
+}
+
+.detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #34495e;
+    font-size: 1.1em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-grid, .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-item, .detail-metric {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label, .detail-metric .metric-label {
+    font-size: 0.8em;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.info-value, .detail-metric .metric-value {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.raw-values {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+    overflow-x: auto;
+    margin-top: 5px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .control-buttons {
+        margin-top: 10px;
+    }
+    
+    .view-filters {
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .system-metrics {
+        flex-direction: column;
+    }
+    
+    .metric {
+        width: 100%;
+    }
+    
+    .batteries-grid {
+        grid-template-columns: 1fr;
+    }
+}
