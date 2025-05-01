@@ -1,12 +1,14 @@
 # modbus_app/client.py
 import sys
 from pymodbus.client import ModbusSerialClient
-from . import device_info
 import importlib
 
 # Variable global para mantener la instancia del cliente
 modbus_client_instance = None
 _is_connected = False  # Variable auxiliar para rastrear el estado de conexión
+
+# Importar solo lo que necesitamos de device_info
+from .device_info import connection_params
 
 # Determinar la versión de pymodbus
 def get_pymodbus_version():
@@ -26,16 +28,15 @@ def get_client():
 def connect_client(port, baudrate, parity, stopbits, bytesize, timeout):
     """ Crea y conecta un cliente Modbus Serial RTU. Cierra la conexión anterior si existe. """
     global modbus_client_instance, _is_connected
-    from . import device_info  # Importar aquí para evitar importación circular
+    
     # Guardar parámetros para uso futuro
-    device_info.connection_params = {
-        'port': port,
-        'baudrate': baudrate,
-        'parity': parity,
-        'stopbits': stopbits,
-        'bytesize': bytesize,
-        'timeout': timeout
-    }
+    connection_params['port'] = port
+    connection_params['baudrate'] = baudrate
+    connection_params['parity'] = parity
+    connection_params['stopbits'] = stopbits
+    connection_params['bytesize'] = bytesize
+    connection_params['timeout'] = timeout
+    
     # Cerrar conexión previa si existe
     if is_client_connected():
         disconnect_client()
@@ -117,7 +118,9 @@ def disconnect_client():
         except Exception as e:
             print(f"Error al desconectar: {e}")
         finally:
-            device_info.reset_device_info()  # Limpiar caché de información
+            # Importación retrasada para evitar ciclo
+            from .device_info import reset_device_info
+            reset_device_info()  # Limpiar caché de información
             modbus_client_instance = None
             _is_connected = False
             return True
@@ -217,5 +220,6 @@ def get_device_info():
             "message": "No hay conexión activa con el dispositivo"
         }
         
-    # Obtener información almacenada en caché
-    return device_info.get_cached_device_info()
+    # Obtener información almacenada en caché - importación retrasada para evitar ciclo
+    from .device_info import get_cached_device_info
+    return get_cached_device_info()
