@@ -96,3 +96,18 @@ function getAllBatteriesStatus() {
 function getBatteryStatus(batteryId) {
     return apiRequest(`/api/batteries/status/${batteryId}`, 'GET');
 }
+
+// Función para iniciar la carga de información detallada
+function loadBatteriesDetailedInfo(batteryIds = []) {
+    return apiRequest('/api/batteries/load_detailed_info', 'POST', { battery_ids: batteryIds });
+}
+
+// Función para verificar el estado de la carga de información detallada
+function getDetailedInfoLoadingStatus() {
+    return apiRequest('/api/batteries/detailed_info_status', 'GET');
+}
+
+// Función para obtener la información detallada de una batería específica
+function getBatteryDetailedInfo(batteryId) {
+    return apiRequest(`/api/batteries/detailed_info/${batteryId}`, 'GET');
+}

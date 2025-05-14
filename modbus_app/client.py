@@ -7,8 +7,15 @@ import importlib
 modbus_client_instance = None
 _is_connected = False  # Variable auxiliar para rastrear el estado de conexión
 
-# Importar solo lo que necesitamos de device_info
-from .device_info import connection_params
+# Definición propia de connection_params para evitar dependencia circular
+connection_params = {
+    'port': None,
+    'baudrate': 9600,
+    'parity': 'N',
+    'stopbits': 1,
+    'bytesize': 8,
+    'timeout': 1.0
+}
 
 # Determinar la versión de pymodbus
 def get_pymodbus_version():
@@ -27,7 +34,7 @@ def get_client():
 
 def connect_client(port, baudrate, parity, stopbits, bytesize, timeout):
     """ Crea y conecta un cliente Modbus Serial RTU. Cierra la conexión anterior si existe. """
-    global modbus_client_instance, _is_connected
+    global modbus_client_instance, _is_connected, connection_params
     
     # Guardar parámetros para uso futuro
     connection_params['port'] = port
@@ -73,39 +80,6 @@ def connect_client(port, baudrate, parity, stopbits, bytesize, timeout):
         modbus_client_instance = None # Limpiar en caso de excepción
         return False, f"Excepción al conectar: {str(e)}"
         
-def wake_up_device(slave_id=217, max_attempts=10):
-    """Intenta despertar el dispositivo leyendo el registro de voltaje (registro 0)."""
-    global modbus_client_instance
-    
-    if not is_client_connected() or not modbus_client_instance:
-        print("No hay conexión activa para despertar el dispositivo")
-        return False
-        
-    print(f"Iniciando secuencia de despertar para dispositivo {slave_id}...")
-    
-    for attempt in range(1, max_attempts + 1):
-        try:
-            print(f"Intento {attempt} de despertar el dispositivo...")
-            # Leer registro 0 (voltaje)
-            result = modbus_client_instance.read_holding_registers(address=0, count=1, slave=slave_id)
-            
-            if not result.isError():
-                voltage = result.registers[0] * 0.01  # Factor de conversión
-                print(f"Dispositivo despertó! Voltaje actual: {voltage:.2f}V")
-                return True
-            else:
-                print(f"Intento {attempt}: Error en lectura - {result}")
-        except Exception as e:
-            print(f"Intento {attempt}: Excepción - {str(e)}")
-        
-        # Aumentar el tiempo de espera progresivamente
-        wait_time = attempt * 1.5  # 1.5, 3, 4.5, 6, 7.5 segundos
-        print(f"Esperando {wait_time:.1f}s antes del siguiente intento...")
-        import time
-        time.sleep(wait_time)
-    
-    print("No se pudo despertar el dispositivo después de múltiples intentos")
-    return False
     
 def disconnect_client():
     """ Cierra la conexión Modbus si está activa. """
@@ -119,7 +93,7 @@ def disconnect_client():
             print(f"Error al desconectar: {e}")
         finally:
             # Importación retrasada para evitar ciclo
-            from .device_info import reset_device_info
+            from modbus_app.device_info.device_cache import reset_device_info
             reset_device_info()  # Limpiar caché de información
             modbus_client_instance = None
             _is_connected = False
@@ -206,10 +180,10 @@ def is_client_connected():
         _is_connected = False
         return False
 
-# CORRECCIÓN: Implementación de get_device_info
+# Función para obtener información del dispositivo desde caché
 def get_device_info():
     """
-    Función para obtener información del dispositivo desde caché.
+    Función para obtener información del dispositivo desde el inicializador.
     
     Returns:
         dict: Información del dispositivo o error
@@ -220,6 +194,19 @@ def get_device_info():
             "message": "No hay conexión activa con el dispositivo"
         }
         
-    # Obtener información almacenada en caché - importación retrasada para evitar ciclo
-    from .device_info import get_cached_device_info
-    return get_cached_device_info()
+    try:
+        # Obtener ID de batería activo
+        from modbus_app import config_manager
+        slave_id = config_manager.get_default_slave_id()
+        
+        # Obtener información desde el inicializador
+        from modbus_app.battery_initializer import BatteryInitializer
+        initializer = BatteryInitializer.get_instance()
+        battery_info = initializer.get_battery_info(slave_id)
+        return battery_info
+    except Exception as e:
+        print(f"Error al obtener información del dispositivo: {str(e)}")
+        return {
+            "status": "error",
+            "message": f"Error al obtener información de la batería: {str(e)}"
+        }

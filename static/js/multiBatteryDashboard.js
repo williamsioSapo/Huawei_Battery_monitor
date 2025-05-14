@@ -17,6 +17,12 @@ const MultiBatteryDashboard = (props) => {
     const [viewFilter, setViewFilter] = React.useState('all'); // 'all', 'active', 'charging', 'discharging', 'critical'
     // Estado para carga inicial
     const [isInitialLoading, setIsInitialLoading] = React.useState(props && props.initialLoading ? props.initialLoading : false);
+    // Estado para la información detallada
+    const [detailedInfo, setDetailedInfo] = React.useState(null);
+    // Estado para indicar si se está cargando la información detallada
+    const [loadingDetailedInfo, setLoadingDetailedInfo] = React.useState(false);
+    // Estado para el progreso de carga
+    const [loadingProgress, setLoadingProgress] = React.useState(props && props.loadingProgress ? props.loadingProgress : null);
 
     // Efecto para manejar props externos (forceUpdate, error, etc.)
     React.useEffect(() => {
@@ -44,13 +50,38 @@ const MultiBatteryDashboard = (props) => {
             setIsInitialLoading(props.initialLoading);
             console.log("MultiBatteryDashboard: Actualizando estado de carga inicial:", props.initialLoading);
         }
+
+        // Si recibimos loadingProgress, actualizar estado
+        if (props && props.loadingProgress) {
+            setLoadingProgress(props.loadingProgress);
+            console.log("MultiBatteryDashboard: Actualizando progreso de carga:", props.loadingProgress);
+            
+            // Si está cargando, verificar estado periódicamente
+            if (!loadingProgress) {
+                checkLoadingProgress();
+            }
+        }
     }, [props]);
+
+    // Efecto para cargar la información detallada cuando se selecciona una batería
+    React.useEffect(() => {
+        if (selectedBattery !== null) {
+            loadBatteryDetailedInfo(selectedBattery);
+        }
+    }, [selectedBattery]);
 
     // Función para iniciar el monitoreo
     const startMonitoring = async () => {
         try {
             setError(null);
             setIsInitialLoading(true);
+            
+            // Verificar si hay una carga en progreso
+            const loadingStatus = await getDetailedInfoLoadingStatus();
+            if (loadingStatus.status === 'success' && loadingStatus.loading_active) {
+                setLoadingProgress(loadingStatus.progress);
+                checkLoadingProgress();  // Iniciar verificación periódica
+            }
             
             console.log("MultiBatteryDashboard: Iniciando monitoreo...");
             const response = await fetch('/api/batteries/start_monitoring', {
@@ -129,6 +160,28 @@ const MultiBatteryDashboard = (props) => {
         }
     };
 
+    // Función para verificar el progreso de carga de información detallada
+    const checkLoadingProgress = async () => {
+        try {
+            const result = await getDetailedInfoLoadingStatus();
+            
+            if (result.status === 'success') {
+                setLoadingProgress(result.progress);
+                
+                // Si la carga está activa, programar otra verificación
+                if (result.loading_active) {
+                    setTimeout(checkLoadingProgress, 2000);
+                } else {
+                    // Si la carga ha terminado, actualizar baterías
+                    updateBatteriesData();
+                    setLoadingProgress(null);
+                }
+            }
+        } catch (error) {
+            console.error("Error al verificar progreso de carga:", error);
+        }
+    };
+
     // Función para actualizar datos de todas las baterías
     const updateBatteriesData = async () => {
         try {
@@ -158,6 +211,26 @@ const MultiBatteryDashboard = (props) => {
         } catch (err) {
             console.error('MultiBatteryDashboard: Error al actualizar datos de baterías:', err);
             setError(`Error al actualizar: ${err.message}`);
+        }
+    };
+
+    // Función para cargar la información detallada de una batería
+    const loadBatteryDetailedInfo = async (batteryId) => {
+        try {
+            setLoadingDetailedInfo(true);
+            const result = await getBatteryDetailedInfo(batteryId);
+            
+            if (result.status === 'success' && result.detailed_info) {
+                setDetailedInfo(result.detailed_info);
+            } else {
+                console.warn(`No se pudo obtener información detallada para batería ${batteryId}: ${result.message}`);
+                setDetailedInfo(null);
+            }
+        } catch (error) {
+            console.error(`Error al cargar información detallada para batería ${batteryId}:`, error);
+            setDetailedInfo(null);
+        } finally {
+            setLoadingDetailedInfo(false);
         }
     };
 
@@ -283,159 +356,27 @@ const MultiBatteryDashboard = (props) => {
         );
     };
 
-    // Renderizar un mini-panel de batería individual
-    const renderBatteryMiniPanel = (batteryData) => {
-        if (!batteryData) return null;
-        
-        const statusClass = getBatteryStatusClass(batteryData);
-        
-        // Obtener el nombre de la batería de manera segura
-        let customName = `Batería ${batteryData.id}`;
-        if (batteryData.device_info && batteryData.device_info.custom_name) {
-            customName = batteryData.device_info.custom_name;
-        }
-        
-        return (
-            <div 
-                key={batteryData.id}
-                className={`battery-mini-panel ${statusClass}`}
-                onClick={() => showBatteryDetail(batteryData.id)}
-            >
-                <div className="mini-panel-header">
-                    <span className="battery-id">{customName}</span>
-                    <span className={`battery-status ${statusClass}`}>{batteryData.status || 'N/A'}</span>
-                </div>
-                <div className="mini-panel-body">
-                    <div className="mini-metric">
-                        <span className="mini-label">SOC:</span>
-                        <span className="mini-value">{batteryData.soc !== undefined ? batteryData.soc : 'N/A'}%</span>
-                    </div>
-                    <div className="mini-metric">
-                        <span className="mini-label">Volt:</span>
-                        <span className="mini-value">
-                            {batteryData.voltage !== undefined ? batteryData.voltage.toFixed(2) : 'N/A'}V
-                        </span>
-                    </div>
-                    <div className="mini-metric">
-                        <span className="mini-label">Corriente:</span>
-                        <span className="mini-value">
-                            {batteryData.current !== undefined ? batteryData.current.toFixed(2) : 'N/A'}A
-                        </span>
-                    </div>
-                </div>
-            </div>
-        );
+    // Obtener la batería seleccionada para la vista detallada
+    const getSelectedBatteryData = () => {
+        if (selectedBattery === null) return null;
+        return batteriesData.find(b => b.id === selectedBattery);
     };
 
-    // Renderizar vista detallada de una batería
-    const renderBatteryDetailView = () => {
-        if (selectedBattery === null) return null;
+    // Renderizar el indicador de progreso de carga
+    const renderLoadingProgress = () => {
+        if (!loadingProgress) return null;
         
-        // Encontrar la batería seleccionada en los datos
-        const batteryData = batteriesData.find(b => b.id === selectedBattery);
-        if (!batteryData) return null;
-        
-        // Obtener el nombre de la batería de manera segura
-        let customName = `Batería ${batteryData.id}`;
-        if (batteryData.device_info && batteryData.device_info.custom_name) {
-            customName = batteryData.device_info.custom_name;
-        }
-        
-        // Obtener datos del dispositivo de manera segura
-        const manufacturer = batteryData.device_info && batteryData.device_info.manufacturer ? 
-                             batteryData.device_info.manufacturer : 'N/A';
-        const model = batteryData.device_info && batteryData.device_info.model ? 
-                      batteryData.device_info.model : 'N/A';
-        const discoveryDate = batteryData.device_info && batteryData.device_info.discovery_date ? 
-                              batteryData.device_info.discovery_date : 'N/A';
+        const { total, completed, current_battery } = loadingProgress;
+        const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
         
         return (
-            <div className="battery-detail-modal">
-                <div className="battery-detail-content">
-                    <div className="detail-header">
-                        <h3>{customName}</h3>
-                        <button className="close-btn" onClick={closeBatteryDetail}>×</button>
-                    </div>
-                    <div className="detail-body">
-                        <div className="detail-section">
-                            <h4>Información de la Batería</h4>
-                            <div className="info-grid">
-                                <div className="info-item">
-                                    <span className="info-label">ID:</span>
-                                    <span className="info-value">{batteryData.id}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="info-label">Fabricante:</span>
-                                    <span className="info-value">{manufacturer}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="info-label">Modelo:</span>
-                                    <span className="info-value">{model}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="info-label">Descubierto:</span>
-                                    <span className="info-value">{discoveryDate}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="detail-section">
-                            <h4>Métricas Actuales</h4>
-                            <div className="metrics-grid">
-                                <div className="detail-metric">
-                                    <span className="metric-label">Estado:</span>
-                                    <span className={`metric-value ${getBatteryStatusClass(batteryData)}`}>
-                                        {batteryData.status || 'N/A'}
-                                    </span>
-                                </div>
-                                <div className="detail-metric">
-                                    <span className="metric-label">SOC:</span>
-                                    <span className={`metric-value ${batteryData.soc < 20 ? 'critical' : batteryData.soc < 40 ? 'warning' : ''}`}>
-                                        {batteryData.soc !== undefined ? batteryData.soc : 'N/A'}%
-                                    </span>
-                                </div>
-                                <div className="detail-metric">
-                                    <span className="metric-label">SOH:</span>
-                                    <span className="metric-value">
-                                        {batteryData.soh !== undefined ? batteryData.soh : 'N/A'}%
-                                    </span>
-                                </div>
-                                <div className="detail-metric">
-                                    <span className="metric-label">Voltaje:</span>
-                                    <span className="metric-value">
-                                        {batteryData.voltage !== undefined ? batteryData.voltage.toFixed(2) : 'N/A'} V
-                                    </span>
-                                </div>
-                                <div className="detail-metric">
-                                    <span className="metric-label">Voltaje Pack:</span>
-                                    <span className="metric-value">
-                                        {batteryData.pack_voltage !== undefined ? batteryData.pack_voltage.toFixed(2) : 'N/A'} V
-                                    </span>
-                                </div>
-                                <div className="detail-metric">
-                                    <span className="metric-label">Corriente:</span>
-                                    <span className={`metric-value ${batteryData.current > 0 ? 'charging' : batteryData.current < 0 ? 'discharging' : ''}`}>
-                                        {batteryData.current !== undefined ? batteryData.current.toFixed(2) : 'N/A'} A
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="detail-section">
-                            <h4>Información Técnica</h4>
-                            <div className="tech-info">
-                                <div className="info-item">
-                                    <span className="info-label">Última Actualización:</span>
-                                    <span className="info-value">{formatTimestamp(batteryData.last_updated)}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="info-label">Valores Crudos:</span>
-                                    <pre className="raw-values">{JSON.stringify(batteryData.raw_values, null, 2)}</pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div className="loading-progress">
+                <h3>Cargando información detallada de baterías...</h3>
+                <div className="progress-bar-container">
+                    <div className="progress-bar" style={{ width: `${percent}%` }}></div>
                 </div>
+                <p>{completed} de {total} baterías completadas ({percent}%)</p>
+                {current_battery && <p>Procesando batería ID: {current_battery}</p>}
             </div>
         );
     };
@@ -480,27 +421,49 @@ const MultiBatteryDashboard = (props) => {
                 </div>
             )}
             
+            {/* Indicador de progreso de carga */}
+            {loadingProgress && renderLoadingProgress()}
+            
             {isInitialLoading ? 
-                React.createElement("div", { className: "loading-container" },
-                    React.createElement("p", null, "Cargando datos de baterías...")
-                ) : 
-                React.createElement("div", null, // Usar div en lugar de fragmento
-                    renderSystemOverview(),
+                <div className="loading-container">
+                    <p>Cargando datos de baterías...</p>
+                </div> : 
+                <div>
+                    {renderSystemOverview()}
                     
-                    React.createElement("div", { className: "batteries-grid" },
-                        batteriesData.length === 0 ? 
-                            React.createElement("div", { className: "no-data-message" },
-                                "No hay datos de baterías disponibles. ", 
-                                isMonitoring ? 'Esperando datos...' : 'Inicie el monitoreo para comenzar.'
-                            ) : 
+                    <div className="batteries-grid">
+                        {batteriesData.length === 0 ? 
+                            <div className="no-data-message">
+                                No hay datos de baterías disponibles. 
+                                {isMonitoring ? 'Esperando datos...' : 'Inicie el monitoreo para comenzar.'}
+                            </div> : 
                             batteriesData
                                 .filter(shouldShowBattery)
-                                .map(batteryData => renderBatteryMiniPanel(batteryData))
-                    )
-                )
+                                .map(batteryData => {
+                                    // Usar el componente BatteryMiniPanel
+                                    const statusClass = getBatteryStatusClass(batteryData);
+                                    return <window.BatteryMiniPanel 
+                                        key={batteryData.id}
+                                        batteryData={batteryData}
+                                        statusClass={statusClass}
+                                        onClick={() => showBatteryDetail(batteryData.id)}
+                                    />;
+                                })
+                        }
+                    </div>
+                </div>
             }
             
-            {renderBatteryDetailView()}
+            {/* Usar el componente existente para la vista detallada */}
+            {selectedBattery !== null && window.BatteryDetailView && 
+                <window.BatteryDetailView 
+                    batteryData={getSelectedBatteryData()}
+                    detailedInfo={detailedInfo}
+                    loadingDetailedInfo={loadingDetailedInfo}
+                    onClose={closeBatteryDetail}
+                    getBatteryStatusClass={getBatteryStatusClass}
+                />
+            }
         </div>
     );
 };

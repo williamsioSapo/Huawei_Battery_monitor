@@ -5,7 +5,7 @@ Proporciona una API de alto nivel que utiliza los otros módulos.
 """
 
 import time
-from .device_cache import get_cached_device_info, reset_device_info
+from .device_cache import get_cached_device_info, reset_device_info, device_info_cache
 from .device_communication import authenticate_device
 
 # Mantener una referencia al cliente para uso dentro del módulo
@@ -14,27 +14,55 @@ client = None
 def authenticate_and_read_device_info(slave_id=217):
     """
     Función completa que realiza la autenticación y lectura de información.
+    
+    Modificada para trabajar con diferentes IDs de batería sin interferir con la conexión principal.
     """
-    global client
     # Importación retrasada para evitar ciclo
-    from modbus_app.client import get_client, is_client_connected
+    from modbus_app.client import get_client
     client = get_client()
     
     print(f"INFO: Iniciando proceso completo de autenticación y lectura para slave {slave_id}")
-    reset_device_info() # Ya usa print
-    auth_success = authenticate_device(slave_id) # Ya usa print
+    
+    # Importación retrasada para evitar ciclo
+    from .device_cache import device_info_cache as current_cache
+    from .device_cache import reset_device_info, get_cached_device_info
+    
+    # Guardar el estado actual antes de modificar
+    original_cache = current_cache.copy()
+    
+    # Resetear para esta lectura específica
+    reset_device_info()
+    
+    # Realizar autenticación y lectura para este ID específico
+    from .device_communication import authenticate_device
+    auth_success = authenticate_device(slave_id)
 
     if not auth_success:
-         # --- Reemplazo de logger.error ---
         print("ERROR: Fallo en la secuencia de autenticación/lectura directa.")
+        
+        # Restaurar el estado original
+        from .device_cache import device_info_cache
+        # Restaurar el estado original completo
+        for key, value in original_cache.items():
+            device_info_cache[key] = value
+        
         return {
-            "status": "error", "message": "Fallo en la autenticación o lectura inicial del dispositivo.",
-            "is_authenticated": False, "is_huawei": False
+            "status": "error", 
+            "message": f"Fallo en la autenticación o lectura inicial de la batería {slave_id}.",
+            "is_authenticated": False, 
+            "is_huawei": False
         }
 
-     
     print("INFO: Autenticación/lectura directa exitosa. Obteniendo info de caché.")
-    return get_cached_device_info() # Ya usa print
+    result = get_cached_device_info()
+    
+    # Restaurar el estado original después de obtener la información
+    from .device_cache import device_info_cache
+    # Restaurar el estado original completo
+    for key, value in original_cache.items():
+        device_info_cache[key] = value
+    
+    return result
 
 def get_default_slave_id():
     """Obtiene el ID de esclavo predeterminado de la configuración."""

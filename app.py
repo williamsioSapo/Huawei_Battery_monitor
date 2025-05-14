@@ -6,13 +6,19 @@ import time
 from collections import deque
 from flask import Flask, render_template, request, jsonify
 from modbus_app.battery_monitor import BatteryMonitor
+from modbus_app.battery_initializer import BatteryInitializer
+from modbus_app.authentication_status import (
+    format_all_batteries_status_for_api,
+    format_battery_status_for_api,
+    reset_battery_status
+)
 # Cola circular para almacenar los últimos mensajes (limitada a 500 mensajes)
 console_messages = deque(maxlen=500)
 battery_monitor = BatteryMonitor()
 # Importar funciones de los módulos separados
 from modbus_app.operations import execute_read_operation, execute_write_operation, execute_read_device_info, verify_battery_cell_data
 # CORRECCIÓN: Importar correctamente las funciones de client
-from modbus_app.client import connect_client, disconnect_client, is_client_connected, wake_up_device, get_device_info
+from modbus_app.client import connect_client, disconnect_client, is_client_connected, get_device_info
 # CORRECCIÓN: También importamos device_info para acceder a get_cached_device_info
 from modbus_app import device_info
 
@@ -57,6 +63,25 @@ def list_batteries_api():
     from modbus_app import config_manager  # Nuevo módulo a crear
     return jsonify(config_manager.get_available_batteries())
 
+@app.route('/api/auth_status', methods=['GET'])
+def get_auth_status():
+    """Endpoint para obtener el estado de autenticación de todas las baterías."""
+    return jsonify(format_all_batteries_status_for_api())
+
+@app.route('/api/auth_status/<int:battery_id>', methods=['GET'])
+def get_battery_auth_status(battery_id):
+    """Endpoint para obtener el estado de autenticación de una batería específica."""
+    return jsonify(format_battery_status_for_api(battery_id))
+
+@app.route('/api/auth_status/<int:battery_id>/reset', methods=['POST'])
+def reset_auth_status(battery_id):
+    """Endpoint para reiniciar el estado de autenticación de una batería."""
+    reset_battery_status(battery_id)
+    return jsonify({
+        "status": "success",
+        "message": f"Estado de autenticación para batería {battery_id} reiniciado"
+    })
+
 @app.route('/api/connect', methods=['POST'])
 def connect_api():
     """ Endpoint para conectar al dispositivo Modbus. """
@@ -67,34 +92,68 @@ def connect_api():
     stopbits = int(data.get('stopbits', 1))
     bytesize = int(data.get('bytesize', 8))
     timeout = int(data.get('timeout', 1))
-    slave_id = int(data.get('slaveId', device_info.get_default_slave_id()))
-
-    # Paso 1: Conectar al puerto serial
-    success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
-    if not success:
-        return jsonify({"status": "error", "message": message})
     
-    # Paso 2: Despertar dispositivo
-    if not wake_up_device(slave_id=slave_id):
-        disconnect_client()  # Desconectar antes de devolver error
+    # Obtener el ID de esclavo predeterminado en lugar de usar el proporcionado
+    from modbus_app import config_manager
+    battery_info = config_manager.get_available_batteries()
+    
+    # 1. Inicialización a bajo nivel primero
+    print("Iniciando proceso de inicialización a bajo nivel para baterías...")
+    initializer = BatteryInitializer(
+        port=port, 
+        baudrate=baudrate, 
+        parity=parity, 
+        stopbits=stopbits, 
+        bytesize=bytesize, 
+        timeout=timeout
+    )
+    
+    # Guardar instancia globalmente
+    BatteryInitializer.set_instance(initializer)
+    
+    # Obtener todos los IDs de baterías disponibles
+    battery_ids = battery_info.get('batteries', [])
+    if not battery_ids:
         return jsonify({
-            "status": "warning", 
-            "message": "Conectado, pero el dispositivo no responde o no ha despertado"
+            "status": "error", 
+            "message": "No hay baterías configuradas para inicializar"
         })
     
-    # Paso 3: Autenticar para acceso a FC41 (incluye lectura de información)
-    print("Iniciando autenticación para acceso a funciones avanzadas...")
-    auth_result = device_info.authenticate_and_read_device_info(slave_id)
+    # Inicializar todas las baterías configuradas
+    init_result = initializer.initialize_batteries(battery_ids)
     
-    if auth_result.get("status") == "success":
-        status = "success"
-        message = "Conectado y autenticado correctamente. Información del dispositivo cargada."
+    if init_result["status"] == "error":
+        return jsonify({
+            "status": "error",
+            "message": f"Error en la inicialización de baterías: {init_result.get('message', 'Error desconocido')}"
+        })
+    
+    # 2. Ahora, conectar con PyModbus para operaciones normales
+    print("Inicialización a bajo nivel completada. Conectando cliente PyModbus...")
+    success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
+    
+    if not success:
+        return jsonify({"status": "error", "message": f"Error al conectar PyModbus: {message}"})
+    
+    # 3. Preparar respuesta combinada
+    response_status = "success"
+    if init_result["status"] == "partial":
+        response_status = "warning"
+        response_message = f"{init_result.get('message', '')}. Cliente PyModbus conectado correctamente."
     else:
-        status = "warning"
-        message = auth_result.get("message", "Conectado pero la autenticación falló.")
+        response_message = f"Baterías inicializadas y cliente PyModbus conectado correctamente."
     
-    return jsonify({"status": status, "message": message})
+    # Iniciar carga de información detallada en segundo plano
+    print("Iniciando carga de información detallada para todas las baterías...")
+    battery_monitor.load_all_detailed_info()
     
+    return jsonify({
+        "status": response_status, 
+        "message": response_message,
+        "loading_detailed_info": True,  # Indicar que se está cargando información detallada
+        "initialized_batteries": init_result.get("initialized_count", 0),
+        "total_batteries": len(battery_ids)
+    })
 @app.route('/api/disconnect', methods=['POST'])
 def disconnect_api():
     """ Endpoint para desconectar del dispositivo Modbus. """
@@ -254,6 +313,69 @@ def get_battery_status(battery_id):
         })
     
     return jsonify(battery_monitor.get_battery_status(battery_id))
+@app.route('/api/batteries/load_detailed_info', methods=['POST'])
+def load_batteries_detailed_info():
+    """Endpoint para iniciar la carga de información detallada de todas las baterías."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus"
+        })
+    
+    data = request.json
+    battery_ids = data.get('battery_ids', [])
+    
+    # Si no se especifican IDs, obtener todas las disponibles
+    if not battery_ids:
+        battery_ids = None  # El método load_all_detailed_info lo manejará
+    
+    # Iniciar carga en segundo plano
+    success = battery_monitor.load_all_detailed_info(battery_ids)
+    
+    return jsonify({
+        "status": "success" if success else "error",
+        "message": "Carga de información detallada iniciada" if success else "La carga ya está en progreso o no hay baterías disponibles"
+    })
+
+@app.route('/api/batteries/detailed_info_status', methods=['GET'])
+def get_batteries_detailed_info_status():
+    """Endpoint para verificar el estado de la carga de información detallada."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus"
+        })
+    
+    loading_status = battery_monitor.get_detailed_info_loading_status()
+    
+    return jsonify({
+        "status": "success",
+        "loading_active": loading_status.get("active", False),
+        "progress": loading_status.get("progress", {})
+    })
+
+@app.route('/api/batteries/detailed_info/<int:battery_id>', methods=['GET'])
+def get_battery_detailed_info(battery_id):
+    """Endpoint para obtener la información detallada de una batería específica."""
+    if not is_client_connected():
+        return jsonify({
+            "status": "error",
+            "message": "No hay conexión activa con el bus Modbus"
+        })
+    
+    detailed_info = battery_monitor.get_battery_detailed_info(battery_id)
+    
+    if not detailed_info:
+        return jsonify({
+            "status": "error",
+            "message": f"No hay información detallada disponible para la batería {battery_id}"
+        })
+    
+    return jsonify({
+        "status": "success",
+        "battery_id": battery_id,
+        "detailed_info": detailed_info
+    })
 # CORRECCIÓN: Implementar get_device_info
 def get_device_info():
     """
@@ -262,6 +384,8 @@ def get_device_info():
         dict: Información del dispositivo o mensaje de error
     """
     return device_info.get_cached_device_info()
+
+
 
 if __name__ == '__main__':
     # Asegúrate de que la ruta a tus plantillas y archivos estáticos es correcta

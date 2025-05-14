@@ -54,6 +54,9 @@ const ConnectionHandler = (function() {
         // Mostrar mensaje de conexión
         showConnectionMessage('Conectando...', 'info');
         
+        // Mostrar monitor de autenticación durante el proceso
+        showAuthMonitor();
+        
         let connectSuccess = false;
         try {
             // Usar la función de modbusApi.js
@@ -63,16 +66,41 @@ const ConnectionHandler = (function() {
             // Considerar éxito si status es 'success' o 'warning'
             if (result.status === 'success' || result.status === 'warning') {
                 connectSuccess = true;
+                
+                // NUEVO: Si se está cargando información detallada, mostrar mensaje
+                if (result.loading_detailed_info) {
+                    showConnectionMessage(
+                        'Conectado. Cargando información detallada de todas las baterías en segundo plano...',
+                        'info'
+                    );
+                }
+                
+                // NUEVO: Después de conectar, cambiar a vista multi-batería automáticamente
+                if (typeof window.UiManager !== 'undefined' && typeof window.UiManager.switchView === 'function') {
+                    setTimeout(() => {
+                        window.UiManager.switchView('multi');
+                    }, 500);  // Pequeño retraso para asegurar que la conexión esté completamente establecida
+                }
             }
         } catch (error) {
             showConnectionMessage(`Error: ${error.message}`, 'error');
             connectSuccess = false;
+            // Ocultar monitor en caso de error
+            hideAuthMonitor();
         } finally {
             // Actualizar estado interno
             isConnected = connectSuccess;
             
             // Disparar evento para notificar del cambio de estado
             dispatchConnectionEvent(connectSuccess);
+            
+            // Si conectado exitosamente, dejar el monitor visible un poco más
+            if (connectSuccess) {
+                // Dejar el monitor visible por unos segundos más
+                setTimeout(() => {
+                    hideAuthMonitor();
+                }, 5000);
+            }
         }
     }
     
@@ -87,6 +115,10 @@ const ConnectionHandler = (function() {
         elements.disconnectBtn.disabled = true;
         
         showConnectionMessage('Desconectando...', 'info');
+        
+        // Ocultar monitor si está visible durante la desconexión
+        hideAuthMonitor();
+        
         try {
             // Usar la función de modbusApi.js
             const result = await disconnectModbus();
@@ -193,6 +225,30 @@ const ConnectionHandler = (function() {
         } catch (error) {
             console.error('Error al verificar estado de conexión:', error);
             return false;
+        }
+    }
+    
+    /**
+     * Muestra el monitor de autenticación
+     * @private
+     */
+    function showAuthMonitor() {
+        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.show) {
+            window.AuthMonitor.show();
+            console.log("Monitor de autenticación activado");
+        } else {
+            console.warn("Monitor de autenticación no disponible");
+        }
+    }
+
+    /**
+     * Oculta el monitor de autenticación
+     * @private
+     */
+    function hideAuthMonitor() {
+        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.hide) {
+            window.AuthMonitor.hide();
+            console.log("Monitor de autenticación desactivado");
         }
     }
     

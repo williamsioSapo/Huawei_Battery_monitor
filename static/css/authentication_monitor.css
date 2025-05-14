@@ -1,0 +1,176 @@
+/* static/css/authentication_monitor.css */
+
+.auth-monitor {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 15px 0;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-monitor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.auth-monitor-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #e74c3c;
+}
+
+.auth-monitor-loading,
+.auth-monitor-empty {
+    padding: 20px;
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.auth-monitor-list {
+    padding: 10px;
+}
+
+.auth-monitor-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.auth-monitor-table th,
+.auth-monitor-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.auth-monitor-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+}
+
+.auth-row {
+    transition: background-color 0.3s;
+}
+
+.auth-row:hover {
+    background-color: #f1f5f9;
+}
+
+.battery-id {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.phase {
+    position: relative;
+    width: 100px;
+}
+
+.phase-indicator {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.phase-label {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+/* Estados de fases */
+.phase.success {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+}
+
+.phase.in-progress {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #2980b9;
+    animation: pulse 1.5s infinite;
+}
+
+.phase.failed {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+}
+
+.phase.not-started {
+    color: #7f8c8d;
+}
+
+/* Estado global */
+.status {
+    font-weight: 600;
+}
+
+.status.success {
+    color: #27ae60;
+}
+
+.status.in-progress {
+    color: #2980b9;
+}
+
+.status.failed {
+    color: #c0392b;
+}
+
+.status.waiting {
+    color: #7f8c8d;
+}
+
+/* Animación de pulso para estados en progreso */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Estilos para hacerlo responsivo */
+@media (max-width: 768px) {
+    .auth-monitor-table {
+        font-size: 13px;
+    }
+    
+    .phase {
+        width: 70px;
+    }
+    
+    .phase-label {
+        max-width: 70px;
+    }
+}

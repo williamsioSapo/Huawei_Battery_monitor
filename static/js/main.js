@@ -485,3 +485,42 @@ function initMultiBatteryIntegration() {
     
     console.log("Main.js: initMultiBatteryIntegration - completado.");
 }
+function checkDetailedInfoLoading() {
+    // Verificar si hay una carga de información detallada en progreso
+    if (typeof getDetailedInfoLoadingStatus === 'function') {
+        getDetailedInfoLoadingStatus().then(result => {
+            if (result.status === 'success' && result.loading_active) {
+                console.log("Main.js: Detectada carga de información detallada en progreso");
+                
+                // Si hay una carga en progreso y estamos en la vista multi-batería,
+                // actualizar el estado de progreso
+                if (window.UiManager && window.UiManager.getCurrentView() === 'multi' && 
+                    typeof window.updateMultiBatteryDashboard === 'function') {
+                    
+                    window.updateMultiBatteryDashboard({
+                        loadingProgress: result.progress
+                    });
+                }
+                
+                // Programar otra verificación
+                setTimeout(checkDetailedInfoLoading, 2000);
+            }
+        }).catch(error => {
+            console.error("Error al verificar estado de carga:", error);
+        });
+    }
+}
+
+// Modificar initConnectionHandler para iniciar la verificación
+function initConnectionHandler(elements) {
+    if (typeof window.ConnectionHandler === 'undefined') {
+        console.error("Main.js: Error crítico - ConnectionHandler no encontrado");
+        return;
+    }
+    
+    console.log("Main.js: Inicializando ConnectionHandler");
+    window.ConnectionHandler.init(elements);
+    
+    // Iniciar verificación de carga de información detallada
+    setTimeout(checkDetailedInfoLoading, 1000);
+}

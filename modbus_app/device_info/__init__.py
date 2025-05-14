@@ -26,14 +26,23 @@ from .device_communication import (
     read_device_information
 )
 
-# Importar y reexportar elementos de device_info_manager.py
-from .device_info_manager import (
-    authenticate_and_read_device_info,
-    get_default_slave_id,
-    analyze_modbus_indices
-)
-
-# De este modo, el código que antes hacía:
-# from modbus_app import device_info
-# device_info.get_cached_device_info()
-# seguirá funcionando sin cambios
+# Importar y reexportar elementos de device_info_manager.py usando try/except
+# para evitar problemas si hay dependencias circulares
+try:
+    from .device_info_manager import (
+        authenticate_and_read_device_info,
+        get_default_slave_id,
+        analyze_modbus_indices
+    )
+except ImportError:
+    print("Advertencia: Algunas funciones de device_info_manager no pudieron importarse")
+    # Proporcionar stubs vacíos para las funciones que no se pudieron importar
+    def authenticate_and_read_device_info(slave_id=217):
+        raise NotImplementedError("Función no disponible debido a error de importación")
+        
+    def get_default_slave_id():
+        from modbus_app.config_manager import get_default_slave_id as get_config_default_slave_id
+        return get_config_default_slave_id()
+        
+    def analyze_modbus_indices(fragments=None):
+        raise NotImplementedError("Función no disponible debido a error de importación")

@@ -7,10 +7,12 @@
     <!-- Enlace a hojas de estilos CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/authentication_monitor.css') }}">
     <!-- Favicon (opcional, pero evita el error 404 en consola) -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
+    <div id="auth-monitor-container" class="auth-monitor-container"></div>
 	<!-- Botón de consola persistente -->
 	<div class="console-toggle-button" id="consoleToggleBtn">
 		<i class="console-icon">⚙️</i> Consola
@@ -101,7 +103,6 @@
                 </div>
                  <div class="message-area" id="connectionMessage"></div>
             </section>
-
             <!-- Sección de Panel de Batería Individual (Original) -->
             <section id="battery-dashboard" class="section card" style="display: none;">
                 <h2>Panel de Control de Batería Individual</h2>
@@ -226,7 +227,7 @@
         </main>
     </div>
 
-   <!-- Scripts JavaScript -->
+  <!-- Scripts JavaScript -->
 <!-- Librerías React y Babel -->
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -240,13 +241,18 @@
 <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
 <!-- 3. Componente React para batería individual -->
 <script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
-<!-- 4. Componente React para múltiples baterías -->
+<!-- 4. Componente BatteryMiniPanel (NUEVO) -->
+<script type="text/babel" src="{{ url_for('static', filename='js/batteryMiniPanel.js') }}"></script>
+<!-- 5. Componente BatteryDetailView -->
+<script type="text/babel" src="{{ url_for('static', filename='js/batteryDetailView.js') }}"></script>
+<!-- 6. Componente React para múltiples baterías -->
 <script type="text/babel" src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
-<!-- 5. Lógica principal (ACTUALIZADO) -->
+<script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
+<!-- 7. Lógica principal (ACTUALIZADO) -->
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-<!-- 6. Lógica del Dashboard individual -->
+<!-- 8. Lógica del Dashboard individual -->
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-<!-- 7. Lógica de la Consola Web -->
+<!-- 9. Lógica de la Consola Web -->
 <script src="{{ url_for('static', filename='js/console.js') }}"></script>
 
 </body>
