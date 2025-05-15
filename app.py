@@ -10,7 +10,10 @@ from modbus_app.battery_initializer import BatteryInitializer
 from modbus_app.authentication_status import (
     format_all_batteries_status_for_api,
     format_battery_status_for_api,
-    reset_battery_status
+    reset_battery_status,
+    all_batteries_authenticated,
+    get_failed_batteries,
+    authentication_is_complete
 )
 # Cola circular para almacenar los últimos mensajes (limitada a 500 mensajes)
 console_messages = deque(maxlen=500)
@@ -34,6 +37,28 @@ class ConsoleCapturer(io.StringIO):
 # Reemplazar sys.stdout para capturar todos los print()
 original_stdout = sys.stdout
 sys.stdout = ConsoleCapturer()
+
+# Función para verificar si la autenticación está completa
+def verify_authentication_complete():
+    """
+    Verifica si todas las baterías están correctamente autenticadas.
+    Si no están autenticadas, prepara una respuesta de error.
+    
+    Returns:
+        dict or None: Respuesta de error JSON o None si la autenticación está completa
+    """
+    if not all_batteries_authenticated():
+        failed_batteries = get_failed_batteries()
+        battery_list = ", ".join([str(b) for b in failed_batteries]) if failed_batteries else "desconocidas"
+        
+        return {
+            "status": "error",
+            "message": f"Operación no permitida: Algunas baterías no están autenticadas ({battery_list})",
+            "auth_requires_action": True,
+            "failed_batteries": failed_batteries
+        }
+    
+    return None
 
 # Endpoint para obtener los mensajes de consola
 @app.route('/api/console', methods=['GET'])
@@ -125,7 +150,9 @@ def connect_api():
     if init_result["status"] == "error":
         return jsonify({
             "status": "error",
-            "message": f"Error en la inicialización de baterías: {init_result.get('message', 'Error desconocido')}"
+            "message": f"Error en la inicialización de baterías: {init_result.get('message', 'Error desconocido')}",
+            "show_auth_monitor": True,
+            "auth_requires_action": True
         })
     
     # 2. Ahora, conectar con PyModbus para operaciones normales
@@ -136,12 +163,22 @@ def connect_api():
         return jsonify({"status": "error", "message": f"Error al conectar PyModbus: {message}"})
     
     # 3. Preparar respuesta combinada
-    response_status = "success"
-    if init_result["status"] == "partial":
+    # Verificar si todas las autenticaciones están completas y exitosas
+    auth_complete = authentication_is_complete()
+    all_auth = all_batteries_authenticated()
+    failed_batteries = get_failed_batteries()
+    
+    # Determinar el estado general y mensaje
+    if init_result["status"] == "partial" or not all_auth:
         response_status = "warning"
-        response_message = f"{init_result.get('message', '')}. Cliente PyModbus conectado correctamente."
+        if failed_batteries:
+            battery_list = ", ".join([str(b) for b in failed_batteries])
+            response_message = f"Algunas baterías fallaron en la inicialización ({battery_list}). Cliente PyModbus conectado."
+        else:
+            response_message = "Algunas baterías no completaron la inicialización. Cliente PyModbus conectado."
     else:
-        response_message = f"Baterías inicializadas y cliente PyModbus conectado correctamente."
+        response_status = "success"
+        response_message = "Baterías inicializadas y cliente PyModbus conectado correctamente."
     
     # Iniciar carga de información detallada en segundo plano
     print("Iniciando carga de información detallada para todas las baterías...")
@@ -150,10 +187,49 @@ def connect_api():
     return jsonify({
         "status": response_status, 
         "message": response_message,
-        "loading_detailed_info": True,  # Indicar que se está cargando información detallada
+        "show_auth_monitor": not all_auth,
+        "auth_requires_action": not all_auth,
+        "auth_complete": auth_complete,
+        "all_authenticated": all_auth,
+        "failed_batteries": failed_batteries,
+        "loading_detailed_info": True,
         "initialized_batteries": init_result.get("initialized_count", 0),
         "total_batteries": len(battery_ids)
     })
+
+# Nuevo endpoint para reintentar baterías específicas
+@app.route('/api/retry_initialize_battery/<int:battery_id>', methods=['POST'])
+def retry_initialize_battery_api(battery_id):
+    """
+    Endpoint para reintentar la inicialización de una batería específica.
+    """
+    try:
+        # Verificar que el inicializador existe
+        initializer = BatteryInitializer.get_instance()
+        
+        # Reintentar inicialización
+        result = initializer.retry_initialize_battery(battery_id)
+        
+        # Verificar estado general de autenticación después del reintento
+        all_auth = all_batteries_authenticated()
+        failed_batteries = get_failed_batteries()
+        
+        # Incluir información adicional en la respuesta
+        result.update({
+            "all_authenticated": all_auth,
+            "failed_batteries": failed_batteries,
+            "auth_requires_action": not all_auth
+        })
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"Error al reintentar inicialización: {str(e)}",
+            "all_authenticated": False,
+            "auth_requires_action": True
+        })
+
 @app.route('/api/disconnect', methods=['POST'])
 def disconnect_api():
     """ Endpoint para desconectar del dispositivo Modbus. """
@@ -173,6 +249,11 @@ def status_api():
 @app.route('/api/read', methods=['POST'])
 def read_api():
     """ Endpoint para realizar lecturas Modbus estándar. """
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     data = request.json
     slave_id = int(data.get('slaveId', 1))
     function = data.get('function', 'holding')
@@ -185,6 +266,11 @@ def read_api():
 @app.route('/api/write', methods=['POST'])
 def write_api():
     """ Endpoint para realizar escrituras Modbus estándar. """
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     data = request.json
     slave_id = int(data.get('slaveId', 1))
     function = data.get('function', 'holding')
@@ -197,6 +283,11 @@ def write_api():
 @app.route('/api/read_device_info', methods=['POST'])
 def read_device_info_api():
     """ Endpoint para leer información del dispositivo usando FC41. """
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     data = request.json
     slave_id = int(data.get('slaveId', 217))  # CORRECCIÓN: valor por defecto 217
     info_index = int(data.get('index', 0))
@@ -224,6 +315,11 @@ def verify_cells_api():
     Endpoint para verificar datos de celdas individuales.
     Solo imprime los resultados en la consola para diagnóstico.
     """
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     if not is_client_connected():
         return jsonify({
             "status": "error",
@@ -252,6 +348,11 @@ def verify_cells_api():
 @app.route('/api/batteries/start_monitoring', methods=['POST'])
 def start_battery_monitoring():
     """Endpoint para iniciar el monitoreo de múltiples baterías."""
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     if not is_client_connected():
         return jsonify({
             "status": "error",
@@ -285,6 +386,11 @@ def start_battery_monitoring():
 @app.route('/api/batteries/stop_monitoring', methods=['POST'])
 def stop_battery_monitoring():
     """Endpoint para detener el monitoreo de baterías."""
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     success = battery_monitor.stop_polling()
     return jsonify({
         "status": "success" if success else "warning",
@@ -293,7 +399,7 @@ def stop_battery_monitoring():
 
 @app.route('/api/batteries/status', methods=['GET'])
 def get_all_batteries_status():
-    """Endpoint para obtener el estado de todas las baterías monitorizadas."""
+    """Endpoint para obtener el estado de todas las baterías monitoreadas."""
     if not is_client_connected():
         return jsonify({
             "status": "error",
@@ -301,7 +407,33 @@ def get_all_batteries_status():
             "batteries": []
         })
     
-    return jsonify(battery_monitor.get_all_battery_status())
+    # Obtener el estado de las baterías
+    battery_status = battery_monitor.get_all_battery_status()
+    
+    # Añadir información del dispositivo desde config.json
+    if battery_status["status"] == "success" and battery_status["batteries"]:
+        from modbus_app import config_manager
+        config = config_manager.load_config()
+        discovered_devices = config.get("application", {}).get("discovered_devices", [])
+        
+        for battery in battery_status["batteries"]:
+            # Buscar el dispositivo correspondiente en la configuración
+            device_info = None
+            for device in discovered_devices:
+                if device.get("id") == battery["id"]:
+                    device_info = {
+                        "manufacturer": "Huawei",  # Asumimos Huawei ya que el sistema es específico
+                        "model": device.get("type", "ESM Battery"),
+                        "custom_name": device.get("custom_name", f"Batería {battery['id']}"),
+                        "discovery_date": device.get("discovery_date", "N/A"),
+                        "last_seen": device.get("last_seen", "N/A")
+                    }
+                    break
+            
+            # Añadir device_info al objeto de batería
+            battery["device_info"] = device_info
+    
+    return jsonify(battery_status)
 
 @app.route('/api/batteries/status/<int:battery_id>', methods=['GET'])
 def get_battery_status(battery_id):
@@ -312,10 +444,41 @@ def get_battery_status(battery_id):
             "message": "No hay conexión activa con el bus Modbus"
         })
     
-    return jsonify(battery_monitor.get_battery_status(battery_id))
+    # Obtener el estado de la batería
+    result = battery_monitor.get_battery_status(battery_id)
+    
+    # Añadir información del dispositivo desde config.json
+    if result["status"] == "success" and result["battery_data"]:
+        from modbus_app import config_manager
+        config = config_manager.load_config()
+        discovered_devices = config.get("application", {}).get("discovered_devices", [])
+        
+        # Buscar el dispositivo correspondiente en la configuración
+        device_info = None
+        for device in discovered_devices:
+            if device.get("id") == battery_id:
+                device_info = {
+                    "manufacturer": "Huawei",  # Asumimos Huawei ya que el sistema es específico
+                    "model": device.get("type", "ESM Battery"),
+                    "custom_name": device.get("custom_name", f"Batería {battery_id}"),
+                    "discovery_date": device.get("discovery_date", "N/A"),
+                    "last_seen": device.get("last_seen", "N/A")
+                }
+                break
+        
+        # Añadir device_info al objeto de batería
+        result["battery_data"]["device_info"] = device_info
+    
+    return jsonify(result)
+    
 @app.route('/api/batteries/load_detailed_info', methods=['POST'])
 def load_batteries_detailed_info():
     """Endpoint para iniciar la carga de información detallada de todas las baterías."""
+    # Verificar autenticación completa
+    auth_error = verify_authentication_complete()
+    if auth_error:
+        return jsonify(auth_error)
+        
     if not is_client_connected():
         return jsonify({
             "status": "error",

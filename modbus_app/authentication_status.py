@@ -249,6 +249,7 @@ def format_battery_status_for_api(battery_id):
         
         return api_status
 
+
 def format_all_batteries_status_for_api():
     """
     Formatea el estado de todas las baterías para la API.
@@ -268,3 +269,59 @@ def format_all_batteries_status_for_api():
             'batteries': all_batteries,
             'timestamp': time.time()
         }
+
+def all_batteries_authenticated():
+    """
+    Verifica si todas las baterías registradas están correctamente autenticadas.
+    
+    Returns:
+        bool: True si todas las baterías están autenticadas, False si alguna falló
+    """
+    with status_lock:
+        # Si no hay baterías registradas, consideramos que no hay autenticación completa
+        if not authentication_status:
+            return False
+            
+        # Verificar si alguna batería tiene estado fallido
+        for battery_id, status in authentication_status.items():
+            if status['state'] == GLOBAL_STATES['FAILED']:
+                return False
+            # También considerar incompleto si alguna no ha terminado
+            if status['state'] != GLOBAL_STATES['SUCCESS']:
+                return False
+                
+        # Si llegamos aquí, todas las baterías están en estado SUCCESS
+        return True
+
+def get_failed_batteries():
+    """
+    Obtiene la lista de baterías que fallaron en la autenticación.
+    
+    Returns:
+        list: Lista de IDs de baterías que fallaron
+    """
+    with status_lock:
+        failed_batteries = []
+        
+        for battery_id, status in authentication_status.items():
+            if status['state'] == GLOBAL_STATES['FAILED']:
+                failed_batteries.append(battery_id)
+                
+        return failed_batteries
+
+def authentication_is_complete():
+    """
+    Verifica si el proceso de autenticación ha terminado para todas las baterías.
+    
+    Returns:
+        bool: True si todos los procesos han terminado (éxito o fracaso), False si alguno sigue en progreso
+    """
+    with status_lock:
+        if not authentication_status:
+            return False
+            
+        for battery_id, status in authentication_status.items():
+            if status['state'] == GLOBAL_STATES['WAITING'] or status['state'] == GLOBAL_STATES['IN_PROGRESS']:
+                return False
+                
+        return True

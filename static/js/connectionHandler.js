@@ -67,19 +67,43 @@ const ConnectionHandler = (function() {
             if (result.status === 'success' || result.status === 'warning') {
                 connectSuccess = true;
                 
+                // NUEVO: Actualizar estado de autenticación en UiManager
+                if (typeof window.UiManager !== 'undefined' && 
+                    typeof window.UiManager.updateAuthenticationStatus === 'function') {
+                    window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
+                }
+                
+                // NUEVO: Mantener monitor visible si se requiere acción
+                if (result.auth_requires_action) {
+                    console.log("Manteniendo monitor de autenticación visible - se requiere acción para baterías fallidas");
+                    
+                    // Notificar a AuthMonitor que se requiere acción
+                    if (window.AuthMonitor && window.AuthMonitor.setRequiresAction) {
+                        window.AuthMonitor.setRequiresAction(
+                            result.auth_requires_action, 
+                            result.failed_batteries || []
+                        );
+                    }
+                } else {
+                    // Ocultar después de un tiempo si no se requiere acción
+                    setTimeout(() => {
+                        hideAuthMonitor();
+                    }, 5000);
+                }
+                
+                // NUEVO: Solo cambiar a vista múltiple si todas las baterías están autenticadas
+                if (result.all_authenticated && typeof window.UiManager !== 'undefined') {
+                    setTimeout(() => {
+                        window.UiManager.switchView('multi');
+                    }, 500);
+                }
+                
                 // NUEVO: Si se está cargando información detallada, mostrar mensaje
                 if (result.loading_detailed_info) {
                     showConnectionMessage(
                         'Conectado. Cargando información detallada de todas las baterías en segundo plano...',
                         'info'
                     );
-                }
-                
-                // NUEVO: Después de conectar, cambiar a vista multi-batería automáticamente
-                if (typeof window.UiManager !== 'undefined' && typeof window.UiManager.switchView === 'function') {
-                    setTimeout(() => {
-                        window.UiManager.switchView('multi');
-                    }, 500);  // Pequeño retraso para asegurar que la conexión esté completamente establecida
                 }
             }
         } catch (error) {
@@ -93,14 +117,6 @@ const ConnectionHandler = (function() {
             
             // Disparar evento para notificar del cambio de estado
             dispatchConnectionEvent(connectSuccess);
-            
-            // Si conectado exitosamente, dejar el monitor visible un poco más
-            if (connectSuccess) {
-                // Dejar el monitor visible por unos segundos más
-                setTimeout(() => {
-                    hideAuthMonitor();
-                }, 5000);
-            }
         }
     }
     
@@ -252,8 +268,66 @@ const ConnectionHandler = (function() {
         }
     }
     
+    /**
+     * Reintenta la inicialización de una batería específica
+     * @param {number} batteryId - ID de la batería a reintentar
+     * @returns {Promise} - Promesa que se resuelve con el resultado del reintento
+     */
+    function retryBatteryInitialization(batteryId) {
+        if (!batteryId) return Promise.reject(new Error("No se especificó ID de batería"));
+        
+        return new Promise(async (resolve, reject) => {
+            try {
+                showConnectionMessage(`Reintentando inicialización de batería ${batteryId}...`, 'info');
+                
+                const response = await fetch(`/api/retry_initialize_battery/${batteryId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showConnectionMessage(result.message, 'success');
+                    
+                    // NUEVO: Actualizar estado de autenticación en UiManager
+                    if (typeof window.UiManager !== 'undefined' && 
+                        typeof window.UiManager.updateAuthenticationStatus === 'function') {
+                        window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
+                    }
+                    
+                    // Si todas las baterías están autenticadas, ocultar monitor y cambiar vista
+                    if (result.all_authenticated) {
+                        setTimeout(() => {
+                            hideAuthMonitor();
+                            
+                            // Cambiar a vista multi-batería
+                            if (typeof window.UiManager !== 'undefined') {
+                                window.UiManager.switchView('multi');
+                            }
+                        }, 3000);
+                    }
+                    
+                    resolve(result);
+                } else {
+                    showConnectionMessage(result.message, 'error');
+                    reject(new Error(result.message));
+                }
+            } catch (error) {
+                showConnectionMessage(`Error al reintentar: ${error.message}`, 'error');
+                reject(error);
+            }
+        });
+    }
+    
     // API pública
-    return {
+    const publicAPI = {
         /**
          * Inicializa el módulo de conexión
          * @param {Object} domElements - Referencias a elementos DOM necesarios
@@ -311,8 +385,20 @@ const ConnectionHandler = (function() {
                 isConnected = connected;
                 dispatchConnectionEvent(connected);
             }
-        }
+        },
+        
+        /**
+         * Reintenta la inicialización de una batería específica
+         * @param {number} batteryId - ID de la batería a reintentar
+         * @returns {Promise} - Promesa que se resuelve con el resultado del reintento
+         */
+        retryBatteryInitialization: retryBatteryInitialization
     };
+    
+    // También exportar la función de reintento a window para uso global
+    window.retryBatteryInitialization = retryBatteryInitialization;
+    
+    return publicAPI;
 })();
 
 // Exportar para uso global

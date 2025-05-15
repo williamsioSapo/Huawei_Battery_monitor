@@ -46,18 +46,33 @@ const UiManager = (function() {
         
         // Mostrar/ocultar secciones basado en estado de conexión
         if (connected) {
-            // Solo mostrar una vista activa a la vez (single o multi)
-            if (sections.batteryDashboardSection) {
-                sections.batteryDashboardSection.style.display = currentView === 'single' ? 'block' : 'none';
+            // MODIFICADO: Solo mostrar una vista activa a la vez (single o multi)
+            // y solo si todas las baterías están autenticadas
+            if (window.allBatteriesAuthenticated) {
+                if (sections.batteryDashboardSection) {
+                    sections.batteryDashboardSection.style.display = currentView === 'single' ? 'block' : 'none';
+                }
+                if (sections.multiBatterySection) {
+                    sections.multiBatterySection.style.display = currentView === 'multi' ? 'block' : 'none';
+                }
+                
+                // Mostrar siempre estas secciones cuando hay conexión y autenticación completa
+                if (sections.readSection) sections.readSection.style.display = 'block';
+                if (sections.writeSection) sections.writeSection.style.display = 'block';
+                if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'block';
+            } else {
+                // Si no están todas autenticadas, no mostrar nada
+                if (sections.batteryDashboardSection) sections.batteryDashboardSection.style.display = 'none';
+                if (sections.multiBatterySection) sections.multiBatterySection.style.display = 'none';
+                if (sections.readSection) sections.readSection.style.display = 'none';
+                if (sections.writeSection) sections.writeSection.style.display = 'none';
+                if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'none';
+                
+                // Mostrar el monitor de autenticación si está disponible
+                if (window.AuthMonitor && window.AuthMonitor.show) {
+                    window.AuthMonitor.show();
+                }
             }
-            if (sections.multiBatterySection) {
-                sections.multiBatterySection.style.display = currentView === 'multi' ? 'block' : 'none';
-            }
-            
-            // Mostrar siempre estas secciones cuando hay conexión
-            if (sections.readSection) sections.readSection.style.display = 'block';
-            if (sections.writeSection) sections.writeSection.style.display = 'block';
-            if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'block';
         } else {
             // Ocultar todas las secciones que requieren conexión
             if (sections.batteryDashboardSection) sections.batteryDashboardSection.style.display = 'none';
@@ -169,6 +184,18 @@ const UiManager = (function() {
     function switchView(viewType) {
         console.log(`UiManager: switchView - Cambiando a vista: ${viewType}`);
         
+        // NUEVO: Verificar si todas las baterías están autenticadas
+        if (!window.allBatteriesAuthenticated) {
+            console.log("UiManager: switchView - No se puede cambiar vista porque no todas las baterías están autenticadas");
+            
+            // Mostrar el monitor de autenticación
+            if (window.AuthMonitor && window.AuthMonitor.show) {
+                window.AuthMonitor.show();
+            }
+            
+            return;
+        }
+        
         // Verificar si hay conexión activa
         if (!window.ConnectionHandler || !window.ConnectionHandler.isConnected()) {
             console.log("UiManager: switchView - No se puede cambiar la vista porque no hay conexión activa");
@@ -273,6 +300,22 @@ const UiManager = (function() {
         }, 5000);
     }
     
+    /**
+     * Actualiza el estado de autenticación de todas las baterías
+     * @param {boolean} allAuthenticated - true si todas las baterías están autenticadas, false si no
+     */
+    function updateAuthenticationStatus(allAuthenticated) {
+        console.log(`UiManager: updateAuthenticationStatus - Todas autenticadas: ${allAuthenticated}`);
+        
+        // Guardar estado global
+        window.allBatteriesAuthenticated = allAuthenticated;
+        
+        // Actualizar UI basada en el nuevo estado
+        if (window.ConnectionHandler && window.ConnectionHandler.isConnected()) {
+            updateConnectionUI(true);
+        }
+    }
+    
     // API pública
     return {
         /**
@@ -290,6 +333,9 @@ const UiManager = (function() {
             
             // Establecer estado inicial como desconectado
             updateConnectionUI(false);
+            
+            // Inicializar estado de autenticación
+            window.allBatteriesAuthenticated = false;
             
             // Escuchar eventos de cambio de estado de conexión
             document.addEventListener('connection-status-change', (e) => {
@@ -323,6 +369,12 @@ const UiManager = (function() {
         updateConnectionStatus: function(connected) {
             updateConnectionUI(connected);
         },
+        
+        /**
+         * Actualiza el estado de autenticación de todas las baterías
+         * @param {boolean} allAuthenticated - true si todas las baterías están autenticadas, false si no
+         */
+        updateAuthenticationStatus: updateAuthenticationStatus,
         
         /**
          * Muestra un mensaje en un elemento específico

@@ -7,8 +7,8 @@ de las baterías, antes de pasar a operaciones normales con PyModbus.
 
 import time
 import datetime
-import serial
 import struct
+import serial
 import threading
 import logging
 from modbus_app.authentication_status import update_phase_status, PHASE_STATES
@@ -784,6 +784,50 @@ class BatteryInitializer:
             list: Lista de IDs de baterías inicializadas
         """
         return list(self.initialized_batteries)
+    
+    # NUEVO: Método para reintentar la inicialización de una batería específica
+    def retry_initialize_battery(self, battery_id):
+        """
+        Reintenta la inicialización de una batería específica.
+        
+        Args:
+            battery_id (int): ID de la batería a reintentar
+            
+        Returns:
+            dict: Resultado del proceso de inicialización
+        """
+        print(f"Reintentando inicialización para batería ID: {battery_id}")
+        
+        # Intentar conectar al puerto serial
+        if not self.connect():
+            return {"status": "error", "message": f"No se pudo conectar al puerto {self.port}"}
+        
+        results = {
+            "status": "success",
+            "battery_id": battery_id,
+            "message": ""
+        }
+        
+        try:
+            # Inicializar la batería específica
+            battery_result = self._initialize_single_battery(battery_id)
+            
+            if battery_result["status"] == "success":
+                self.initialized_batteries.add(battery_id)
+                results["message"] = f"Batería {battery_id} inicializada exitosamente"
+            else:
+                results["status"] = "error"
+                results["message"] = battery_result.get("message", f"Error al inicializar batería {battery_id}")
+                
+        except Exception as e:
+            results["status"] = "error"
+            results["message"] = f"Error durante la inicialización de batería {battery_id}: {str(e)}"
+            
+        finally:
+            # Cerrar conexión
+            self.disconnect()
+            
+        return results
         
     @classmethod
     def get_instance(cls):

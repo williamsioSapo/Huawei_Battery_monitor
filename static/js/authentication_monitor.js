@@ -40,7 +40,9 @@
                 container.style.display = 'none';
             }
         },
-        initialized: false
+        initialized: false,
+        // Nuevas propiedades y métodos
+        setRequiresAction: null // Será asignada por el componente React
     };
 })();
 
@@ -60,6 +62,12 @@ const AuthenticationMonitor = (props) => {
     // Estado para controlar si está cargando datos
     const [isLoading, setIsLoading] = React.useState(false);
     
+    // NUEVO: Estado para rastrear si se requiere acción
+    const [requiresAction, setRequiresAction] = React.useState(false);
+    
+    // NUEVO: Estado para rastrear baterías fallidas
+    const [failedBatteries, setFailedBatteries] = React.useState([]);
+    
     // Referencia para el intervalo de actualización
     const updateIntervalRef = React.useRef(null);
     
@@ -72,6 +80,13 @@ const AuthenticationMonitor = (props) => {
     // Función para ocultar el monitor
     const hideMonitor = React.useCallback(() => {
         console.log("AuthenticationMonitor: hideMonitor llamado");
+        
+        // NUEVO: No ocultar si se requiere acción
+        if (requiresAction) {
+            console.log("AuthenticationMonitor: No se puede ocultar porque se requiere acción");
+            return;
+        }
+        
         setIsVisible(false);
         
         // Si hay una actualización automática activa, detenerla
@@ -79,6 +94,14 @@ const AuthenticationMonitor = (props) => {
             clearInterval(updateIntervalRef.current);
             updateIntervalRef.current = null;
         }
+    }, [requiresAction]);
+    
+    // NUEVO: Función para establecer si se requiere acción (llamada desde ConnectionHandler)
+    const setRequiresActionState = React.useCallback((requires, failed = []) => {
+        console.log("AuthenticationMonitor: Actualizando estado requiresAction =", requires);
+        console.log("AuthenticationMonitor: Baterías fallidas =", failed);
+        setRequiresAction(requires);
+        setFailedBatteries(Array.isArray(failed) ? failed : []);
     }, []);
     
     // Al montar el componente, registrar las funciones en el objeto global
@@ -88,77 +111,159 @@ const AuthenticationMonitor = (props) => {
         window._hideMonitorCallback = hideMonitor;
         window.AuthMonitor.initialized = true;
         
+        // NUEVO: Registrar la función setRequiresAction
+        window.AuthMonitor.setRequiresAction = setRequiresActionState;
+        
         // Limpieza al desmontar
         return () => {
             console.log("AuthenticationMonitor: Limpiando callbacks");
             window._showMonitorCallback = null;
             window._hideMonitorCallback = null;
             window.AuthMonitor.initialized = false;
+            window.AuthMonitor.setRequiresAction = null;
+            
             if (updateIntervalRef.current) {
                 clearInterval(updateIntervalRef.current);
                 updateIntervalRef.current = null;
             }
         };
-    }, [showMonitor, hideMonitor]);
+    }, [showMonitor, hideMonitor, setRequiresActionState]);
     
     // Efecto para iniciar actualización automática - Solo cuando está visible
     React.useEffect(() => {
-        // Función para actualizar estado
-        const updateStatus = async () => {
-            // No actualizar si no está visible
-            if (!isVisible) return;
-            
-            try {
-                setIsLoading(true);
-                console.log("AuthenticationMonitor: Consultando estado de autenticación...");
-                const response = await fetch('/api/auth_status');
-                
-                if (!response.ok) {
-                    console.error(`AuthenticationMonitor: Error HTTP ${response.status}`);
-                    throw new Error(`Error HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log("AuthenticationMonitor: Datos recibidos:", data);
-                
-                if (data.status === 'success') {
-                    setBatteriesAuth(data.batteries.reduce((acc, battery) => {
-                        acc[battery.battery_id] = battery;
-                        return acc;
-                    }, {}));
-                }
-            } catch (error) {
-                console.error('Error al actualizar estado de autenticación:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    // Función para actualizar estado
+    const updateStatus = async () => {
+        // No actualizar si no está visible
+        if (!isVisible) return;
         
-        // Solo actualizar si está visible
-        if (isVisible) {
-            console.log("AuthenticationMonitor: Iniciando actualizaciones periódicas");
+        try {
+            setIsLoading(true);
+            console.log("AuthenticationMonitor: Consultando estado de autenticación...");
+            const response = await fetch('/api/auth_status');
             
-            // Actualizar inmediatamente
-            updateStatus();
+            if (!response.ok) {
+                console.error(`AuthenticationMonitor: Error HTTP ${response.status}`);
+                throw new Error(`Error HTTP ${response.status}`);
+            }
             
-            // Configurar actualización periódica cada 2 segundos
-            updateIntervalRef.current = setInterval(updateStatus, 2000);
-        } else if (updateIntervalRef.current) {
-            // Detener actualizaciones si no está visible
-            console.log("AuthenticationMonitor: Deteniendo actualizaciones periódicas");
+            const data = await response.json();
+            console.log("AuthenticationMonitor: Datos recibidos:", data);
+            
+            if (data.status === 'success') {
+                // Convertir array a objeto con ID como clave
+                const batteryMap = data.batteries.reduce((acc, battery) => {
+                    acc[battery.battery_id] = battery;
+                    return acc;
+                }, {});
+                
+                setBatteriesAuth(batteryMap);
+                
+                // NUEVO: Verificar si hay baterías fallidas
+                const failed = data.batteries.filter(b => b.state === 'failed').map(b => b.battery_id);
+                setFailedBatteries(failed);
+                
+                // NUEVO: Actualizar requiresAction basado en los datos recibidos
+                const anyFailed = failed.length > 0;
+                const anyInProgress = data.batteries.some(b => b.state === 'in_progress');
+                
+                // RequiresAction si hay fallos o procesos en curso
+                const newRequiresAction = anyFailed || anyInProgress;
+                setRequiresAction(newRequiresAction);
+                
+                // Actualizar UiManager si existe
+                if (window.UiManager && window.UiManager.updateAuthenticationStatus) {
+                    window.UiManager.updateAuthenticationStatus(!newRequiresAction);
+                }
+            }
+        } catch (error) {
+            console.error('Error al actualizar estado de autenticación:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    // Nuevo: Registrar cambios en visibilidad y requiresAction para depuración
+    console.log(`AuthenticationMonitor: Visibilidad: ${isVisible}, requiresAction: ${requiresAction}`);
+    
+    // Solo actualizar si está visible
+    if (isVisible) {
+        console.log("AuthenticationMonitor: Iniciando actualizaciones periódicas");
+        
+        // Actualizar inmediatamente
+        updateStatus();
+        
+        // Configurar actualización periódica cada 2 segundos
+        if (updateIntervalRef.current) {
+            clearInterval(updateIntervalRef.current);
+        }
+        updateIntervalRef.current = setInterval(updateStatus, 2000);
+        
+        console.log("AuthenticationMonitor: Intervalo de actualización establecido:", updateIntervalRef.current);
+    } else if (updateIntervalRef.current) {
+        // Detener actualizaciones si no está visible
+        console.log("AuthenticationMonitor: Deteniendo actualizaciones periódicas");
+        clearInterval(updateIntervalRef.current);
+        updateIntervalRef.current = null;
+    }
+    
+    // Función de limpieza al desmontar o cambiar isVisible/requiresAction
+    return () => {
+        if (updateIntervalRef.current) {
+            console.log("AuthenticationMonitor: Limpiando intervalo de actualización:", updateIntervalRef.current);
             clearInterval(updateIntervalRef.current);
             updateIntervalRef.current = null;
         }
+    };
+	}, [isVisible, requiresAction]); // Dependencias: isVisible y requiresAction
+    
+    // NUEVO: Función para manejar reintento de batería
+    const handleRetry = React.useCallback(async (batteryId) => {
+        if (!window.retryBatteryInitialization) {
+            console.error("Función retryBatteryInitialization no disponible");
+            return;
+        }
         
-        // Función de limpieza al desmontar o cambiar isVisible
-        return () => {
-            if (updateIntervalRef.current) {
-                console.log("AuthenticationMonitor: Deteniendo actualizaciones periódicas");
-                clearInterval(updateIntervalRef.current);
-                updateIntervalRef.current = null;
+        try {
+            // Actualizar estado local para mostrar "en progreso"
+            // Crear copia de los datos
+            const updatedBatteries = {...batteriesAuth};
+            if (updatedBatteries[batteryId]) {
+                // Marcar como en progreso
+                updatedBatteries[batteryId].state = 'in_progress';
+                updatedBatteries[batteryId].phases = {
+                    ...updatedBatteries[batteryId].phases,
+                    wake_up: {
+                        ...updatedBatteries[batteryId].phases.wake_up,
+                        state: 'in_progress'
+                    },
+                    authenticate: {
+                        ...updatedBatteries[batteryId].phases.authenticate,
+                        state: 'not_started'
+                    },
+                    read_info: {
+                        ...updatedBatteries[batteryId].phases.read_info,
+                        state: 'not_started'
+                    }
+                };
+                setBatteriesAuth(updatedBatteries);
             }
-        };
-    }, [isVisible]); // Dependencia en isVisible para reiniciar/detener cuando cambie
+            
+            // Llamar a la función de reintento
+            const result = await window.retryBatteryInitialization(batteryId);
+            
+            // Actualizar la lista de baterías fallidas
+            if (result.failed_batteries) {
+                setFailedBatteries(result.failed_batteries);
+            }
+            
+            // Actualizar requiresAction
+            setRequiresAction(result.auth_requires_action || false);
+            
+            // La actualización del estado real ocurrirá en la siguiente consulta automática
+        } catch (error) {
+            console.error(`Error al reintentar batería ${batteryId}:`, error);
+        }
+    }, [batteriesAuth]);
     
     // Si no está visible, no renderizar nada
     if (!isVisible) {
@@ -187,38 +292,31 @@ const AuthenticationMonitor = (props) => {
     // Renderizado del componente
     return (
         <div className="auth-monitor" style={{
-            position: 'fixed',
-            top: '120px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            backgroundColor: 'white',
-            border: '2px solid #3498db',
-            boxShadow: '0 0 20px rgba(0,0,0,0.5)',
-            width: '80%',
-            maxWidth: '800px',
-            padding: '10px',
-            overflow: 'auto',
-            maxHeight: '80vh'
+            padding: '15px',
+            borderRadius: '8px',
+            maxHeight: '80vh',
+            overflow: 'auto'
         }}>
             <div className="auth-monitor-header">
                 <h3>Monitor de Autenticación de Baterías</h3>
-                <button 
-                    onClick={() => window.AuthMonitor.hide()} 
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        background: 'none',
-                        border: 'none',
-                        fontSize: '18px',
-                        fontWeight: 'bold',
-                        color: '#3498db',
-                        cursor: 'pointer'
-                    }}
-                >
-                    ×
-                </button>
+                {!requiresAction && (
+                    <button 
+                        onClick={() => window.AuthMonitor.hide()} 
+                        style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            background: 'none',
+                            border: 'none',
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            color: '#3498db',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        ×
+                    </button>
+                )}
             </div>
             
             {isLoading && Object.keys(batteriesAuth).length === 0 && (
@@ -235,6 +333,8 @@ const AuthenticationMonitor = (props) => {
                                 <th style={{padding: '8px', borderBottom: '1px solid #ddd'}}>Autenticar</th>
                                 <th style={{padding: '8px', borderBottom: '1px solid #ddd'}}>Leer Info</th>
                                 <th style={{padding: '8px', borderBottom: '1px solid #ddd'}}>Estado</th>
+                                {/* NUEVO: Columna para acciones */}
+                                <th style={{padding: '8px', borderBottom: '1px solid #ddd'}}>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -276,6 +376,25 @@ const AuthenticationMonitor = (props) => {
                                          battery.state === 'in_progress' ? 'En proceso' :
                                          battery.state === 'failed' ? 'Fallido' : 'Esperando'}
                                     </td>
+                                    
+                                    {/* NUEVO: Celda para botón de acción */}
+                                    <td style={{padding: '8px', textAlign: 'center'}}>
+                                        {battery.state === 'failed' && (
+                                            <button 
+                                                onClick={() => handleRetry(battery.battery_id)}
+                                                style={{
+                                                    padding: '4px 8px',
+                                                    backgroundColor: '#3498db',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                Reintentar
+                                            </button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -289,6 +408,53 @@ const AuthenticationMonitor = (props) => {
                     </div>
                 </div>
             ) : null}
+
+            {/* NUEVO: Sección para reintentar todas o mensaje explicativo */}
+            {requiresAction && (
+                <div className="auth-monitor-actions" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '10px',
+                    borderTop: '1px solid #eee',
+                    marginTop: '10px',
+                    alignItems: 'center'
+                }}>
+                    <div>
+                        <button 
+                            onClick={() => {
+                                // Reintentar todas las baterías fallidas
+                                failedBatteries.forEach((batteryId, index) => {
+                                    setTimeout(() => {
+                                        handleRetry(batteryId);
+                                    }, index * 500); // Pequeño retraso entre reintentos
+                                });
+                            }}
+                            style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#2ecc71',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                            }}
+                            disabled={failedBatteries.length === 0}
+                        >
+                            Reintentar Todas las Fallidas
+                        </button>
+                    </div>
+                    <div style={{maxWidth: '60%'}}>
+                        <p style={{
+                            color: '#e74c3c',
+                            fontStyle: 'italic',
+                            margin: '0',
+                            fontSize: '13px'
+                        }}>
+                            <strong>Nota:</strong> La aplicación requiere que todas las baterías estén autenticadas 
+                            correctamente para funcionar. Por favor, reintente las baterías con estado "Fallido".
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <div style={{marginTop: '10px', textAlign: 'center', fontSize: '12px', color: '#7f8c8d'}}>
                 Última actualización: {new Date().toLocaleTimeString()}
