@@ -261,7 +261,29 @@ def format_all_batteries_status_for_api():
         all_batteries = []
         
         for battery_id in authentication_status:
-            all_batteries.append(format_battery_status_for_api(battery_id))
+            status = authentication_status[battery_id]
+            
+            # Formato simplificado para la API
+            battery_status = {
+                'battery_id': battery_id,
+                'state': status['state'],
+                'phases': {
+                    'wake_up': status['phases']['wake_up']['state'],
+                    'authenticate': status['phases']['authenticate']['state'],
+                    'read_info': status['phases']['read_info']['state']
+                },
+                'messages': {
+                    'wake_up': status['phases']['wake_up'].get('message', ''),
+                    'authenticate': status['phases']['authenticate'].get('message', ''),
+                    'read_info': status['phases']['read_info'].get('message', '')
+                },
+                'last_updated': max(
+                    phase['timestamp'] if phase['timestamp'] else 0 
+                    for phase in status['phases'].values()
+                )
+            }
+            
+            all_batteries.append(battery_status)
         
         return {
             'status': 'success',

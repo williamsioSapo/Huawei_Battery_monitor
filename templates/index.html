@@ -46,9 +46,9 @@
         </header>
 
         <main>
-            <!-- Sección de Conexión -->
+            <!-- Sección de Configuración de Comunicación -->
             <section id="connection-section" class="section card">
-                <h2>Configuración de Conexión</h2>
+                <h2>Configuración de Comunicación</h2>
                 <div class="form-grid">
                     <div>
                         <label for="slaveId">ID Batería Principal:</label>
@@ -97,12 +97,38 @@
                         <input type="number" id="timeout" value="1" min="1" max="10">
                     </div>
                 </div>
-                <div class="button-group">
-                    <button id="connectBtn">Conectar</button>
-                    <button id="disconnectBtn" disabled>Desconectar</button>
-                </div>
-                 <div class="message-area" id="connectionMessage"></div>
             </section>
+
+            <!-- Sección de Conexión a Bajo Nivel -->
+            <section id="low-level-connection-section" class="section card">
+                <h2>Conexión a Bajo Nivel</h2>
+                <p class="section-description">
+                    Esta conexión es necesaria para inicializar y autenticar las baterías.
+                </p>
+                <div class="button-group">
+                    <button id="lowLevelConnectBtn" class="primary-btn">Conectar (Bajo Nivel)</button>
+                    <button id="lowLevelDisconnectBtn" class="secondary-btn" disabled>Desconectar (Bajo Nivel)</button>
+                    <button id="initializeBtn" class="action-btn" disabled>Inicializar Baterías</button>
+                </div>
+                <div class="message-area" id="connectionMessage"></div>
+            </section>
+
+            <!-- Sección de Conexión PyModbus -->
+            <section id="modbus-connection-section" class="section card" style="display: none;">
+                <h2>Conexión PyModbus</h2>
+                <p class="section-description">
+                    Una vez inicializadas todas las baterías, conecte PyModbus para operaciones normales.
+                </p>
+                <div class="button-group">
+                    <button id="modbusConnectBtn" class="primary-btn" disabled>Conectar PyModbus</button>
+                    <button id="modbusDisconnectBtn" class="secondary-btn" disabled>Desconectar PyModbus</button>
+                </div>
+                <div class="view-selector">
+                    <!-- El selector de vistas se insertará aquí dinámicamente por uiManager.js -->
+                </div>
+                <div class="message-area" id="modbusConnectionMessage"></div>
+            </section>
+
             <!-- Sección de Panel de Batería Individual (Original) -->
             <section id="battery-dashboard" class="section card" style="display: none;">
                 <h2>Panel de Control de Batería Individual</h2>
@@ -227,33 +253,33 @@
         </main>
     </div>
 
-  <!-- Scripts JavaScript -->
-<!-- Librerías React y Babel -->
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- Scripts JavaScript -->
+    <!-- Librerías React y Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-<!-- Scripts de la aplicación (Orden Importante) -->
-<!-- 1. API Helper -->
-<script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
-<!-- 2. Módulos refactorizados (NUEVOS) -->
-<script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
-<script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
-<!-- 3. Componente React para batería individual -->
-<script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
-<!-- 4. Componente BatteryMiniPanel (NUEVO) -->
-<script type="text/babel" src="{{ url_for('static', filename='js/batteryMiniPanel.js') }}"></script>
-<!-- 5. Componente BatteryDetailView -->
-<script type="text/babel" src="{{ url_for('static', filename='js/batteryDetailView.js') }}"></script>
-<!-- 6. Componente React para múltiples baterías -->
-<script type="text/babel" src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
-<script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
-<!-- 7. Lógica principal (ACTUALIZADO) -->
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-<!-- 8. Lógica del Dashboard individual -->
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-<!-- 9. Lógica de la Consola Web -->
-<script src="{{ url_for('static', filename='js/console.js') }}"></script>
+    <!-- Scripts de la aplicación (Orden Importante) -->
+    <!-- 1. API Helper -->
+    <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
+    <!-- 2. Módulos refactorizados (NUEVOS) -->
+    <script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
+    <!-- 3. Componente React para batería individual -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
+    <!-- 4. Componente BatteryMiniPanel (NUEVO) -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/batteryMiniPanel.js') }}"></script>
+    <!-- 5. Componente BatteryDetailView -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/batteryDetailView.js') }}"></script>
+    <!-- 6. Componente React para múltiples baterías -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
+    <!-- 7. Lógica principal (ACTUALIZADO) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- 8. Lógica del Dashboard individual -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <!-- 9. Lógica de la Consola Web -->
+    <script src="{{ url_for('static', filename='js/console.js') }}"></script>
 
 </body>
 </html>

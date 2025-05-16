@@ -50,15 +50,32 @@ function getAvailableBatteries() {
     return apiRequest('/api/batteries', 'GET');
 }
 
-// Modificar función de conexión
+// Funciones para comunicación de bajo nivel
+function lowLevelConnect(params) {
+    return apiRequest('/api/low_level/connect', 'POST', params);
+}
+
+function lowLevelDisconnect() {
+    return apiRequest('/api/low_level/disconnect', 'POST');
+}
+
+function lowLevelInitialize() {
+    return apiRequest('/api/low_level/initialize', 'POST');
+}
+
+function lowLevelRetryBattery(batteryId) {
+    return apiRequest(`/api/low_level/retry_battery/${batteryId}`, 'POST');
+}
+
+// Funciones para comunicación PyModbus
 function connectModbus(params) {
-    // Si no se especifica slaveId, usar el predeterminado (se resolverá en el backend)
-    return apiRequest('/api/connect', 'POST', params);
+    return apiRequest('/api/modbus/connect', 'POST', params);
 }
 
 function disconnectModbus() {
-    return apiRequest('/api/disconnect', 'POST');
+    return apiRequest('/api/modbus/disconnect', 'POST');
 }
+
 
 function checkStatus() {
     return apiRequest('/api/status', 'GET');

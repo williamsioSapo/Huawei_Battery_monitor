@@ -53,6 +53,7 @@ class BatteryInitializer:
         # Para comunicación serial
         self._serial = None
         self._lock = threading.RLock()  # Para thread-safety
+        self._is_connected = False  # Nueva bandera para rastrear estado
         
         # Caché de información por batería
         self.battery_info_cache = {}
@@ -66,9 +67,15 @@ class BatteryInitializer:
             bool: True si se conectó exitosamente, False en caso contrario
         """
         with self._lock:
-            if self._serial and self._serial.is_open:
+            # Si ya está conectado, devolver True inmediatamente
+            if self._is_connected and self._serial and self._serial.is_open:
                 logger.info("Puerto serial ya está abierto")
                 return True
+            
+            # Si hay un objeto serial pero está cerrado, limpiarlo
+            if self._serial and not self._serial.is_open:
+                self._serial = None
+                self._is_connected = False
                 
             try:
                 logger.info(f"Conectando a {self.port} ({self.baudrate},{self.bytesize}{self.parity}{self.stopbits})")
@@ -80,10 +87,13 @@ class BatteryInitializer:
                     bytesize=self.bytesize,
                     timeout=self.timeout
                 )
+                self._is_connected = True
                 logger.info(f"Conexión establecida con {self.port}")
                 return True
             except Exception as e:
                 logger.error(f"Error al conectar: {str(e)}")
+                self._is_connected = False
+                self._serial = None
                 return False
     
     def disconnect(self):
@@ -99,12 +109,15 @@ class BatteryInitializer:
                     self._serial.close()
                     logger.info("Puerto serial cerrado")
                     self._serial = None
+                    self._is_connected = False
                     return True
                 except Exception as e:
                     logger.error(f"Error al cerrar puerto serial: {str(e)}")
                     return False
             else:
                 logger.info("Puerto serial ya está cerrado")
+                self._serial = None
+                self._is_connected = False
                 return True
                 
     def _compute_crc16(self, data):
@@ -141,9 +154,9 @@ class BatteryInitializer:
             logger.warning("No se proporcionaron IDs de baterías para inicializar")
             return {"status": "error", "message": "No hay baterías para inicializar"}
         
-        # Intentar conectar al puerto serial
-        if not self.connect():
-            return {"status": "error", "message": f"No se pudo conectar al puerto {self.port}"}
+        # Verificar si hay conexión serial activa
+        if not self._is_connected or not self._serial or not self._serial.is_open:
+            return {"status": "error", "message": "No hay conexión serial activa"}
         
         logger.info(f"Iniciando inicialización para {len(battery_ids)} baterías: {battery_ids}")
         
@@ -186,10 +199,7 @@ class BatteryInitializer:
             logger.error(f"Error durante la inicialización de baterías: {str(e)}")
             results["status"] = "error"
             results["message"] = f"Error general: {str(e)}"
-        finally:
-            # Cerrar conexión
-            self.disconnect()
-            
+        
         return results
         
     def _initialize_single_battery(self, battery_id):
@@ -798,9 +808,9 @@ class BatteryInitializer:
         """
         print(f"Reintentando inicialización para batería ID: {battery_id}")
         
-        # Intentar conectar al puerto serial
-        if not self.connect():
-            return {"status": "error", "message": f"No se pudo conectar al puerto {self.port}"}
+        # Verificar si hay conexión serial activa
+        if not self._is_connected or not self._serial or not self._serial.is_open:
+            return {"status": "error", "message": "No hay conexión serial activa", "battery_id": battery_id}
         
         results = {
             "status": "success",
@@ -822,10 +832,6 @@ class BatteryInitializer:
         except Exception as e:
             results["status"] = "error"
             results["message"] = f"Error durante la inicialización de batería {battery_id}: {str(e)}"
-            
-        finally:
-            # Cerrar conexión
-            self.disconnect()
             
         return results
         

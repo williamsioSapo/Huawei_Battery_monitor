@@ -71,43 +71,100 @@ const MultiBatteryDashboard = (props) => {
     }, [selectedBattery]);
 
     // Función para iniciar el monitoreo
-    const startMonitoring = async () => {
-        try {
-            setError(null);
-            setIsInitialLoading(true);
-            
-            // Verificar si hay una carga en progreso
-            const loadingStatus = await getDetailedInfoLoadingStatus();
-            if (loadingStatus.status === 'success' && loadingStatus.loading_active) {
-                setLoadingProgress(loadingStatus.progress);
-                checkLoadingProgress();  // Iniciar verificación periódica
-            }
-            
-            console.log("MultiBatteryDashboard: Iniciando monitoreo...");
-            const response = await fetch('/api/batteries/start_monitoring', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ battery_ids: [] }) // Vacío para usar todas las disponibles
-            });
-            
-            const data = await response.json();
-            console.log("MultiBatteryDashboard: Respuesta start_monitoring:", data);
-            
-            if (data.status === 'success') {
-                setIsMonitoring(true);
-                setIsInitialLoading(false);
-                // Iniciar actualizaciones periódicas
-                startPeriodicUpdates();
-            } else {
-                setError(data.message || 'Error al iniciar monitoreo');
-                setIsInitialLoading(false);
-            }
-        } catch (err) {
-            console.error("MultiBatteryDashboard: Error al iniciar monitoreo:", err);
-            setError(`Error: ${err.message}`);
-            setIsInitialLoading(false);
-        }
-    };
+	const startMonitoring = async () => {
+		try {
+			console.log("MultiBatteryDashboard: ========= INICIO DE STARTMONITORING =========");
+			setError(null);
+			setIsInitialLoading(true);
+			
+			// Verificar si hay una carga en progreso
+			console.log("MultiBatteryDashboard: Verificando si hay una carga de información detallada en progreso...");
+			const loadingStatus = await getDetailedInfoLoadingStatus();
+			console.log("MultiBatteryDashboard: Resultado getDetailedInfoLoadingStatus:", loadingStatus);
+			
+			if (loadingStatus.status === 'success' && loadingStatus.loading_active) {
+				console.log("MultiBatteryDashboard: Hay una carga en progreso, configurando progreso:", loadingStatus.progress);
+				setLoadingProgress(loadingStatus.progress);
+				checkLoadingProgress();  // Iniciar verificación periódica
+			}
+			
+			// Primero obtener la lista de baterías disponibles
+			console.log("MultiBatteryDashboard: Obteniendo lista de baterías disponibles desde /api/batteries...");
+			const availableBatteriesResponse = await fetch('/api/batteries');
+			console.log("MultiBatteryDashboard: Respuesta API Baterías - Status:", availableBatteriesResponse.status);
+			
+			if (!availableBatteriesResponse.ok) {
+				throw new Error(`Error obteniendo baterías disponibles: ${availableBatteriesResponse.status} ${availableBatteriesResponse.statusText}`);
+			}
+			
+			const availableBatteries = await availableBatteriesResponse.json();
+			console.log("MultiBatteryDashboard: Datos de baterías disponibles:", availableBatteries);
+			
+			// Extraer los IDs de batería
+			const battery_ids = availableBatteries.batteries || [];
+			
+			console.log(`MultiBatteryDashboard: Encontradas ${battery_ids.length} baterías disponibles: ${battery_ids.join(', ')}`);
+			
+			if (battery_ids.length === 0) {
+				console.error("MultiBatteryDashboard: ERROR - No se encontraron baterías disponibles para monitorear");
+				setError("No se encontraron baterías disponibles para monitorear. Verifique la configuración.");
+				setIsInitialLoading(false);
+				return;
+			}
+			
+			// Iniciar monitoreo con los IDs obtenidos
+			console.log(`MultiBatteryDashboard: Iniciando monitoreo para ${battery_ids.length} baterías con IDs: ${battery_ids.join(', ')}...`);
+			const response = await fetch('/api/batteries/start_monitoring', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ battery_ids: battery_ids })
+			});
+			
+			console.log("MultiBatteryDashboard: Respuesta start_monitoring - Status:", response.status);
+			
+			if (!response.ok) {
+				throw new Error(`Error al iniciar monitoreo: ${response.status} ${response.statusText}`);
+			}
+			
+			const data = await response.json();
+			console.log("MultiBatteryDashboard: Respuesta completa start_monitoring:", data);
+			
+			if (data.status === 'success') {
+				console.log("MultiBatteryDashboard: Monitoreo iniciado exitosamente para IDs:", data.battery_ids);
+				setIsMonitoring(true);
+				setIsInitialLoading(false);
+				
+				// Verificar si hay algún error o advertencia
+				if (data.message && data.message.includes("warning")) {
+					console.warn("MultiBatteryDashboard: Advertencia durante inicio de monitoreo:", data.message);
+				}
+				
+				// Iniciar actualizaciones periódicas
+				console.log("MultiBatteryDashboard: Iniciando actualizaciones periódicas de datos...");
+				startPeriodicUpdates();
+				
+				// Verificar que tenemos datos inmediatamente
+				console.log("MultiBatteryDashboard: Realizando actualización inicial de datos...");
+				await updateBatteriesData();
+				
+				// Verificar si se obtuvieron datos
+				console.log("MultiBatteryDashboard: Estado actual de batteriesData:", batteriesData);
+				if (batteriesData.length === 0) {
+					console.warn("MultiBatteryDashboard: No se obtuvieron datos de baterías después de iniciar monitoreo");
+				}
+			} else {
+				console.error(`MultiBatteryDashboard: Error al iniciar monitoreo: ${data.message || 'Error desconocido'}`);
+				setError(data.message || 'Error al iniciar monitoreo');
+				setIsInitialLoading(false);
+			}
+		} catch (err) {
+			console.error("MultiBatteryDashboard: Excepción durante startMonitoring:", err);
+			setError(`Error: ${err.message}`);
+			setIsInitialLoading(false);
+		} finally {
+			console.log("MultiBatteryDashboard: ========= FIN DE STARTMONITORING =========");
+		}
+	};
 
     // Función para detener el monitoreo
     const stopMonitoring = async () => {
@@ -380,7 +437,15 @@ const MultiBatteryDashboard = (props) => {
             </div>
         );
     };
-
+		React.useEffect(() => {
+			console.log("MultiBatteryDashboard: Exponiendo startMonitoring globalmente como window.startMultiBatteryMonitoring");
+			window.startMultiBatteryMonitoring = startMonitoring;
+			
+			return () => {
+				console.log("MultiBatteryDashboard: Eliminando referencia global a startMultiBatteryMonitoring");
+				window.startMultiBatteryMonitoring = null;
+			};
+		}, []);
     // Renderizado principal del componente
     return (
         <div className="multi-battery-dashboard">

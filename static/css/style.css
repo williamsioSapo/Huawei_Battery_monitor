@@ -484,3 +484,106 @@ tbody tr:hover {
 .metric-value.discharging {
     color: #dc3545;
 }
+/* Estilos para los botones en las secciones de conexión */
+.primary-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background-color: #2980b9;
+}
+
+.primary-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.secondary-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    background-color: #c0392b;
+}
+
+.secondary-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.action-btn {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.action-btn:hover {
+    background-color: #27ae60;
+}
+
+.action-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+/* Estilo para botón habilitado después de autenticación */
+.ready {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
+}
+
+/* Estilos para estado de conexión parcial */
+.status-indicator.partial {
+    background-color: #f39c12;
+    color: white;
+}
+
+.status-indicator.partial .dot {
+    background-color: #e67e22;
+}
+
+/* Descripción de sección */
+.section-description {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .button-group button {
+        margin: 5px 0;
+        width: 100%;
+    }
+}

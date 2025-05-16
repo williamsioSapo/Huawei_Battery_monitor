@@ -107,95 +107,6 @@ def reset_auth_status(battery_id):
         "message": f"Estado de autenticación para batería {battery_id} reiniciado"
     })
 
-@app.route('/api/connect', methods=['POST'])
-def connect_api():
-    """ Endpoint para conectar al dispositivo Modbus. """
-    data = request.json
-    port = data.get('port', 'COM1')
-    baudrate = int(data.get('baudrate', 9600))
-    parity = data.get('parity', 'N')
-    stopbits = int(data.get('stopbits', 1))
-    bytesize = int(data.get('bytesize', 8))
-    timeout = int(data.get('timeout', 1))
-    
-    # Obtener el ID de esclavo predeterminado en lugar de usar el proporcionado
-    from modbus_app import config_manager
-    battery_info = config_manager.get_available_batteries()
-    
-    # 1. Inicialización a bajo nivel primero
-    print("Iniciando proceso de inicialización a bajo nivel para baterías...")
-    initializer = BatteryInitializer(
-        port=port, 
-        baudrate=baudrate, 
-        parity=parity, 
-        stopbits=stopbits, 
-        bytesize=bytesize, 
-        timeout=timeout
-    )
-    
-    # Guardar instancia globalmente
-    BatteryInitializer.set_instance(initializer)
-    
-    # Obtener todos los IDs de baterías disponibles
-    battery_ids = battery_info.get('batteries', [])
-    if not battery_ids:
-        return jsonify({
-            "status": "error", 
-            "message": "No hay baterías configuradas para inicializar"
-        })
-    
-    # Inicializar todas las baterías configuradas
-    init_result = initializer.initialize_batteries(battery_ids)
-    
-    if init_result["status"] == "error":
-        return jsonify({
-            "status": "error",
-            "message": f"Error en la inicialización de baterías: {init_result.get('message', 'Error desconocido')}",
-            "show_auth_monitor": True,
-            "auth_requires_action": True
-        })
-    
-    # 2. Ahora, conectar con PyModbus para operaciones normales
-    print("Inicialización a bajo nivel completada. Conectando cliente PyModbus...")
-    success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
-    
-    if not success:
-        return jsonify({"status": "error", "message": f"Error al conectar PyModbus: {message}"})
-    
-    # 3. Preparar respuesta combinada
-    # Verificar si todas las autenticaciones están completas y exitosas
-    auth_complete = authentication_is_complete()
-    all_auth = all_batteries_authenticated()
-    failed_batteries = get_failed_batteries()
-    
-    # Determinar el estado general y mensaje
-    if init_result["status"] == "partial" or not all_auth:
-        response_status = "warning"
-        if failed_batteries:
-            battery_list = ", ".join([str(b) for b in failed_batteries])
-            response_message = f"Algunas baterías fallaron en la inicialización ({battery_list}). Cliente PyModbus conectado."
-        else:
-            response_message = "Algunas baterías no completaron la inicialización. Cliente PyModbus conectado."
-    else:
-        response_status = "success"
-        response_message = "Baterías inicializadas y cliente PyModbus conectado correctamente."
-    
-    # Iniciar carga de información detallada en segundo plano
-    print("Iniciando carga de información detallada para todas las baterías...")
-    battery_monitor.load_all_detailed_info()
-    
-    return jsonify({
-        "status": response_status, 
-        "message": response_message,
-        "show_auth_monitor": not all_auth,
-        "auth_requires_action": not all_auth,
-        "auth_complete": auth_complete,
-        "all_authenticated": all_auth,
-        "failed_batteries": failed_batteries,
-        "loading_detailed_info": True,
-        "initialized_batteries": init_result.get("initialized_count", 0),
-        "total_batteries": len(battery_ids)
-    })
 
 # Nuevo endpoint para reintentar baterías específicas
 @app.route('/api/retry_initialize_battery/<int:battery_id>', methods=['POST'])
@@ -229,16 +140,282 @@ def retry_initialize_battery_api(battery_id):
             "all_authenticated": False,
             "auth_requires_action": True
         })
+# Endpoints para comunicación de bajo nivel
+@app.route('/api/low_level/connect', methods=['POST'])
+def low_level_connect_api():
+    """ Endpoint para conectar a nivel de comunicación serial directa. """
+    data = request.json
+    port = data.get('port', 'COM1')
+    baudrate = int(data.get('baudrate', 9600))
+    parity = data.get('parity', 'N')
+    stopbits = int(data.get('stopbits', 1))
+    bytesize = int(data.get('bytesize', 8))
+    timeout = int(data.get('timeout', 1))
+    
+    # Verificar si hay conexión Modbus activa en el mismo puerto
+    from modbus_app.client import is_client_connected, get_client_port
+    if is_client_connected() and get_client_port() == port:
+        return jsonify({
+            "status": "error", 
+            "message": f"Error: El puerto {port} está siendo utilizado por PyModbus. Desconecte primero."
+        })
+    
+    try:
+        # Crear instancia del inicializador
+        initializer = BatteryInitializer(
+            port=port, 
+            baudrate=baudrate, 
+            parity=parity, 
+            stopbits=stopbits, 
+            bytesize=bytesize, 
+            timeout=timeout
+        )
+        
+        # Intentar establecer la conexión serial
+        if not initializer.connect():
+            return jsonify({
+                "status": "error", 
+                "message": f"No se pudo establecer conexión serial con el puerto {port}"
+            })
+        
+        # Guardar instancia globalmente
+        BatteryInitializer.set_instance(initializer)
+        
+        return jsonify({
+            "status": "success", 
+            "message": f"Conexión de bajo nivel establecida en {port}"
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "status": "error", 
+            "message": f"Error al conectar a bajo nivel: {str(e)}"
+        })
 
-@app.route('/api/disconnect', methods=['POST'])
-def disconnect_api():
-    """ Endpoint para desconectar del dispositivo Modbus. """
+@app.route('/api/low_level/disconnect', methods=['POST'])
+def low_level_disconnect_api():
+    """ Endpoint para desconectar la comunicación serial directa. """
+    try:
+        initializer = BatteryInitializer.get_instance()
+        if initializer.disconnect():
+            return jsonify({
+                "status": "success", 
+                "message": "Conexión de bajo nivel cerrada correctamente"
+            })
+        else:
+            return jsonify({
+                "status": "warning", 
+                "message": "No había conexión de bajo nivel activa"
+            })
+    except Exception as e:
+        return jsonify({
+            "status": "error", 
+            "message": f"Error al desconectar: {str(e)}"
+        })
+
+@app.route('/api/low_level/initialize', methods=['POST'])
+def low_level_initialize_api():
+    """ Endpoint para inicializar todas las baterías configuradas. """
+    try:
+        # Verificar que tenemos una instancia del inicializador
+        initializer = BatteryInitializer.get_instance()
+        
+        # Obtener IDs de baterías disponibles
+        from modbus_app import config_manager
+        battery_info = config_manager.get_available_batteries()
+        battery_ids = battery_info.get('batteries', [])
+        
+        if not battery_ids:
+            return jsonify({
+                "status": "error", 
+                "message": "No hay baterías configuradas para inicializar"
+            })
+        
+        # Inicializar todas las baterías configuradas
+        init_result = initializer.initialize_batteries(battery_ids)
+        
+        # Verificar si todas las autenticaciones están completas y exitosas
+        auth_complete = authentication_is_complete()
+        all_auth = all_batteries_authenticated()
+        failed_batteries = get_failed_batteries()
+        
+        # Determinar el estado general y mensaje
+        if init_result["status"] == "error":
+            response_status = "error"
+            response_message = f"Error en la inicialización de baterías: {init_result.get('message', 'Error desconocido')}"
+        elif init_result["status"] == "partial" or not all_auth:
+            response_status = "warning"
+            if failed_batteries:
+                battery_list = ", ".join([str(b) for b in failed_batteries])
+                response_message = f"Algunas baterías fallaron en la inicialización ({battery_list})"
+            else:
+                response_message = "Algunas baterías no completaron la inicialización"
+        else:
+            response_status = "success"
+            response_message = "Todas las baterías inicializadas correctamente"
+        
+        return jsonify({
+            "status": response_status, 
+            "message": response_message,
+            "show_auth_monitor": not all_auth,
+            "auth_requires_action": not all_auth,
+            "auth_complete": auth_complete,
+            "all_authenticated": all_auth,
+            "failed_batteries": failed_batteries,
+            "initialized_batteries": init_result.get("initialized_count", 0),
+            "total_batteries": len(battery_ids),
+            "result": init_result  # Incluimos el resultado completo para más detalle
+        })
+        
+    except RuntimeError as e:
+        # Error específico cuando no hay inicializador
+        return jsonify({
+            "status": "error", 
+            "message": f"Error: {str(e)}. Asegúrese de conectar primero usando /api/low_level/connect."
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error", 
+            "message": f"Error inesperado: {str(e)}"
+        })
+
+@app.route('/api/low_level/status', methods=['GET'])
+def low_level_status_api():
+    """ Endpoint para verificar el estado de la conexión a bajo nivel. """
+    try:
+        # Intentar obtener la instancia del inicializador
+        initializer = BatteryInitializer.get_instance()
+        
+        # Verificar si existe y está conectado
+        is_connected = False
+        if initializer:
+            is_connected = initializer._is_connected and initializer._serial and initializer._serial.is_open
+            
+        return jsonify({
+            "connected": is_connected,
+            "port": initializer.port if initializer and is_connected else None
+        })
+    except RuntimeError:
+        # Excepción específica cuando no hay instancia disponible
+        return jsonify({
+            "connected": False,
+            "error": "No hay instancia del inicializador disponible"
+        })
+    except Exception as e:
+        # Cualquier otra excepción
+        return jsonify({
+            "connected": False,
+            "error": str(e)
+        })
+
+@app.route('/api/low_level/retry_battery/<int:battery_id>', methods=['POST'])
+def low_level_retry_battery_api(battery_id):
+    """
+    Endpoint para reintentar la inicialización de una batería específica.
+    """
+    try:
+        # Verificar que el inicializador existe
+        initializer = BatteryInitializer.get_instance()
+        
+        # Reintentar inicialización
+        result = initializer.retry_initialize_battery(battery_id)
+        
+        # Verificar estado general de autenticación después del reintento
+        all_auth = all_batteries_authenticated()
+        failed_batteries = get_failed_batteries()
+        
+        # Incluir información adicional en la respuesta
+        result.update({
+            "all_authenticated": all_auth,
+            "failed_batteries": failed_batteries,
+            "auth_requires_action": not all_auth
+        })
+        
+        return jsonify(result)
+    except RuntimeError as e:
+        # Error específico cuando no hay inicializador
+        return jsonify({
+            "status": "error",
+            "message": f"Error: {str(e)}. Asegúrese de conectar primero usando /api/low_level/connect.",
+            "all_authenticated": False,
+            "auth_requires_action": True
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"Error al reintentar inicialización: {str(e)}",
+            "all_authenticated": False,
+            "auth_requires_action": True
+        })
+
+# Endpoints para comunicación PyModbus
+@app.route('/api/modbus/connect', methods=['POST'])
+def modbus_connect_api():
+    """ Endpoint para conectar cliente PyModbus. """
+    data = request.json
+    port = data.get('port', 'COM1')
+    baudrate = int(data.get('baudrate', 9600))
+    parity = data.get('parity', 'N')
+    stopbits = int(data.get('stopbits', 1))
+    bytesize = int(data.get('bytesize', 8))
+    timeout = int(data.get('timeout', 1))
+    
+    # Verificar si hay inicializador de bajo nivel activo en el mismo puerto
+    try:
+        initializer = BatteryInitializer.get_instance()
+        if initializer and initializer._serial and initializer._serial.is_open and initializer.port == port:
+            return jsonify({
+                "status": "error", 
+                "message": f"Error: El puerto {port} está siendo utilizado por la conexión de bajo nivel. Desconecte primero."
+            })
+    except:
+        # Si hay excepción, no hay inicializador activo
+        pass
+    
+    # Verificar si todas las baterías están inicializadas correctamente
+    if not all_batteries_authenticated():
+        failed_batteries = get_failed_batteries()
+        return jsonify({
+            "status": "warning",
+            "message": "No todas las baterías están correctamente inicializadas. Se recomienda completar la inicialización primero.",
+            "all_authenticated": False,
+            "failed_batteries": failed_batteries,
+            "proceed_anyway": True  # Permitimos continuar a pesar de la advertencia
+        })
+    
+    # Conectar cliente PyModbus
+    success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
+    
+    if not success:
+        return jsonify({
+            "status": "error", 
+            "message": f"Error al conectar PyModbus: {message}"
+        })
+    
+    # Iniciar carga de información detallada en segundo plano
+    print("Iniciando carga de información detallada para todas las baterías...")
+    battery_monitor.load_all_detailed_info()
+    
+    return jsonify({
+        "status": "success", 
+        "message": "Cliente PyModbus conectado correctamente",
+        "loading_detailed_info": True
+    })
+
+@app.route('/api/modbus/disconnect', methods=['POST'])
+def modbus_disconnect_api():
+    """ Endpoint para desconectar cliente PyModbus. """
     disconnected = disconnect_client()
     if disconnected:
-        return jsonify({"status": "success", "message": "Desconectado correctamente"})
+        return jsonify({
+            "status": "success", 
+            "message": "Cliente PyModbus desconectado correctamente"
+        })
     else:
-        # Si disconnect_client devuelve False, significa que no había nada que desconectar
-        return jsonify({"status": "warning", "message": "No había conexión activa para desconectar"})
+        return jsonify({
+            "status": "warning", 
+            "message": "No había conexión PyModbus activa para desconectar"
+        })
 
 @app.route('/api/status', methods=['GET'])
 def status_api():

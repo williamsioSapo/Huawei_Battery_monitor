@@ -179,6 +179,13 @@ def is_client_connected():
         print(f"ERROR INESPERADO al verificar conexión: {e}", file=sys.stderr)
         _is_connected = False
         return False
+    
+def get_client_port():
+    """ 
+    Devuelve el puerto de la conexión actual o None si no hay conexión.
+    """
+    global connection_params
+    return connection_params.get('port') if is_client_connected() else None
 
 # Función para obtener información del dispositivo desde caché
 def get_device_info():

@@ -6,13 +6,24 @@
  */
 const ConnectionHandler = (function() {
     // Estado interno
-    let isConnected = false;
+    let lowLevelConnected = false;
+    let modbusConnected = false;
     
     // Referencias a elementos DOM críticos para la conexión
     let elements = {
-        connectBtn: null,
-        disconnectBtn: null,
+        // Elementos para conexión a bajo nivel
+        lowLevelConnectBtn: null,
+        lowLevelDisconnectBtn: null,
+        initializeBtn: null,
+        
+        // Elementos para conexión PyModbus
+        modbusConnectBtn: null,
+        modbusDisconnectBtn: null,
+        
+        // Elementos comunes
         messageEl: null,
+        
+        // Elementos de parámetros
         slaveIdSelect: null,
         portInput: null,
         baudrateSelect: null,
@@ -39,113 +50,266 @@ const ConnectionHandler = (function() {
     }
     
     /**
-     * Maneja el proceso de conexión
+     * Maneja el proceso de conexión a bajo nivel
      */
-    async function handleConnect() {
-        if (!elements.connectBtn || !elements.disconnectBtn) return;
+    async function handleLowLevelConnect() {
+        if (!elements.lowLevelConnectBtn) return;
         
-        // Deshabilitar botones mientras conecta
-        elements.connectBtn.disabled = true;
-        elements.disconnectBtn.disabled = true;
+        // Deshabilitar botones durante la operación
+        elements.lowLevelConnectBtn.disabled = true;
         
         // Obtener parámetros de conexión
         const params = getConnectionParams();
         
         // Mostrar mensaje de conexión
-        showConnectionMessage('Conectando...', 'info');
+        showConnectionMessage('Conectando a bajo nivel...', 'info');
         
-        // Mostrar monitor de autenticación durante el proceso
-        showAuthMonitor();
-        
-        let connectSuccess = false;
         try {
-            // Usar la función de modbusApi.js
-            const result = await connectModbus(params);
-            showConnectionMessage(result.message, result.status || 'info');
+            // Establecer conexión a bajo nivel
+            const result = await lowLevelConnect(params);
             
-            // Considerar éxito si status es 'success' o 'warning'
             if (result.status === 'success' || result.status === 'warning') {
-                connectSuccess = true;
+                showConnectionMessage(`Conexión de bajo nivel establecida: ${result.message}`, 'success');
                 
-                // NUEVO: Actualizar estado de autenticación en UiManager
-                if (typeof window.UiManager !== 'undefined' && 
-                    typeof window.UiManager.updateAuthenticationStatus === 'function') {
-                    window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
-                }
+                // Actualizar estado interno
+                lowLevelConnected = true;
+                dispatchLowLevelConnectionEvent(true);
+            } else {
+                showConnectionMessage(`Error en conexión a bajo nivel: ${result.message}`, 'error');
                 
-                // NUEVO: Mantener monitor visible si se requiere acción
-                if (result.auth_requires_action) {
-                    console.log("Manteniendo monitor de autenticación visible - se requiere acción para baterías fallidas");
-                    
-                    // Notificar a AuthMonitor que se requiere acción
-                    if (window.AuthMonitor && window.AuthMonitor.setRequiresAction) {
-                        window.AuthMonitor.setRequiresAction(
-                            result.auth_requires_action, 
-                            result.failed_batteries || []
-                        );
-                    }
-                } else {
-                    // Ocultar después de un tiempo si no se requiere acción
-                    setTimeout(() => {
-                        hideAuthMonitor();
-                    }, 5000);
-                }
-                
-                // NUEVO: Solo cambiar a vista múltiple si todas las baterías están autenticadas
-                if (result.all_authenticated && typeof window.UiManager !== 'undefined') {
-                    setTimeout(() => {
-                        window.UiManager.switchView('multi');
-                    }, 500);
-                }
-                
-                // NUEVO: Si se está cargando información detallada, mostrar mensaje
-                if (result.loading_detailed_info) {
-                    showConnectionMessage(
-                        'Conectado. Cargando información detallada de todas las baterías en segundo plano...',
-                        'info'
-                    );
-                }
+                // Actualizar estado interno
+                lowLevelConnected = false;
+                dispatchLowLevelConnectionEvent(false);
             }
         } catch (error) {
             showConnectionMessage(`Error: ${error.message}`, 'error');
-            connectSuccess = false;
-            // Ocultar monitor en caso de error
-            hideAuthMonitor();
-        } finally {
-            // Actualizar estado interno
-            isConnected = connectSuccess;
             
-            // Disparar evento para notificar del cambio de estado
-            dispatchConnectionEvent(connectSuccess);
+            // Actualizar estado interno
+            lowLevelConnected = false;
+            dispatchLowLevelConnectionEvent(false);
+        } finally {
+            // Actualizar estado de botones
+            updateButtonStates();
         }
     }
     
     /**
-     * Maneja el proceso de desconexión
+     * Maneja el proceso de desconexión a bajo nivel
      */
-    async function handleDisconnect() {
-        if (!elements.connectBtn || !elements.disconnectBtn) return;
+    async function handleLowLevelDisconnect() {
+        if (!elements.lowLevelDisconnectBtn) return;
         
-        // Deshabilitar botones mientras desconecta
-        elements.connectBtn.disabled = true;
-        elements.disconnectBtn.disabled = true;
+        // Deshabilitar botones durante la operación
+        elements.lowLevelDisconnectBtn.disabled = true;
         
-        showConnectionMessage('Desconectando...', 'info');
-        
-        // Ocultar monitor si está visible durante la desconexión
-        hideAuthMonitor();
+        showConnectionMessage('Desconectando a bajo nivel...', 'info');
         
         try {
-            // Usar la función de modbusApi.js
-            const result = await disconnectModbus();
-            showConnectionMessage(result.message, 'success');
+            // Desconectar a bajo nivel
+            const result = await lowLevelDisconnect();
+            
+            showConnectionMessage(result.message, result.status);
+            
+            // Actualizar estado interno
+            lowLevelConnected = false;
+            dispatchLowLevelConnectionEvent(false);
         } catch (error) {
             showConnectionMessage(`Error: ${error.message}`, 'error');
         } finally {
-            // Actualizar estado interno y notificar
-            isConnected = false;
-            dispatchConnectionEvent(false);
+            // Actualizar estado de botones
+            updateButtonStates();
         }
+    }
+    
+    /**
+     * Maneja el proceso de inicialización de baterías
+     */
+    async function handleInitializeBatteries() {
+		if (!elements.initializeBtn) return;
+		
+		// Deshabilitar botones durante la operación
+		elements.initializeBtn.disabled = true;
+		
+		// Mostrar monitor de autenticación durante el proceso
+		showAuthMonitor();
+		
+		showConnectionMessage('Inicializando baterías...', 'info');
+		
+		try {
+			// Inicializar baterías
+			const result = await lowLevelInitialize();
+			
+			showConnectionMessage(result.message, result.status);
+			
+			// Actualizar estado de autenticación en UiManager (esto solo actualiza UI)
+			if (typeof window.UiManager !== 'undefined' && 
+				typeof window.UiManager.updateAuthenticationStatus === 'function') {
+				window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
+			}
+			
+			// NUEVO: Verifica si todas las baterías están autenticadas para disparar el evento
+			if (result.all_authenticated === true) {
+				console.log("ConnectionHandler: ¡TODAS LAS BATERÍAS AUTENTICADAS! Disparando evento de transición...");
+				
+				// Disparar evento para iniciar transición automática
+				document.dispatchEvent(new CustomEvent('authentication-status-change', {
+					detail: { allAuthenticated: true }
+				}));
+				
+				// Ocultar el monitor después de un tiempo si todo está ok
+				setTimeout(() => {
+					hideAuthMonitor();
+				}, 5000);
+			}
+			
+			// Mantener monitor visible si se requiere acción
+			if (result.auth_requires_action) {
+				console.log("Manteniendo monitor de autenticación visible - se requiere acción para baterías fallidas");
+				
+				// Notificar a AuthMonitor que se requiere acción
+				if (window.AuthMonitor && window.AuthMonitor.setRequiresAction) {
+					window.AuthMonitor.setRequiresAction(
+						result.auth_requires_action, 
+						result.failed_batteries || []
+					);
+				}
+			}
+			
+		} catch (error) {
+			showConnectionMessage(`Error: ${error.message}`, 'error');
+			
+			// CORREGIDO: NO ocultar el monitor en caso de error
+			// El usuario necesita ver qué falló
+			
+		} finally {
+			// Actualizar estado de botones
+			updateButtonStates();
+		}
+	}
+    
+    /**
+     * Maneja el proceso de conexión con PyModbus
+     */
+    async function handleModbusConnect() {
+        if (!elements.modbusConnectBtn) return;
+        
+        // Deshabilitar botones durante la operación
+        elements.modbusConnectBtn.disabled = true;
+        
+        // Obtener parámetros de conexión
+        const params = getConnectionParams();
+        
+        showConnectionMessage('Conectando cliente PyModbus...', 'info');
+        
+        try {
+            // Conectar cliente PyModbus
+            const result = await connectModbus(params);
+            
+            if (result.status === 'success' || result.status === 'warning') {
+                showConnectionMessage(result.message, result.status);
+                
+                // Actualizar estado interno
+                modbusConnected = true;
+                dispatchModbusConnectionEvent(true);
+                
+                // Cambiar a vista múltiple si todas las baterías están inicializadas
+                if (result.all_authenticated !== false && typeof window.UiManager !== 'undefined') {
+                    setTimeout(() => {
+                        window.UiManager.switchView('multi');
+                    }, 500);
+                }
+            } else {
+                showConnectionMessage(result.message, result.status);
+                
+                // Actualizar estado interno
+                modbusConnected = false;
+                dispatchModbusConnectionEvent(false);
+            }
+        } catch (error) {
+            showConnectionMessage(`Error: ${error.message}`, 'error');
+            
+            // Actualizar estado interno
+            modbusConnected = false;
+            dispatchModbusConnectionEvent(false);
+        } finally {
+            // Actualizar estado de botones
+            updateButtonStates();
+        }
+    }
+    
+    /**
+     * Maneja el proceso de desconexión de PyModbus
+     */
+    async function handleModbusDisconnect() {
+        if (!elements.modbusDisconnectBtn) return;
+        
+        // Deshabilitar botones durante la operación
+        elements.modbusDisconnectBtn.disabled = true;
+        
+        showConnectionMessage('Desconectando cliente PyModbus...', 'info');
+        
+        try {
+            // Desconectar cliente PyModbus
+            const result = await disconnectModbus();
+            
+            showConnectionMessage(result.message, result.status);
+            
+            // Actualizar estado interno
+            modbusConnected = false;
+            dispatchModbusConnectionEvent(false);
+        } catch (error) {
+            showConnectionMessage(`Error: ${error.message}`, 'error');
+        } finally {
+            // Actualizar estado de botones
+            updateButtonStates();
+        }
+    }
+    
+    /**
+     * Reintenta la inicialización de una batería específica
+     * @param {number} batteryId - ID de la batería a reintentar
+     * @returns {Promise} - Promesa que se resuelve con el resultado del reintento
+     */
+    function handleRetryBatteryInitialization(batteryId) {
+        if (!batteryId) return Promise.reject(new Error("No se especificó ID de batería"));
+        
+        return new Promise(async (resolve, reject) => {
+            try {
+                showConnectionMessage(`Reintentando inicialización de batería ${batteryId}...`, 'info');
+                
+                // Verificar que hay conexión a bajo nivel activa
+                if (!lowLevelConnected) {
+                    throw new Error("No hay conexión a bajo nivel activa. Conéctese primero.");
+                }
+                
+                const result = await lowLevelRetryBattery(batteryId);
+                
+                if (result.status === 'success') {
+                    showConnectionMessage(result.message, 'success');
+                    
+                    // Actualizar estado de autenticación en UiManager
+                    if (typeof window.UiManager !== 'undefined' && 
+                        typeof window.UiManager.updateAuthenticationStatus === 'function') {
+                        window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
+                    }
+                    
+                    // Si todas las baterías están autenticadas, ocultar monitor
+                    if (result.all_authenticated) {
+                        setTimeout(() => {
+                            hideAuthMonitor();
+                        }, 3000);
+                    }
+                    
+                    resolve(result);
+                } else {
+                    showConnectionMessage(result.message, 'error');
+                    reject(new Error(result.message));
+                }
+            } catch (error) {
+                showConnectionMessage(`Error al reintentar: ${error.message}`, 'error');
+                reject(error);
+            }
+        });
     }
     
     /**
@@ -173,17 +337,66 @@ const ConnectionHandler = (function() {
     }
     
     /**
-     * Dispara un evento de cambio de estado de conexión
+     * Actualiza el estado de los botones según el estado de conexión
+     */
+    function updateButtonStates() {
+        // Botones de bajo nivel
+        if (elements.lowLevelConnectBtn) {
+            elements.lowLevelConnectBtn.disabled = lowLevelConnected;
+        }
+        
+        if (elements.lowLevelDisconnectBtn) {
+            elements.lowLevelDisconnectBtn.disabled = !lowLevelConnected;
+        }
+        
+        if (elements.initializeBtn) {
+            elements.initializeBtn.disabled = !lowLevelConnected;
+        }
+        
+        // Botones de PyModbus
+        if (elements.modbusConnectBtn) {
+            // Solo habilitar si no hay conexión Modbus actual
+            const authorized = window.UiManager && window.UiManager.allBatteriesAuthorized === true;
+            elements.modbusConnectBtn.disabled = modbusConnected || !authorized;
+        }
+        
+        if (elements.modbusDisconnectBtn) {
+            elements.modbusDisconnectBtn.disabled = !modbusConnected;
+        }
+    }
+    
+    /**
+     * Dispara un evento de cambio de estado de conexión a bajo nivel
      * @param {boolean} connected - Estado de conexión
      */
-    function dispatchConnectionEvent(connected) {
-        console.log(`ConnectionHandler: Disparando evento connection-status-change (connected: ${connected})`);
+    function dispatchLowLevelConnectionEvent(connected) {
+        console.log(`ConnectionHandler: Disparando evento low-level-connection-status-change (connected: ${connected})`);
         
         // Actualizar estado de los botones
-        if (elements.connectBtn) elements.connectBtn.disabled = connected;
-        if (elements.disconnectBtn) elements.disconnectBtn.disabled = !connected;
+        updateButtonStates();
         
         // Disparar evento para otros módulos
+        document.dispatchEvent(new CustomEvent('low-level-connection-status-change', {
+            detail: { connected: connected }
+        }));
+    }
+    
+    /**
+     * Dispara un evento de cambio de estado de conexión PyModbus
+     * @param {boolean} connected - Estado de conexión
+     */
+    function dispatchModbusConnectionEvent(connected) {
+        console.log(`ConnectionHandler: Disparando evento modbus-connection-status-change (connected: ${connected})`);
+        
+        // Actualizar estado de los botones
+        updateButtonStates();
+        
+        // Disparar evento para otros módulos
+        document.dispatchEvent(new CustomEvent('modbus-connection-status-change', {
+            detail: { connected: connected }
+        }));
+        
+        // Mantener compatibilidad con el evento anterior
         document.dispatchEvent(new CustomEvent('connection-status-change', {
             detail: { connected: connected }
         }));
@@ -231,16 +444,38 @@ const ConnectionHandler = (function() {
         try {
             const result = await checkStatus(); // Función de modbusApi.js
             
-            // Si el estado no coincide con nuestro registro, actualizar
-            if (result.connected !== isConnected) {
-                isConnected = result.connected;
-                dispatchConnectionEvent(isConnected);
+            // Actualizar estado interno de conexión PyModbus
+            if (result.connected !== modbusConnected) {
+                modbusConnected = result.connected;
+                dispatchModbusConnectionEvent(modbusConnected);
             }
             
-            return result.connected;
+            // También verificar estado de conexión a bajo nivel
+            // (Este es un ejemplo - necesitarías implementar el endpoint correspondiente)
+            try {
+                const lowLevelResult = await fetch('/api/low_level/status').then(r => r.json());
+                if (lowLevelResult.connected !== lowLevelConnected) {
+                    lowLevelConnected = lowLevelResult.connected;
+                    dispatchLowLevelConnectionEvent(lowLevelConnected);
+                }
+            } catch (error) {
+                // Si hay error, asumimos que no hay conexión a bajo nivel
+                if (lowLevelConnected) {
+                    lowLevelConnected = false;
+                    dispatchLowLevelConnectionEvent(false);
+                }
+            }
+            
+            return { 
+                modbus: modbusConnected,
+                lowLevel: lowLevelConnected
+            };
         } catch (error) {
             console.error('Error al verificar estado de conexión:', error);
-            return false;
+            return { 
+                modbus: false,
+                lowLevel: false
+            };
         }
     }
     
@@ -268,64 +503,6 @@ const ConnectionHandler = (function() {
         }
     }
     
-    /**
-     * Reintenta la inicialización de una batería específica
-     * @param {number} batteryId - ID de la batería a reintentar
-     * @returns {Promise} - Promesa que se resuelve con el resultado del reintento
-     */
-    function retryBatteryInitialization(batteryId) {
-        if (!batteryId) return Promise.reject(new Error("No se especificó ID de batería"));
-        
-        return new Promise(async (resolve, reject) => {
-            try {
-                showConnectionMessage(`Reintentando inicialización de batería ${batteryId}...`, 'info');
-                
-                const response = await fetch(`/api/retry_initialize_battery/${batteryId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showConnectionMessage(result.message, 'success');
-                    
-                    // NUEVO: Actualizar estado de autenticación en UiManager
-                    if (typeof window.UiManager !== 'undefined' && 
-                        typeof window.UiManager.updateAuthenticationStatus === 'function') {
-                        window.UiManager.updateAuthenticationStatus(result.all_authenticated || false);
-                    }
-                    
-                    // Si todas las baterías están autenticadas, ocultar monitor y cambiar vista
-                    if (result.all_authenticated) {
-                        setTimeout(() => {
-                            hideAuthMonitor();
-                            
-                            // Cambiar a vista multi-batería
-                            if (typeof window.UiManager !== 'undefined') {
-                                window.UiManager.switchView('multi');
-                            }
-                        }, 3000);
-                    }
-                    
-                    resolve(result);
-                } else {
-                    showConnectionMessage(result.message, 'error');
-                    reject(new Error(result.message));
-                }
-            } catch (error) {
-                showConnectionMessage(`Error al reintentar: ${error.message}`, 'error');
-                reject(error);
-            }
-        });
-    }
-    
     // API pública
     const publicAPI = {
         /**
@@ -339,64 +516,104 @@ const ConnectionHandler = (function() {
             elements = { ...elements, ...domElements };
             
             // Configurar listeners para botones principales
-            if (elements.connectBtn) {
-                elements.connectBtn.addEventListener('click', handleConnect);
+            if (elements.lowLevelConnectBtn) {
+                elements.lowLevelConnectBtn.addEventListener('click', handleLowLevelConnect);
             }
             
-            if (elements.disconnectBtn) {
-                elements.disconnectBtn.addEventListener('click', handleDisconnect);
+            if (elements.lowLevelDisconnectBtn) {
+                elements.lowLevelDisconnectBtn.addEventListener('click', handleLowLevelDisconnect);
+            }
+            
+            if (elements.initializeBtn) {
+                elements.initializeBtn.addEventListener('click', handleInitializeBatteries);
+            }
+            
+            if (elements.modbusConnectBtn) {
+                elements.modbusConnectBtn.addEventListener('click', handleModbusConnect);
+            }
+            
+            if (elements.modbusDisconnectBtn) {
+                elements.modbusDisconnectBtn.addEventListener('click', handleModbusDisconnect);
             }
             
             // Inicializar selector de baterías
             initBatterySelector();
             
             // Verificar estado inicial
-            checkConnectionStatus().then(connected => {
-                console.log(`ConnectionHandler: Estado inicial - Conectado: ${connected}`);
+            checkConnectionStatus().then(status => {
+                console.log(`ConnectionHandler: Estado inicial - PyModbus: ${status.modbus}, Bajo nivel: ${status.lowLevel}`);
             });
             
             console.log('ConnectionHandler: Inicialización completada');
         },
         
         /**
-         * Devuelve el estado actual de conexión
+         * Devuelve el estado actual de conexión PyModbus
          * @returns {boolean} - true si está conectado, false si no
          */
-        isConnected: function() {
-            return isConnected;
+        isModbusConnected: function() {
+            return modbusConnected;
         },
         
         /**
-         * Inicia el proceso de conexión manualmente
+         * Devuelve el estado actual de conexión a bajo nivel
+         * @returns {boolean} - true si está conectado, false si no
          */
-        connect: handleConnect,
-        
-        /**
-         * Inicia el proceso de desconexión manualmente
-         */
-        disconnect: handleDisconnect,
-        
-        /**
-         * Actualiza el estado de conexión sin iniciar la conexión/desconexión
-         * @param {boolean} connected - Nuevo estado de conexión
-         */
-        updateConnectionState: function(connected) {
-            if (connected !== isConnected) {
-                isConnected = connected;
-                dispatchConnectionEvent(connected);
-            }
+        isLowLevelConnected: function() {
+            return lowLevelConnected;
         },
+        
+        /**
+         * Inicia el proceso de conexión a bajo nivel manualmente
+         */
+        connectLowLevel: handleLowLevelConnect,
+        
+        /**
+         * Inicia el proceso de desconexión a bajo nivel manualmente
+         */
+        disconnectLowLevel: handleLowLevelDisconnect,
+        
+        /**
+         * Inicia el proceso de inicialización de baterías manualmente
+         */
+        initializeBatteries: handleInitializeBatteries,
+        
+        /**
+         * Inicia el proceso de conexión PyModbus manualmente
+         */
+        connectModbus: handleModbusConnect,
+        
+        /**
+         * Inicia el proceso de desconexión PyModbus manualmente
+         */
+        disconnectModbus: handleModbusDisconnect,
         
         /**
          * Reintenta la inicialización de una batería específica
          * @param {number} batteryId - ID de la batería a reintentar
          * @returns {Promise} - Promesa que se resuelve con el resultado del reintento
          */
-        retryBatteryInitialization: retryBatteryInitialization
+        retryBatteryInitialization: handleRetryBatteryInitialization,
+        
+        /**
+         * Actualiza el estado de conexión sin iniciar la conexión/desconexión
+         * @param {Object} state - Estado de conexión {modbus, lowLevel}
+         */
+        updateConnectionState: function(state) {
+            if (state.modbus !== undefined && state.modbus !== modbusConnected) {
+                modbusConnected = state.modbus;
+                dispatchModbusConnectionEvent(modbusConnected);
+            }
+            
+            if (state.lowLevel !== undefined && state.lowLevel !== lowLevelConnected) {
+                lowLevelConnected = state.lowLevel;
+                dispatchLowLevelConnectionEvent(lowLevelConnected);
+            }
+        }
     };
     
     // También exportar la función de reintento a window para uso global
-    window.retryBatteryInitialization = retryBatteryInitialization;
+    window.retryBatteryInitialization = handleRetryBatteryInitialization;
     
     return publicAPI;
 })();

@@ -218,7 +218,7 @@ const AuthenticationMonitor = (props) => {
     
     // NUEVO: Función para manejar reintento de batería
     const handleRetry = React.useCallback(async (batteryId) => {
-        if (!window.retryBatteryInitialization) {
+        if (!window.ConnectionHandler || !window.ConnectionHandler.retryBatteryInitialization) {
             console.error("Función retryBatteryInitialization no disponible");
             return;
         }
@@ -249,7 +249,7 @@ const AuthenticationMonitor = (props) => {
             }
             
             // Llamar a la función de reintento
-            const result = await window.retryBatteryInitialization(batteryId);
+            const result = await window.ConnectionHandler.retryBatteryInitialization(batteryId);
             
             // Actualizar la lista de baterías fallidas
             if (result.failed_batteries) {
