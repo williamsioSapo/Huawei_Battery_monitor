@@ -1,4 +1,5 @@
 // static/js/modbusApi.js
+'use strict';
 
 const BASE_URL = ''; // Si Flask corre en el mismo origen
 
@@ -22,7 +23,6 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     try {
         const response = await fetch(BASE_URL + endpoint, options);
         if (!response.ok) {
-            // Intenta obtener un mensaje de error del cuerpo si es posible
             let errorData;
             try {
                 errorData = await response.json();
@@ -30,18 +30,17 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
                 // Si el cuerpo no es JSON o está vacío
                 errorData = { message: `Error HTTP ${response.status}: ${response.statusText}` };
             }
-            // Lanza un error con el mensaje del backend o un mensaje genérico
-            throw new Error(errorData?.message || `Error HTTP ${response.status}`);
+            // El error se lanzará y se espera que el llamador lo capture y lo loguee con más contexto.
+            throw new Error(errorData.message || `Error HTTP ${response.status} para ${endpoint}`);
         }
         // Si la respuesta es OK pero no tiene cuerpo (ej. 204 No Content)
         if (response.status === 204) {
-            return { status: 'success', message: 'Operación exitosa (sin contenido)'}; // O devuelve null o lo que tenga sentido
+            return { status: 'success', message: 'Operación exitosa (sin contenido)'};
         }
         return await response.json(); // Devuelve el cuerpo JSON
     } catch (error) {
-        console.error(`API request failed for ${method} ${endpoint}:`, error);
-        // Re-lanza el error para que sea manejado por quien llama a la función
-        throw error;
+        // Utils.logError(`Fallo en API request: ${method} ${endpoint}: ${error.message}`, "ModbusAPI"); // Log opcional aquí
+        throw error; // Re-lanza el error para que sea manejado por quien llama a la función
     }
 }
 
@@ -89,7 +88,11 @@ function writeModbusRegisters(params) {
     return apiRequest('/api/write', 'POST', params);
 }
 
+// Esta función no parece usarse en main.js original, que usa /api/device_info
 function readModbusDeviceInfo(params) {
+    // Ya se usa Utils.logWarn en la versión previa, lo cual está bien.
+    // Si no estuviera, aquí se añadiría:
+    Utils.logWarn("Llamada a readModbusDeviceInfo (directo), se prefiere /api/device_info (cache)", "ModbusAPI");
     return apiRequest('/api/read_device_info', 'POST', params);
 }
 
@@ -110,9 +113,9 @@ function getAllBatteriesStatus() {
     return apiRequest('/api/batteries/status', 'GET');
 }
 
-function getBatteryStatus(batteryId) {
-    return apiRequest(`/api/batteries/status/${batteryId}`, 'GET');
-}
+// function getBatteryStatus(batteryId) { // No parece usarse directamente
+//     return apiRequest(`/api/batteries/status/${batteryId}`, 'GET');
+// }
 
 // Función para iniciar la carga de información detallada
 function loadBatteriesDetailedInfo(batteryIds = []) {

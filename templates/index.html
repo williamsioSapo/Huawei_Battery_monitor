@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/authentication_monitor.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/batteryDetailView.css') }}">
+
     <!-- Favicon (opcional, pero evita el error 404 en consola) -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
@@ -129,24 +131,6 @@
                 <div class="message-area" id="modbusConnectionMessage"></div>
             </section>
 
-            <!-- Sección de Panel de Batería Individual (Original) -->
-            <section id="battery-dashboard" class="section card" style="display: none;">
-                <h2>Panel de Control de Batería Individual</h2>
-
-                <!-- Contenedor donde se montará el componente React -->
-                <div id="react-battery-panel">
-                    <!-- React generará el contenido aquí -->
-                </div>
-
-                <!-- Controles fuera del componente React -->
-                <div class="button-group">
-                    <button id="refreshDashboardBtn">Actualizar</button>
-                    <button id="startMonitoringBtn">Iniciar Monitoreo</button>
-                    <button id="stopMonitoringBtn" disabled>Detener Monitoreo</button>
-                </div>
-                <div class="message-area" id="dashboardMessage"></div>
-            </section>
-
             <!-- NUEVA SECCIÓN: Panel Multi-Batería -->
             <section id="multi-battery-section" class="section card" style="display: none;">
                 <h2>Monitoreo de Múltiples Baterías</h2>
@@ -260,13 +244,12 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
     <!-- Scripts de la aplicación (Orden Importante) -->
+	<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <!-- 1. API Helper -->
     <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
     <!-- 2. Módulos refactorizados (NUEVOS) -->
     <script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
     <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
-    <!-- 3. Componente React para batería individual -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/reactBatteryPanel.js') }}"></script>
     <!-- 4. Componente BatteryMiniPanel (NUEVO) -->
     <script type="text/babel" src="{{ url_for('static', filename='js/batteryMiniPanel.js') }}"></script>
     <!-- 5. Componente BatteryDetailView -->
@@ -276,8 +259,6 @@
     <script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
     <!-- 7. Lógica principal (ACTUALIZADO) -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <!-- 8. Lógica del Dashboard individual -->
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <!-- 9. Lógica de la Consola Web -->
     <script src="{{ url_for('static', filename='js/console.js') }}"></script>
 

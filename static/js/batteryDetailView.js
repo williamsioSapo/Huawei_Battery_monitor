@@ -6,18 +6,79 @@
  * Recibe los datos de la batería y maneja la visualización detallada.
  */
 const BatteryDetailView = (props) => {
+    // Estado para controlar la visualización de datos en bruto
+    const [showRawData, setShowRawData] = React.useState(false);
+    
     // Datos de entrada vía props
     const batteryData = props.batteryData;
-    const detailedInfo = props.detailedInfo; // Nueva prop para info detallada
-    const loadingDetailedInfo = props.loadingDetailedInfo; // Nueva prop para estado de carga
+    const detailedInfo = props.detailedInfo; // Info detallada
+    const loadingDetailedInfo = props.loadingDetailedInfo; // Estado de carga
     const onClose = props.onClose || function() {};
     const getBatteryStatusClass = props.getBatteryStatusClass || function() { return ''; };
+
+    /**
+     * Maneja la verificación de celdas individuales
+     */
+    const handleVerifyCells = async () => {
+        if (!batteryData || !batteryData.id) return;
+        
+        try {
+            Utils.logInfo(`Iniciando verificación de celdas para batería ${batteryData.id}`, 'BatteryDetailView');
+            
+            // Mostrar mensaje de proceso
+            const detailBody = document.querySelector('.detail-body');
+            if (!detailBody) return;
+            
+            let messageArea = document.querySelector('.detail-message');
+            if (!messageArea) {
+                messageArea = document.createElement('div');
+                messageArea.className = 'detail-message info';
+                detailBody.appendChild(messageArea);
+            }
+            
+            messageArea.className = 'detail-message info';
+            messageArea.textContent = 'Verificando celdas individuales...';
+            
+            // Llamar a la API de verificación de celdas
+            if (typeof verifyCellData === 'function') {
+                const result = await verifyCellData(batteryData.id);
+                
+                if (result && result.status === 'success') {
+                    messageArea.className = 'detail-message success';
+                    messageArea.textContent = 'Verificación iniciada. Revise la consola para ver resultados detallados.';
+                } else {
+                    messageArea.className = 'detail-message error';
+					messageArea.textContent = `Error: ${(result && result.message) ? result.message : 'No se pudo verificar las celdas'}`;                    
+                }
+            } else {
+                messageArea.className = 'detail-message error';
+                messageArea.textContent = 'Error: función de verificación no disponible';
+            }
+            
+            // Eliminar el mensaje después de 5 segundos
+            setTimeout(() => {
+                if (messageArea && messageArea.parentNode) {
+                    messageArea.parentNode.removeChild(messageArea);
+                }
+            }, 5000);
+            
+        } catch (error) {
+            Utils.logError(`Error al verificar celdas: ${error.message}`, 'BatteryDetailView');
+        }
+    };
+    
+    /**
+     * Alterna la visualización de datos en bruto
+     */
+    const toggleRawData = () => {
+        setShowRawData(!showRawData);
+    };
 
     // Función auxiliar para formatear timestamp
     const formatTimestamp = (timestamp) => {
         if (!timestamp) return 'N/A';
-        const date = new Date(timestamp * 1000);
-        return date.toLocaleTimeString();
+        // Usar la función de Utils para formato consistente
+        return Utils.formatTimestamp(timestamp, true);
     };
 
     // Si no hay datos de batería, no renderizar nada
@@ -42,6 +103,7 @@ const BatteryDetailView = (props) => {
         if (loadingDetailedInfo) {
             return (
                 <div className="loading-info">
+                    <div className="loading-spinner"></div>
                     <p>Cargando información detallada...</p>
                 </div>
             );
@@ -94,12 +156,27 @@ const BatteryDetailView = (props) => {
         );
     };
     
+    // Función para renderizar la sección de datos en bruto
+    const renderRawData = () => {
+        if (!showRawData) return null;
+        
+        const rawData = detailedInfo && detailedInfo.status === "success" && detailedInfo.combined_text ? 
+                        detailedInfo.combined_text : 'No hay datos en bruto disponibles';
+        
+        return (
+            <div className="detail-section raw-data-section">
+                <h4>Datos en Bruto</h4>
+                <pre className="raw-data-content">{rawData}</pre>
+            </div>
+        );
+    };
+    
     return (
         <div className="battery-detail-modal">
             <div className="battery-detail-content">
                 <div className="detail-header">
                     <h3>{customName}</h3>
-                    <button className="close-btn" onClick={onClose}>×</button>
+                    <button className="battery-detail-close-btn" onClick={onClose}>×</button>
                 </div>
                 <div className="detail-body">
                     <div className="detail-section">
@@ -124,7 +201,7 @@ const BatteryDetailView = (props) => {
                         </div>
                     </div>
                     
-                    {/* Nueva sección de información detallada */}
+                    {/* Sección de información detallada */}
                     {renderDetailedInfo()}
                     
                     <div className="detail-section">
@@ -182,6 +259,28 @@ const BatteryDetailView = (props) => {
                             </div>
                         </div>
                     </div>
+                    
+                    {/* Nueva sección para acciones */}
+                    <div className="detail-section actions-section">
+                        <h4>Acciones</h4>
+                        <div className="detail-actions">
+                            <button 
+                                className="action-btn verify-cells-btn" 
+                                onClick={handleVerifyCells}
+                            >
+                                <i className="action-icon">🔍</i> Verificar Celdas
+                            </button>
+                            <button 
+                                className={`action-btn raw-data-btn ${showRawData ? 'active' : ''}`} 
+                                onClick={toggleRawData}
+                            >
+                                <i className="action-icon">📋</i> {showRawData ? 'Ocultar Datos Brutos' : 'Ver Datos Brutos'}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {/* Sección condicional para mostrar datos en bruto */}
+                    {renderRawData()}
                 </div>
             </div>
         </div>

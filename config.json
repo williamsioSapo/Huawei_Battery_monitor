@@ -132,5 +132,16 @@
         "auto_start": false
       }
     }
+  },
+  "logging": {
+    "log_level": "INFO",
+    "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "max_console_messages": 500,
+    "verbose_modules": [
+      "device_info_manager",
+      "device_communication",
+      "device_cache",
+      "battery_monitor"
+    ]
   }
 }

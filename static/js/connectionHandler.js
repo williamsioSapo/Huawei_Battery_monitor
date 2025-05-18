@@ -62,27 +62,27 @@ const ConnectionHandler = (function() {
         const params = getConnectionParams();
         
         // Mostrar mensaje de conexión
-        showConnectionMessage('Conectando a bajo nivel...', 'info');
+        Utils.showMessage(elements.messageEl, 'Conectando a bajo nivel...', 'info');
         
         try {
             // Establecer conexión a bajo nivel
             const result = await lowLevelConnect(params);
             
             if (result.status === 'success' || result.status === 'warning') {
-                showConnectionMessage(`Conexión de bajo nivel establecida: ${result.message}`, 'success');
+                Utils.showMessage(elements.messageEl, `Conexión de bajo nivel establecida: ${result.message}`, 'success');
                 
                 // Actualizar estado interno
                 lowLevelConnected = true;
                 dispatchLowLevelConnectionEvent(true);
             } else {
-                showConnectionMessage(`Error en conexión a bajo nivel: ${result.message}`, 'error');
+                Utils.showMessage(elements.messageEl, `Error en conexión a bajo nivel: ${result.message}`, 'error');
                 
                 // Actualizar estado interno
                 lowLevelConnected = false;
                 dispatchLowLevelConnectionEvent(false);
             }
         } catch (error) {
-            showConnectionMessage(`Error: ${error.message}`, 'error');
+            Utils.showMessage(elements.messageEl, `Error: ${error.message}`, 'error');
             
             // Actualizar estado interno
             lowLevelConnected = false;
@@ -102,19 +102,19 @@ const ConnectionHandler = (function() {
         // Deshabilitar botones durante la operación
         elements.lowLevelDisconnectBtn.disabled = true;
         
-        showConnectionMessage('Desconectando a bajo nivel...', 'info');
+        Utils.showMessage(elements.messageEl, 'Desconectando a bajo nivel...', 'info');
         
         try {
             // Desconectar a bajo nivel
             const result = await lowLevelDisconnect();
             
-            showConnectionMessage(result.message, result.status);
+            Utils.showMessage(elements.messageEl, result.message, result.status);
             
             // Actualizar estado interno
             lowLevelConnected = false;
             dispatchLowLevelConnectionEvent(false);
         } catch (error) {
-            showConnectionMessage(`Error: ${error.message}`, 'error');
+            Utils.showMessage(elements.messageEl, `Error: ${error.message}`, 'error');
         } finally {
             // Actualizar estado de botones
             updateButtonStates();
@@ -133,13 +133,13 @@ const ConnectionHandler = (function() {
 		// Mostrar monitor de autenticación durante el proceso
 		showAuthMonitor();
 		
-		showConnectionMessage('Inicializando baterías...', 'info');
+		Utils.showMessage(elements.messageEl, 'Inicializando baterías...', 'info');
 		
 		try {
 			// Inicializar baterías
 			const result = await lowLevelInitialize();
 			
-			showConnectionMessage(result.message, result.status);
+			Utils.showMessage(elements.messageEl, result.message, result.status);
 			
 			// Actualizar estado de autenticación en UiManager (esto solo actualiza UI)
 			if (typeof window.UiManager !== 'undefined' && 
@@ -149,7 +149,7 @@ const ConnectionHandler = (function() {
 			
 			// NUEVO: Verifica si todas las baterías están autenticadas para disparar el evento
 			if (result.all_authenticated === true) {
-				console.log("ConnectionHandler: ¡TODAS LAS BATERÍAS AUTENTICADAS! Disparando evento de transición...");
+				Utils.logInfo("¡TODAS LAS BATERÍAS AUTENTICADAS! Disparando evento de transición...", "ConnectionHandler");
 				
 				// Disparar evento para iniciar transición automática
 				document.dispatchEvent(new CustomEvent('authentication-status-change', {
@@ -164,7 +164,7 @@ const ConnectionHandler = (function() {
 			
 			// Mantener monitor visible si se requiere acción
 			if (result.auth_requires_action) {
-				console.log("Manteniendo monitor de autenticación visible - se requiere acción para baterías fallidas");
+				Utils.logInfo("Manteniendo monitor de autenticación visible - se requiere acción para baterías fallidas", "ConnectionHandler");
 				
 				// Notificar a AuthMonitor que se requiere acción
 				if (window.AuthMonitor && window.AuthMonitor.setRequiresAction) {
@@ -176,7 +176,7 @@ const ConnectionHandler = (function() {
 			}
 			
 		} catch (error) {
-			showConnectionMessage(`Error: ${error.message}`, 'error');
+			Utils.showMessage(elements.messageEl, `Error: ${error.message}`, 'error');
 			
 			// CORREGIDO: NO ocultar el monitor en caso de error
 			// El usuario necesita ver qué falló
@@ -199,14 +199,14 @@ const ConnectionHandler = (function() {
         // Obtener parámetros de conexión
         const params = getConnectionParams();
         
-        showConnectionMessage('Conectando cliente PyModbus...', 'info');
+        Utils.showMessage(elements.messageEl, 'Conectando cliente PyModbus...', 'info');
         
         try {
             // Conectar cliente PyModbus
             const result = await connectModbus(params);
             
             if (result.status === 'success' || result.status === 'warning') {
-                showConnectionMessage(result.message, result.status);
+                Utils.showMessage(elements.messageEl, result.message, result.status);
                 
                 // Actualizar estado interno
                 modbusConnected = true;
@@ -219,14 +219,14 @@ const ConnectionHandler = (function() {
                     }, 500);
                 }
             } else {
-                showConnectionMessage(result.message, result.status);
+                Utils.showMessage(elements.messageEl, result.message, result.status);
                 
                 // Actualizar estado interno
                 modbusConnected = false;
                 dispatchModbusConnectionEvent(false);
             }
         } catch (error) {
-            showConnectionMessage(`Error: ${error.message}`, 'error');
+            Utils.showMessage(elements.messageEl, `Error: ${error.message}`, 'error');
             
             // Actualizar estado interno
             modbusConnected = false;
@@ -246,19 +246,19 @@ const ConnectionHandler = (function() {
         // Deshabilitar botones durante la operación
         elements.modbusDisconnectBtn.disabled = true;
         
-        showConnectionMessage('Desconectando cliente PyModbus...', 'info');
+        Utils.showMessage(elements.messageEl, 'Desconectando cliente PyModbus...', 'info');
         
         try {
             // Desconectar cliente PyModbus
             const result = await disconnectModbus();
             
-            showConnectionMessage(result.message, result.status);
+            Utils.showMessage(elements.messageEl, result.message, result.status);
             
             // Actualizar estado interno
             modbusConnected = false;
             dispatchModbusConnectionEvent(false);
         } catch (error) {
-            showConnectionMessage(`Error: ${error.message}`, 'error');
+            Utils.showMessage(elements.messageEl, `Error: ${error.message}`, 'error');
         } finally {
             // Actualizar estado de botones
             updateButtonStates();
@@ -275,7 +275,7 @@ const ConnectionHandler = (function() {
         
         return new Promise(async (resolve, reject) => {
             try {
-                showConnectionMessage(`Reintentando inicialización de batería ${batteryId}...`, 'info');
+                Utils.showMessage(elements.messageEl, `Reintentando inicialización de batería ${batteryId}...`, 'info');
                 
                 // Verificar que hay conexión a bajo nivel activa
                 if (!lowLevelConnected) {
@@ -285,7 +285,7 @@ const ConnectionHandler = (function() {
                 const result = await lowLevelRetryBattery(batteryId);
                 
                 if (result.status === 'success') {
-                    showConnectionMessage(result.message, 'success');
+                    Utils.showMessage(elements.messageEl, result.message, 'success');
                     
                     // Actualizar estado de autenticación en UiManager
                     if (typeof window.UiManager !== 'undefined' && 
@@ -302,38 +302,38 @@ const ConnectionHandler = (function() {
                     
                     resolve(result);
                 } else {
-                    showConnectionMessage(result.message, 'error');
+                    Utils.showMessage(elements.messageEl, result.message, 'error');
                     reject(new Error(result.message));
                 }
             } catch (error) {
-                showConnectionMessage(`Error al reintentar: ${error.message}`, 'error');
+                Utils.showMessage(elements.messageEl, `Error al reintentar: ${error.message}`, 'error');
                 reject(error);
             }
         });
     }
     
     /**
-     * Muestra un mensaje en el área de conexión
-     * @param {string} message - Mensaje a mostrar
-     * @param {string} type - Tipo de mensaje (success, error, info)
+     * Muestra el monitor de autenticación
+     * @private
      */
-    function showConnectionMessage(message, type = 'info') {
-        if (!elements.messageEl) return;
-        
-        if (elements.messageEl.timeoutId) {
-            clearTimeout(elements.messageEl.timeoutId);
+    function showAuthMonitor() {
+        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.show) {
+            window.AuthMonitor.show();
+            Utils.logInfo("Monitor de autenticación activado", "ConnectionHandler");
+        } else {
+            Utils.logWarn("Monitor de autenticación no disponible", "ConnectionHandler");
         }
-        
-        elements.messageEl.textContent = message;
-        elements.messageEl.className = `message-area ${type}`;
-        
-        // Auto-limpiar después de un tiempo
-        elements.messageEl.timeoutId = setTimeout(() => {
-            if (elements.messageEl.textContent === message) {
-                elements.messageEl.textContent = '';
-                elements.messageEl.className = 'message-area';
-            }
-        }, 5000);
+    }
+
+    /**
+     * Oculta el monitor de autenticación
+     * @private
+     */
+    function hideAuthMonitor() {
+        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.hide) {
+            window.AuthMonitor.hide();
+            Utils.logInfo("Monitor de autenticación desactivado", "ConnectionHandler");
+        }
     }
     
     /**
@@ -370,7 +370,7 @@ const ConnectionHandler = (function() {
      * @param {boolean} connected - Estado de conexión
      */
     function dispatchLowLevelConnectionEvent(connected) {
-        console.log(`ConnectionHandler: Disparando evento low-level-connection-status-change (connected: ${connected})`);
+        Utils.logInfo(`Disparando evento low-level-connection-status-change (connected: ${connected})`, "ConnectionHandler");
         
         // Actualizar estado de los botones
         updateButtonStates();
@@ -386,7 +386,7 @@ const ConnectionHandler = (function() {
      * @param {boolean} connected - Estado de conexión
      */
     function dispatchModbusConnectionEvent(connected) {
-        console.log(`ConnectionHandler: Disparando evento modbus-connection-status-change (connected: ${connected})`);
+        Utils.logInfo(`Disparando evento modbus-connection-status-change (connected: ${connected})`, "ConnectionHandler");
         
         // Actualizar estado de los botones
         updateButtonStates();
@@ -431,7 +431,7 @@ const ConnectionHandler = (function() {
                 });
             }
         } catch (error) {
-            console.error('Error al cargar baterías disponibles:', error);
+            Utils.logError(`Error al cargar baterías disponibles: ${error}`, "ConnectionHandler");
             // Añadir opción predeterminada en caso de error
             elements.slaveIdSelect.innerHTML = '<option value="217">Batería 217</option>';
         }
@@ -471,35 +471,11 @@ const ConnectionHandler = (function() {
                 lowLevel: lowLevelConnected
             };
         } catch (error) {
-            console.error('Error al verificar estado de conexión:', error);
+            Utils.logError(`Error al verificar estado de conexión: ${error}`, "ConnectionHandler");
             return { 
                 modbus: false,
                 lowLevel: false
             };
-        }
-    }
-    
-    /**
-     * Muestra el monitor de autenticación
-     * @private
-     */
-    function showAuthMonitor() {
-        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.show) {
-            window.AuthMonitor.show();
-            console.log("Monitor de autenticación activado");
-        } else {
-            console.warn("Monitor de autenticación no disponible");
-        }
-    }
-
-    /**
-     * Oculta el monitor de autenticación
-     * @private
-     */
-    function hideAuthMonitor() {
-        if (typeof window.AuthMonitor !== 'undefined' && window.AuthMonitor.hide) {
-            window.AuthMonitor.hide();
-            console.log("Monitor de autenticación desactivado");
         }
     }
     
@@ -510,7 +486,7 @@ const ConnectionHandler = (function() {
          * @param {Object} domElements - Referencias a elementos DOM necesarios
          */
         init: function(domElements) {
-            console.log('ConnectionHandler: Inicializando...');
+            Utils.logInfo('Inicializando...', "ConnectionHandler");
             
             // Guardar referencias a elementos DOM
             elements = { ...elements, ...domElements };
@@ -541,10 +517,10 @@ const ConnectionHandler = (function() {
             
             // Verificar estado inicial
             checkConnectionStatus().then(status => {
-                console.log(`ConnectionHandler: Estado inicial - PyModbus: ${status.modbus}, Bajo nivel: ${status.lowLevel}`);
+                Utils.logInfo(`Estado inicial - PyModbus: ${status.modbus}, Bajo nivel: ${status.lowLevel}`, "ConnectionHandler");
             });
             
-            console.log('ConnectionHandler: Inicialización completada');
+            Utils.logInfo('Inicialización completada', "ConnectionHandler");
         },
         
         /**

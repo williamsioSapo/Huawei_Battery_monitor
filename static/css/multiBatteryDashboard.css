@@ -274,42 +274,8 @@
 }
 
 /* Ventana modal para vista detallada de batería */
-.battery-detail-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
 
-.battery-detail-content {
-    background-color: white;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
 
-.detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.detail-header h3 {
-    margin: 0;
-    color: #2c3e50;
-    font-weight: 600;
-}
 
 .close-btn {
     background: none;
@@ -321,54 +287,9 @@
     line-height: 1;
 }
 
-.detail-body {
-    padding: 20px;
-}
 
-.detail-section {
-    margin-bottom: 25px;
-}
 
-.detail-section h4 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #34495e;
-    font-size: 1.1em;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
 
-.info-grid, .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.info-item, .detail-metric {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-label, .detail-metric .metric-label {
-    font-size: 0.8em;
-    color: #7f8c8d;
-    margin-bottom: 5px;
-}
-
-.info-value, .detail-metric .metric-value {
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-.raw-values {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.9em;
-    overflow-x: auto;
-    margin-top: 5px;
-}
 
 /* Estilos responsivos */
 @media (max-width: 768px) {

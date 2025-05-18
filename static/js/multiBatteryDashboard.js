@@ -538,7 +538,6 @@ let multiBatteryDashboardRoot = null;
 
 /**
  * Función GLOBAL para actualizar el estado del panel múltiple
- * Similar a window.updateBatteryPanel para permitir actualizaciones externas
  * @param {object} props - Propiedades para actualizar el estado (opcional)
  */
 window.updateMultiBatteryDashboard = function(props) {

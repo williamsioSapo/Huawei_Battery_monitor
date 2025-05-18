@@ -1,19 +1,25 @@
-// static/js/main.js (refactorizado)
-
-/**
- * Archivo principal - Versión refactorizada
- * Coordina los módulos y maneja la inicialización de la aplicación
- */
+// static/js/main.js (versión corregida)
 
 // Esperamos a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Main.js: DOMContentLoaded - Inicializando aplicación");
+    Utils.logInfo("Inicializando aplicación", "Main");
     
     // Recopilar referencias a elementos DOM principales para conexión
+    // CORREGIDO: Usar los mismos nombres y IDs que la versión original
     const connectionElements = {
-        connectBtn: document.getElementById('connectBtn'),
-        disconnectBtn: document.getElementById('disconnectBtn'),
+        // Elementos para la conexión a bajo nivel - usar nombres compatibles con el HTML actual
+        lowLevelConnectBtn: document.getElementById('lowLevelConnectBtn'),
+        lowLevelDisconnectBtn: document.getElementById('lowLevelDisconnectBtn'),
+        initializeBtn: document.getElementById('initializeBtn'),
+        
+        // Elementos para la conexión PyModbus
+        modbusConnectBtn: document.getElementById('modbusConnectBtn'),
+        modbusDisconnectBtn: document.getElementById('modbusDisconnectBtn'),
+        
+        // Elementos comunes
         messageEl: document.getElementById('connectionMessage'),
+        
+        // Elementos de parámetros
         slaveIdSelect: document.getElementById('slaveId'),
         portInput: document.getElementById('port'),
         baudrateSelect: document.getElementById('baudrate'),
@@ -24,16 +30,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     // Recopilar referencias a secciones principales
+    // CORREGIDO: Usar solo las secciones originales para mantener compatibilidad
     const uiSections = {
         connectionStatusEl: document.getElementById('connectionStatus'),
         connectionStatusText: document.querySelector('#connectionStatus .text'),
         connectionSection: document.getElementById('connection-section'),
-        batteryDashboardSection: document.getElementById('battery-dashboard'),
         multiBatterySection: document.getElementById('multi-battery-section'),
         readSection: document.getElementById('read-section'),
         writeSection: document.getElementById('write-section'),
         deviceInfoSection: document.getElementById('device-info-section')
     };
+    
+    // CORREGIDO: Asegurarse de que las secciones críticas estén visibles
+    const lowLevelSection = document.getElementById('low-level-connection-section');
+    if (lowLevelSection) {
+        lowLevelSection.style.display = 'block';
+    }
     
     // Inicializar módulos principales
     initConnectionHandler(connectionElements);
@@ -43,38 +55,46 @@ document.addEventListener('DOMContentLoaded', () => {
     initReadSection();
     initWriteSection();
     initDeviceInfoSection();
+    initMultiBatteryIntegration();
     
-    // Inicializar los componentes de dashboard (si existen sus funciones)
-    initDashboards();
+    // Configurar listeners para eventos de sistema
     setupEventListeners();
-    console.log("Main.js: Inicialización completada");
+    
+    Utils.logInfo("Inicialización completada", "Main");
+    
+    // CORREGIDO: Verificar nuevamente que las secciones críticas estén visibles
+    setTimeout(() => {
+        if (lowLevelSection && lowLevelSection.style.display !== 'block') {
+            Utils.logInfo("Forzando visibilidad de sección critical de conexión", "Main");
+            lowLevelSection.style.display = 'block';
+        }
+    }, 500);
 });
 
 /**
  * Inicializa el gestor de conexiones
- * @param {Object} elements - Referencias a elementos DOM para conexión
  */
 function initConnectionHandler(elements) {
+    // CORREGIDO: Usar la verificación original
     if (typeof window.ConnectionHandler === 'undefined') {
-        console.error("Main.js: Error crítico - ConnectionHandler no encontrado");
+        Utils.logError("Error crítico - ConnectionHandler no encontrado", "Main");
         return;
     }
     
-    console.log("Main.js: Inicializando ConnectionHandler");
+    Utils.logInfo("Inicializando ConnectionHandler", "Main");
     window.ConnectionHandler.init(elements);
 }
 
 /**
  * Inicializa el gestor de interfaz de usuario
- * @param {Object} sections - Referencias a secciones principales
  */
 function initUiManager(sections) {
     if (typeof window.UiManager === 'undefined') {
-        console.error("Main.js: Error crítico - UiManager no encontrado");
+        Utils.logError("Error crítico - UiManager no encontrado", "Main");
         return;
     }
     
-    console.log("Main.js: Inicializando UiManager");
+    Utils.logInfo("Inicializando UiManager", "Main");
     window.UiManager.init(sections);
 }
 
@@ -90,7 +110,6 @@ function initReadSection() {
     const readResultEl = document.getElementById('readResult');
     const dataTableBody = document.getElementById('dataTableBody');
     
-    // Salir si no se encuentran elementos críticos
     if (!readBtn || !readResultEl) return;
     
     readBtn.addEventListener('click', async () => {
@@ -107,83 +126,17 @@ function initReadSection() {
         try {
             const result = await readModbusRegisters(params);
             if (result.status === 'success' && Array.isArray(result.data)) {
-                displayReadData(result.data, params.address);
+                // CORREGIDO: Usar la función de Utils
+                Utils.displayRegisterData(dataTableBody, result.data, params.address);
+                readResultEl.textContent = JSON.stringify(result.data, null, 2);
             } else {
                 readResultEl.textContent = `Error: ${result.message || 'Respuesta inválida'}`;
             }
         } catch (error) {
+            Utils.logError(`Error al leer registros: ${error.message}`, "Main");
             readResultEl.textContent = `Error: ${error.message}`;
         }
     });
-    
-    // Esta función procesará y mostrará los datos leídos
-    function displayReadData(data, baseAddress) {
-        if (!readResultEl || !dataTableBody) return;
-        
-        readResultEl.textContent = JSON.stringify(data, null, 2);
-        dataTableBody.innerHTML = '';
-        
-        // Verificar que la tabla tenga la columna de valor interpretado
-        const headerRow = document.querySelector('#dataTable thead tr');
-        if (headerRow && headerRow.cells.length < 4) {
-            const interpretedHeader = document.createElement('th');
-            interpretedHeader.textContent = 'Valor Interpretado';
-            headerRow.appendChild(interpretedHeader);
-        }
-        
-        // Mostrar los datos en la tabla
-        data.forEach((value, index) => {
-            const address = baseAddress + index;
-            const row = dataTableBody.insertRow();
-            const interpretation = interpretRegisterValue(address, value);
-            
-            row.insertCell().textContent = `${address} - ${interpretation.name}`;
-            row.insertCell().textContent = value.toString();
-            
-            const hexCell = row.insertCell();
-            hexCell.textContent = (typeof value === 'boolean') 
-                ? (value ? 'TRUE' : 'FALSE') 
-                : '0x' + value.toString(16).toUpperCase().padStart(4, '0');
-            
-            const interpretedCell = row.insertCell();
-            interpretedCell.textContent = interpretation.unit 
-                ? `${interpretation.interpretedValue} ${interpretation.unit}` 
-                : interpretation.interpretedValue;
-        });
-    }
-    
-    // Define cómo interpretar valores específicos de registros
-    function interpretRegisterValue(address, value) {
-        // Mapa de registros conocidos (copia simplificada del original)
-        const HUAWEI_BATTERY_REGISTERS = {
-            0: { name: "Battery Voltage", unit: "V", factor: 0.01, signed: false },
-            1: { name: "Pack Voltage", unit: "V", factor: 0.01, signed: false },
-            2: { name: "Battery Current", unit: "A", factor: 0.01, signed: true },
-            3: { name: "Battery SOC", unit: "%", factor: 1, signed: false },
-            4: { name: "Battery SOH", unit: "%", factor: 1, signed: false },
-            5: { name: "Reg Unknown 5", unit: "", factor: 1, signed: false },
-            6: { name: "Reg Unknown 6", unit: "", factor: 1, signed: false }
-        };
-        
-        if (!HUAWEI_BATTERY_REGISTERS[address]) {
-            return { name: `Registro ${address}`, rawValue: value, unit: '', interpretedValue: value.toString() };
-        }
-        
-        const register = HUAWEI_BATTERY_REGISTERS[address];
-        let processedValue = value;
-        
-        if (register.signed && value > 32767) {
-            processedValue = value - 65536;
-        }
-        
-        const scaledValue = processedValue * register.factor;
-        return { 
-            name: register.name, 
-            rawValue: value, 
-            unit: register.unit, 
-            interpretedValue: scaledValue.toFixed(2).replace(/\.?0+$/, '') 
-        };
-    }
 }
 
 /**
@@ -197,11 +150,9 @@ function initWriteSection() {
     const writeBtn = document.getElementById('writeBtn');
     const writeMessageEl = document.getElementById('writeMessage');
     
-    // Salir si no se encuentran elementos críticos
     if (!writeBtn || !writeMessageEl) return;
     
     writeBtn.addEventListener('click', async () => {
-        // Procesar valores según el tipo de función
         const valuesText = writeValuesInput?.value || '';
         let values;
         const writeFunction = writeFunctionSelect?.value || 'holding';
@@ -225,6 +176,7 @@ function initWriteSection() {
             if (values.length === 0) throw new Error("No se proporcionaron valores.");
             
         } catch (parseError) {
+            Utils.logWarn(`Error en valores: ${parseError.message}`, "Main");
             if (window.UiManager) {
                 window.UiManager.showMessage(writeMessageEl, `Error en valores: ${parseError.message}`, 'error');
             } else {
@@ -234,7 +186,6 @@ function initWriteSection() {
             return;
         }
         
-        // Preparar parámetros y ejecutar
         const params = {
             slaveId: parseInt(writeSlaveIdInput?.value || '217'),
             function: writeFunction,
@@ -259,6 +210,7 @@ function initWriteSection() {
                 writeMessageEl.className = `message-area ${result.status || 'info'}`;
             }
         } catch (error) {
+            Utils.logError(`Error al escribir registros: ${error.message}`, "Main");
             if (window.UiManager) {
                 window.UiManager.showMessage(writeMessageEl, `Error: ${error.message}`, 'error');
             } else {
@@ -277,7 +229,6 @@ function initDeviceInfoSection() {
     const deviceInfoResultEl = document.getElementById('deviceInfoResult')?.querySelector('code');
     const deviceInfoMessageEl = document.getElementById('deviceInfoMessage');
     
-    // Salir si no se encuentran elementos críticos
     if (!readInfoBtn || !deviceInfoResultEl) return;
     
     readInfoBtn.addEventListener('click', async () => {
@@ -316,7 +267,7 @@ function initDeviceInfoSection() {
             }
             
         } catch (error) {
-            console.error('Error al leer información del dispositivo:', error);
+            Utils.logError(`Error al leer información del dispositivo: ${error.message}`, "Main");
             
             if (window.UiManager) {
                 window.UiManager.showMessage(deviceInfoMessageEl, `Error: ${error.message}`, 'error');
@@ -329,7 +280,6 @@ function initDeviceInfoSection() {
         }
     });
     
-    // Función para mostrar la información del dispositivo
     function displayDeviceInfo(fragments) {
         if (!deviceInfoResultEl) return;
         
@@ -358,7 +308,6 @@ function initDeviceInfoSection() {
         deviceInfoResultEl.textContent = formattedOutput;
     }
     
-    // Función para extraer datos estructurados del dispositivo
     function extractDeviceData(fragments) {
         let data = { 
             manufacturer: '', 
@@ -376,7 +325,7 @@ function initDeviceInfoSection() {
             const manufacturerMatch = content.match(/[vV]endorName=([^\r\n]+)/);
             if (manufacturerMatch) data.manufacturer = manufacturerMatch[1].trim();
             
-            const modelMatch = content.match(/Model=([^\r\n]+)/) || content.match(/BoardType=([^\r\n]+)/);
+            const modelMatch = content.match(/BoardType=([^\r\n]+)/) || content.match(/Model=([^\r\n]+)/);
             if (modelMatch) data.model = modelMatch[1].trim();
             
             const barcodeMatch = content.match(/BarCode=([^\r\n]+)/);
@@ -400,30 +349,10 @@ function initDeviceInfoSection() {
 }
 
 /**
- * Inicializa los componentes de dashboard
- */
-function initDashboards() {
-    console.log("Main.js: Inicializando componentes de dashboard");
-    
-    // Inicializar dashboard individual si existe la función
-    if (typeof initDashboard === 'function') {
-        console.log("Main.js: Llamando a initDashboard...");
-        initDashboard();
-    } else {
-        console.warn("Main.js: initDashboard no está definida (verifique que dashboard.js se carga correctamente).");
-    }
-    
-    // Configurar la integración del panel múltiple si existe
-    initMultiBatteryIntegration();
-    
-    console.log("Main.js: Inicialización de dashboards completada");
-}
-
-/**
  * Inicializa la integración del panel múltiple
  */
 function initMultiBatteryIntegration() {
-    console.log("Main.js: initMultiBatteryIntegration - Inicializando...");
+    Utils.logInfo("Inicializando integración de panel múltiple", "Main");
     
     // Estado inicial para el panel múltiple cuando está desconectado
     const disconnectedProps = {
@@ -432,18 +361,16 @@ function initMultiBatteryIntegration() {
     
     // Función para manejar cambios en el estado de conexión
     const handleMultiBatteryConnectionChange = (connected) => {
-        // Verificar si la sección está disponible
         const multiBatterySection = document.getElementById('multi-battery-section');
         if (!multiBatterySection) {
-            console.error("Main.js: handleMultiBatteryConnectionChange - No se encontró la sección #multi-battery-section");
+            Utils.logError("No se encontró la sección #multi-battery-section", "Main");
             return;
         }
         
         if (connected) {
-            console.log("Main.js: handleMultiBatteryConnectionChange - Estado cambiado a CONECTADO");
+            Utils.logInfo("Estado de multiBatterySection cambiado a CONECTADO", "Main");
             
             // No mostrar automáticamente, solo preparar para cuando el usuario cambie la vista
-            // La visibilidad se controla desde UiManager.switchView()
             
             // Actualizar panel a estado inicial/cargando
             if (typeof window.updateMultiBatteryDashboard === 'function') {
@@ -451,13 +378,13 @@ function initMultiBatteryIntegration() {
                     initialLoading: true,
                     error: null
                 });
-                console.log("Main.js: handleMultiBatteryConnectionChange - panel múltiple actualizado a estado 'Cargando'");
+                Utils.logInfo("Panel múltiple actualizado a estado 'Cargando'", "Main");
             } else {
-                console.warn("Main.js: handleMultiBatteryConnectionChange - updateMultiBatteryDashboard no definido al conectar");
+                Utils.logWarn("updateMultiBatteryDashboard no definido al conectar", "Main");
             }
             
         } else {
-            console.log("Main.js: handleMultiBatteryConnectionChange - Estado cambiado a DESCONECTADO");
+            Utils.logInfo("Estado de multiBatterySection cambiado a DESCONECTADO", "Main");
             
             // Ocultar sección (aunque UiManager ya lo hace)
             multiBatterySection.style.display = 'none';
@@ -465,74 +392,88 @@ function initMultiBatteryIntegration() {
             // Actualizar panel a estado desconectado
             if (typeof window.updateMultiBatteryDashboard === 'function') {
                 window.updateMultiBatteryDashboard(disconnectedProps);
-                console.log("Main.js: handleMultiBatteryConnectionChange - panel múltiple actualizado a estado 'Desconectado'");
+                Utils.logInfo("Panel múltiple actualizado a estado 'Desconectado'", "Main");
             } else {
-                console.warn("Main.js: handleMultiBatteryConnectionChange - updateMultiBatteryDashboard no definido al desconectar");
+                Utils.logWarn("updateMultiBatteryDashboard no definido al desconectar", "Main");
             }
         }
     };
     
     // Escuchar el evento personalizado de cambio de conexión
-    console.log("Main.js: initMultiBatteryIntegration - Añadiendo listener para 'connection-status-change'");
+    Utils.logInfo("Añadiendo listener para 'connection-status-change'", "Main");
     document.addEventListener('connection-status-change', (e) => {
-        console.log("Main.js: Evento 'connection-status-change' recibido para panel múltiple:", e.detail);
+        Utils.logInfo("Evento 'connection-status-change' recibido para panel múltiple", "Main");
+        // CORREGIDO: Comprobar e.detail de manera segura
         if (e && e.detail && typeof e.detail.connected !== 'undefined') {
             handleMultiBatteryConnectionChange(e.detail.connected);
         } else {
-            console.error("Main.js: Evento 'connection-status-change' recibido sin detalle válido para panel múltiple", e);
+            Utils.logError("Evento 'connection-status-change' recibido sin detalle válido para panel múltiple", "Main");
         }
     });
-    
-    console.log("Main.js: initMultiBatteryIntegration - completado.");
 }
+
+/**
+ * Configura event listeners para eventos del sistema
+ */
 function setupEventListeners() {
-    console.log("Main.js: Configurando listeners para eventos de conexión");
+    Utils.logInfo("Configurando listeners para eventos de conexión", "Main");
     
-    // Escuchar eventos de cambio de estado de conexión a bajo nivel
+    // CORREGIDO: Asegurar visibilidad de secciones críticas
+    const criticalSections = ['low-level-connection-section', 'connection-section'];
+    criticalSections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) section.style.display = 'block';
+    });
+    
+    // Conexión de bajo nivel
     document.addEventListener('low-level-connection-status-change', (e) => {
-        console.log("Main.js: Evento 'low-level-connection-status-change' recibido:", e.detail);
+        Utils.logInfo(`Evento 'low-level-connection-status-change' recibido: ${e.detail?.connected}`, "Main");
         
-        // Actualizar UI según el nuevo estado
+        // CORREGIDO: Asegurar que e.detail existe
+        const isConnected = e && e.detail && e.detail.connected;
+        
+        // CORREGIDO: Asegurar que la sección de conexión a bajo nivel siempre esté visible
+        const lowLevelSection = document.getElementById('low-level-connection-section');
+        if (lowLevelSection) lowLevelSection.style.display = 'block';
+        
         if (window.UiManager) {
             window.UiManager.updateConnectionStatus({
-                lowLevel: e.detail.connected,
+                lowLevel: isConnected,
                 modbus: window.ConnectionHandler ? window.ConnectionHandler.isModbusConnected() : false
             });
         }
         
-        // Habilitar/deshabilitar secciones según corresponda
-        if (e.detail.connected) {
-            console.log("Main.js: Conexión a bajo nivel ACTIVA");
+        if (isConnected) {
+            Utils.logInfo("Conexión a bajo nivel ACTIVA", "Main");
             if (window.ConnectionHandler && window.ConnectionHandler.initializeBatteries) {
-                console.log("Main.js: Iniciando automáticamente la inicialización de baterías");
+                Utils.logInfo("Iniciando automáticamente la inicialización de baterías", "Main");
                 window.ConnectionHandler.initializeBatteries();
             }
-            
         } else {
-            console.log("Main.js: Conexión a bajo nivel INACTIVA");
+            Utils.logInfo("Conexión a bajo nivel INACTIVA", "Main");
             
-            // Si se ha desconectado a bajo nivel, asegurarnos de que el monitor de autenticación esté oculto
             if (window.AuthMonitor && window.AuthMonitor.hide) {
                 window.AuthMonitor.hide();
             }
         }
     });
     
-    // Escuchar eventos de cambio de estado de conexión PyModbus
+    // Conexión PyModbus
     document.addEventListener('modbus-connection-status-change', (e) => {
-        console.log("Main.js: Evento 'modbus-connection-status-change' recibido:", e.detail);
+        Utils.logInfo(`Evento 'modbus-connection-status-change' recibido: ${e.detail?.connected}`, "Main");
         
-        // Actualizar UI según el nuevo estado
+        // CORREGIDO: Asegurar que e.detail existe
+        const isConnected = e && e.detail && e.detail.connected;
+        
         if (window.UiManager) {
             window.UiManager.updateConnectionStatus({
                 lowLevel: window.ConnectionHandler ? window.ConnectionHandler.isLowLevelConnected() : false,
-                modbus: e.detail.connected
+                modbus: isConnected
             });
         }
         
-        // Realizar acciones adicionales si es necesario
-        if (e.detail.connected) {
-            console.log("Main.js: Conexión PyModbus ACTIVA");
+        if (isConnected) {
+            Utils.logInfo("Conexión PyModbus ACTIVA", "Main");
             
             // Si se ha conectado PyModbus y todas las baterías están autenticadas,
             // podemos cambiar a la vista multi-batería automáticamente
@@ -542,101 +483,72 @@ function setupEventListeners() {
                 }, 500);
             }
         } else {
-            console.log("Main.js: Conexión PyModbus INACTIVA");
-            
-            // Si se ha desconectado PyModbus, detener cualquier monitoreo activo
-            if (typeof window.stopMonitoring === 'function') {
-                window.stopMonitoring();
-            }
+            Utils.logInfo("Conexión PyModbus INACTIVA", "Main");
         }
     });
     
-    // Mantener compatibilidad con el evento original (para componentes más antiguos)
-    document.addEventListener('connection-status-change', (e) => {
-        console.log("Main.js: Evento legacy 'connection-status-change' recibido:", e.detail);
-        // No hacemos nada aquí porque los nuevos eventos ya manejan todo
-    });
-    
-    // Escuchar cambios en el estado de autenticación
+    // Estado de autenticación
     document.addEventListener('authentication-status-change', (e) => {
-        console.log("Main.js: Evento 'authentication-status-change' recibido:", e.detail);
+        Utils.logInfo(`Evento 'authentication-status-change' recibido: ${JSON.stringify(e.detail)}`, "Main");
         
-        if (e.detail && typeof e.detail.allAuthenticated !== 'undefined') {
-            console.log(`Main.js: Estado de autenticación - Nuevo: ${e.detail.allAuthenticated}`);
+        // CORREGIDO: Comprobar e.detail de manera segura
+        if (e && e.detail && typeof e.detail.allAuthenticated !== 'undefined') {
+            Utils.logInfo(`Estado de autenticación - Nuevo: ${e.detail.allAuthenticated}`, "Main");
             
-            // Actualizar estado global
             const prevAllAuthenticated = window.allBatteriesAuthenticated || false;
             window.allBatteriesAuthenticated = e.detail.allAuthenticated;
             
-            console.log(`Main.js: Estado guardado - Anterior: ${prevAllAuthenticated}, Actual: ${window.allBatteriesAuthenticated}`);
-            
-            // Actualizar UI si es necesario
             if (window.UiManager) {
                 window.UiManager.updateAuthenticationStatus(e.detail.allAuthenticated);
             }
             
-            // Si todas las baterías están autenticadas, iniciar la transición automática
             if (e.detail.allAuthenticated === true) {
-                console.log("Main.js: ¡ESTADO AUTENTICADO DETECTADO! Verificando si se debe iniciar transición...");
+                Utils.logInfo("¡ESTADO AUTENTICADO DETECTADO! Verificando transición...", "Main");
                 
-                // Solo iniciamos la transición si no estamos ya en modo PyModbus
                 if (window.ConnectionHandler && window.ConnectionHandler.isLowLevelConnected() && 
                     !window.ConnectionHandler.isModbusConnected()) {
                     
-                    console.log("Main.js: ¡TRANSICIÓN AUTOMÁTICA ACTIVADA! Condiciones cumplidas para transición");
+                    Utils.logInfo("¡TRANSICIÓN AUTOMÁTICA ACTIVADA!", "Main");
                     
-                    // Mostrar mensaje al usuario
                     if (window.UiManager) {
                         const messageEl = document.getElementById('connectionMessage');
                         if (messageEl) {
-                            console.log("Main.js: Mostrando mensaje de éxito al usuario");
                             window.UiManager.showMessage(
                                 messageEl, 
                                 'Todas las baterías autenticadas. Iniciando conexión PyModbus automáticamente...', 
                                 'success'
                             );
-                        } else {
-                            console.warn("Main.js: No se encontró el elemento para mostrar mensaje");
                         }
                     }
                     
-                    // Esperar un poco para que el usuario vea el mensaje
-                    console.log("Main.js: Esperando 2 segundos antes de iniciar la secuencia de transición...");
                     setTimeout(() => {
-                        console.log("Main.js: Iniciando secuencia de transición después de espera");
+                        Utils.logInfo("Iniciando secuencia de transición", "Main");
                         
-                        // Verificar nuevamente que las condiciones sigan siendo válidas
                         if (!window.ConnectionHandler) {
-                            console.error("Main.js: FALLO - No se encuentra el objeto ConnectionHandler");
+                            Utils.logError("FALLO - No se encuentra el objeto ConnectionHandler", "Main");
                             return;
                         }
                         
                         if (!window.ConnectionHandler.isLowLevelConnected()) {
-                            console.warn("Main.js: No hay conexión a bajo nivel activa para cerrar");
+                            Utils.logWarn("No hay conexión a bajo nivel activa para cerrar", "Main");
                             return;
                         }
                         
                         if (window.ConnectionHandler.isModbusConnected()) {
-                            console.warn("Main.js: Ya hay una conexión PyModbus activa");
+                            Utils.logWarn("Ya hay una conexión PyModbus activa", "Main");
                             return;
                         }
                         
-                        // 1. Cerrar la conexión a bajo nivel
-                        console.log("Main.js: Cerrando conexión a bajo nivel automáticamente (disconnectLowLevel)");
+                        Utils.logInfo("Cerrando conexión a bajo nivel automáticamente", "Main");
                         window.ConnectionHandler.disconnectLowLevel()
                             .then((disconnectResult) => {
-                                console.log("Main.js: Resultado de desconexión a bajo nivel:", disconnectResult);
-                                console.log("Main.js: Conexión a bajo nivel cerrada exitosamente");
+                                Utils.logInfo(`Conexión a bajo nivel cerrada: ${disconnectResult?.message}`, "Main");
                                 
-                                // Pequeña pausa para asegurar que la desconexión se procese completamente
-                                console.log("Main.js: Esperando 1 segundo antes de iniciar conexión PyModbus...");
                                 return new Promise(resolve => setTimeout(() => {
-                                    // 2. Iniciar conexión PyModbus
-                                    console.log("Main.js: Iniciando conexión PyModbus (connectModbus)...");
+                                    Utils.logInfo("Iniciando conexión PyModbus...", "Main");
                                     
-                                    // Verificar de nuevo que el objeto esté disponible
                                     if (!window.ConnectionHandler || typeof window.ConnectionHandler.connectModbus !== 'function') {
-                                        console.error("Main.js: FALLO - Método connectModbus no disponible");
+                                        Utils.logError("FALLO - Método connectModbus no disponible", "Main");
                                         return Promise.reject(new Error("Método connectModbus no disponible"));
                                     }
                                     
@@ -644,54 +556,42 @@ function setupEventListeners() {
                                 }, 1000));
                             })
                             .then((connectResult) => {
-                                console.log("Main.js: Resultado de conexión PyModbus:", connectResult);
+                                Utils.logInfo(`Resultado de conexión PyModbus: ${connectResult?.status}`, "Main");
                                 
                                 if (connectResult && connectResult.status === "success") {
-                                    console.log("Main.js: ¡ÉXITO! Conexión PyModbus establecida");
+                                    Utils.logInfo("¡ÉXITO! Conexión PyModbus establecida", "Main");
                                     
-                                    // Forzar la actualización del estado de UI (por si acaso)
                                     if (window.UiManager) {
-                                        console.log("Main.js: Forzando actualización de UI a estado 'modbus conectado'");
+                                        Utils.logInfo("Forzando actualización de UI a estado 'modbus conectado'", "Main");
                                         window.UiManager.updateConnectionStatus({
                                             lowLevel: false,
                                             modbus: true
                                         });
                                         
-                                        // Forzar cambio a la vista múltiple
-                                        console.log("Main.js: Esperando 1 segundo antes de cambiar a vista múltiple...");
                                         setTimeout(() => {
-                                            console.log("Main.js: Cambiando a vista múltiple (switchView)");
+                                            Utils.logInfo("Cambiando a vista múltiple", "Main");
                                             window.UiManager.switchView('multi');
                                         }, 1000);
-                                    } else {
-                                        console.error("Main.js: UiManager no disponible para actualizar UI");
                                     }
                                 } else {
-                                    console.error("Main.js: Error al conectar PyModbus:", connectResult);
+                                    Utils.logError(`Error al conectar PyModbus: ${connectResult?.message}`, "Main");
                                     handleConnectionError("Error al conectar PyModbus automáticamente. Intente conectar manualmente.");
                                 }
                             })
                             .catch(error => {
-                                console.error("Main.js: EXCEPCIÓN durante la transición:", error);
+                                Utils.logError(`EXCEPCIÓN durante la transición: ${error.message}`, "Main");
                                 handleConnectionError("Error durante la transición. Intente conectar manualmente.");
                             });
-                    }, 2000); // Esperar 2 segundos
+                    }, 2000);
                 } else {
-                    console.log("Main.js: No se inicia transición - Condiciones no cumplidas. LowLevel conectado:", 
-                                window.ConnectionHandler ? window.ConnectionHandler.isLowLevelConnected() : "Sin ConnectionHandler", 
-                                "PyModbus conectado:", 
-                                window.ConnectionHandler ? window.ConnectionHandler.isModbusConnected() : "Sin ConnectionHandler");
+                    Utils.logInfo("No se inicia transición - Condiciones no cumplidas", "Main");
                 }
             }
-        } else {
-            console.warn("Main.js: Evento 'authentication-status-change' recibido pero sin el campo 'allAuthenticated'");
         }
         
-        // Función auxiliar para manejar errores de conexión
         function handleConnectionError(message) {
-            console.error("Main.js: Manejando error de conexión:", message);
+            Utils.logError(`Manejando error de conexión: ${message}`, "Main");
             
-            // Mostrar mensaje de error al usuario
             const modbusMessageEl = document.getElementById('modbusConnectionMessage');
             if (modbusMessageEl && window.UiManager) {
                 window.UiManager.showMessage(
@@ -699,52 +599,52 @@ function setupEventListeners() {
                     message,
                     'error'
                 );
-            } else {
-                console.warn("Main.js: No se pudo mostrar mensaje de error - elementos no encontrados");
             }
             
-            // Habilitar el botón para conexión manual como fallback
             const modbusConnectBtn = document.getElementById('modbusConnectBtn');
             if (modbusConnectBtn) {
-                console.log("Main.js: Habilitando botón de conexión manual como fallback");
+                Utils.logInfo("Habilitando botón de conexión manual como fallback", "Main");
                 modbusConnectBtn.disabled = false;
                 modbusConnectBtn.classList.add('ready');
                 modbusConnectBtn.title = "Haga clic para intentar conectar PyModbus manualmente.";
-            } else {
-                console.warn("Main.js: No se encontró el botón modbusConnectBtn");
             }
         }
     });
     
-    // Escuchar cambios de vista
+    // Cambios de vista
     document.addEventListener('view-changed', (e) => {
-        console.log("Main.js: Evento 'view-changed' recibido:", e.detail);
+        Utils.logInfo(`Evento 'view-changed' recibido: ${e.detail?.view}`, "Main");
         
-        if (e.detail && e.detail.view) {
-            // Realizar acciones específicas según la vista
+        if (e && e.detail && e.detail.view) {
             if (e.detail.view === 'multi') {
-                // Actualizar el panel múltiple si existe
                 if (typeof window.updateMultiBatteryDashboard === 'function') {
                     window.updateMultiBatteryDashboard({ forceUpdate: true });
-                }
-            } else if (e.detail.view === 'single') {
-                // Actualizar el panel individual si existe
-                if (typeof window.updateDashboard === 'function') {
-                    window.updateDashboard();
                 }
             }
         }
     });
+    
+    // CORREGIDO: Asegurar de nuevo la visibilidad de secciones críticas
+    setTimeout(() => {
+        criticalSections.forEach(id => {
+            const section = document.getElementById(id);
+            if (section) {
+                Utils.logInfo(`Asegurando visibilidad de sección ${id}`, "Main");
+                section.style.display = 'block';
+            }
+        });
+    }, 1000);
 }
+
+/**
+ * Verifica el progreso de carga de información detallada
+ */
 function checkDetailedInfoLoading() {
-    // Verificar si hay una carga de información detallada en progreso
     if (typeof getDetailedInfoLoadingStatus === 'function') {
         getDetailedInfoLoadingStatus().then(result => {
             if (result.status === 'success' && result.loading_active) {
-                console.log("Main.js: Detectada carga de información detallada en progreso");
+                Utils.logInfo("Detectada carga de información detallada en progreso", "Main");
                 
-                // Si hay una carga en progreso y estamos en la vista multi-batería,
-                // actualizar el estado de progreso
                 if (window.UiManager && window.UiManager.getCurrentView() === 'multi' && 
                     typeof window.updateMultiBatteryDashboard === 'function') {
                     
@@ -753,47 +653,10 @@ function checkDetailedInfoLoading() {
                     });
                 }
                 
-                // Programar otra verificación
                 setTimeout(checkDetailedInfoLoading, 2000);
             }
         }).catch(error => {
-            console.error("Error al verificar estado de carga:", error);
+            Utils.logError(`Error al verificar estado de carga: ${error.message}`, "Main");
         });
     }
-}
-
-// Modificar initConnectionHandler para iniciar la verificación
-function initConnectionHandler(elements) {
-    if (typeof window.ConnectionHandler === 'undefined') {
-        console.error("Main.js: Error crítico - ConnectionHandler no encontrado");
-        return;
-    }
-    
-    console.log("Main.js: Inicializando ConnectionHandler");
-    
-    // Recopilar referencias a elementos DOM para conexión
-    const connectionElements = {
-        // Elementos para la conexión a bajo nivel
-        lowLevelConnectBtn: document.getElementById('lowLevelConnectBtn'),
-        lowLevelDisconnectBtn: document.getElementById('lowLevelDisconnectBtn'),
-        initializeBtn: document.getElementById('initializeBtn'),
-        
-        // Elementos para la conexión PyModbus
-        modbusConnectBtn: document.getElementById('modbusConnectBtn'),
-        modbusDisconnectBtn: document.getElementById('modbusDisconnectBtn'),
-        
-        // Elementos comunes
-        messageEl: document.getElementById('connectionMessage'),
-        
-        // Elementos de parámetros
-        slaveIdSelect: document.getElementById('slaveId'),
-        portInput: document.getElementById('port'),
-        baudrateSelect: document.getElementById('baudrate'),
-        paritySelect: document.getElementById('parity'),
-        stopbitsSelect: document.getElementById('stopbits'),
-        bytesizeSelect: document.getElementById('bytesize'),
-        timeoutInput: document.getElementById('timeout')
-    };
-    
-    window.ConnectionHandler.init(connectionElements);
 }

@@ -94,7 +94,7 @@ def disconnect_client():
         finally:
             # Importación retrasada para evitar ciclo
             from modbus_app.device_info.device_cache import reset_device_info
-            reset_device_info()  # Limpiar caché de información
+            # reset_device_info()  # Limpiar caché de información retirado no es nesesario.
             modbus_client_instance = None
             _is_connected = False
             return True
@@ -190,7 +190,7 @@ def get_client_port():
 # Función para obtener información del dispositivo desde caché
 def get_device_info():
     """
-    Función para obtener información del dispositivo desde el inicializador.
+    Función para obtener información del dispositivo desde el caché global.
     
     Returns:
         dict: Información del dispositivo o error
@@ -206,11 +206,9 @@ def get_device_info():
         from modbus_app import config_manager
         slave_id = config_manager.get_default_slave_id()
         
-        # Obtener información desde el inicializador
-        from modbus_app.battery_initializer import BatteryInitializer
-        initializer = BatteryInitializer.get_instance()
-        battery_info = initializer.get_battery_info(slave_id)
-        return battery_info
+        # Obtener información directamente del caché global
+        from modbus_app.device_info.device_cache import get_device_info as get_cached_device_info
+        return get_cached_device_info(slave_id)
     except Exception as e:
         print(f"Error al obtener información del dispositivo: {str(e)}")
         return {

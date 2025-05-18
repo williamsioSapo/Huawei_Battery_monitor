@@ -1,7 +1,7 @@
 # modbus_app/operations.py
 from .client import get_client, is_client_connected # Importar desde el mismo paquete
 from .custom_requests import ReadDeviceInfoRequest, ReadDeviceInfoResponse # Importar clases personalizadas
-from . import device_info  # Importar el módulo completo
+from modbus_app.device_info.device_cache import get_device_info # Importar el nuevo sistema de caché
 from pymodbus.exceptions import ModbusIOException
 from pymodbus.pdu import ModbusExceptions as merror
 
@@ -102,7 +102,7 @@ def execute_write_operation(slave_id, function, address, values):
 def execute_read_device_info(slave_id, info_index):
     """
     Ejecuta la operación personalizada FC41 para leer info del dispositivo.
-    Utiliza la caché cargada durante la inicialización.
+    Utiliza el nuevo caché global con diferenciación por ID.
     
     Args:
         slave_id (int): ID del esclavo
@@ -115,21 +115,17 @@ def execute_read_device_info(slave_id, info_index):
         return {"status": "error", "message": "No hay conexión activa"}
 
     try:
-        # Obtener información desde el inicializador
-        from modbus_app.battery_initializer import BatteryInitializer
-        initializer = BatteryInitializer.get_instance()
+        # Obtener información desde el caché global
+        device_data = get_device_info(slave_id)
         
-        # Obtener la información completa de la batería
-        battery_info = initializer.get_battery_info(slave_id)
-        
-        if battery_info["status"] != "success":
+        if device_data["status"] != "success":
             return {
                 "status": "error", 
-                "message": battery_info.get("message", "Información no disponible")
+                "message": device_data.get("message", "Información no disponible")
             }
         
         # Obtener el texto combinado
-        combined_text = battery_info.get("combined_text", "")
+        combined_text = device_data.get("combined_text", "")
         if not combined_text:
             return {
                 "status": "error",
@@ -166,6 +162,7 @@ def execute_read_device_info(slave_id, info_index):
             "status": "error",
             "message": f"Error al obtener información: {str(e)}"
         }
+
 # Nueva función para verificar datos de celdas individuales
 def verify_battery_cell_data(slave_id=217):
     """

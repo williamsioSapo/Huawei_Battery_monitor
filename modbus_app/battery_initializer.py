@@ -12,9 +12,12 @@ import serial
 import threading
 import logging
 from modbus_app.authentication_status import update_phase_status, PHASE_STATES
+from modbus_app.device_info.device_cache import update_device_info, get_device_info, reset_device_info
+from modbus_app.logger_config import log_to_cmd
+
 # Variable global para almacenar la instancia
 _initializer_instance = None
-
+log_to_cmd("BatteryInitializer: Módulo cargado, _initializer_instance inicial: None", "DEBUG", "INIT")
 # Configurar logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('battery_initializer')
@@ -28,7 +31,7 @@ class BatteryInitializer:
     2. Ejecutar la secuencia de autenticación
     3. Leer información detallada
     
-    La información recopilada se almacena en caché para uso posterior.
+    La información recopilada se almacena en el caché global para uso posterior.
     """
     
     def __init__(self, port=None, baudrate=9600, parity='N', stopbits=1, bytesize=8, timeout=1.0):
@@ -55,9 +58,12 @@ class BatteryInitializer:
         self._lock = threading.RLock()  # Para thread-safety
         self._is_connected = False  # Nueva bandera para rastrear estado
         
-        # Caché de información por batería
-        self.battery_info_cache = {}
+        # Conjunto de baterías inicializadas correctamente
         self.initialized_batteries = set()
+        # Log detallado de inicialización
+        log_to_cmd(f"BatteryInitializer: Nueva instancia creada con ID {id(self)}, puerto={port}", "INFO", "INIT")
+        log_to_cmd(f"BatteryInitializer: Parámetros - baudrate={baudrate}, parity={parity}, stopbits={stopbits}, bytesize={bytesize}, timeout={timeout}", "DEBUG", "INIT")
+
         
     def connect(self):
         """
@@ -150,15 +156,19 @@ class BatteryInitializer:
         Returns:
             dict: Resultado del proceso con estado e información
         """
+        log_to_cmd(f"BatteryInitializer.initialize_batteries: Iniciando con IDs {battery_ids}", "INFO", "INIT")
+        
         if not battery_ids:
-            logger.warning("No se proporcionaron IDs de baterías para inicializar")
+            log_to_cmd("BatteryInitializer.initialize_batteries: ERROR - No se proporcionaron IDs de baterías", "ERROR", "INIT")
             return {"status": "error", "message": "No hay baterías para inicializar"}
         
         # Verificar si hay conexión serial activa
         if not self._is_connected or not self._serial or not self._serial.is_open:
+            log_to_cmd("BatteryInitializer.initialize_batteries: ERROR - No hay conexión serial activa", "ERROR", "INIT")
+            log_to_cmd(f"BatteryInitializer.initialize_batteries: Estado de conexión - is_connected={self._is_connected}, serial exists={self._serial is not None}, is_open={self._serial.is_open if self._serial else False}", "ERROR", "INIT")
             return {"status": "error", "message": "No hay conexión serial activa"}
         
-        logger.info(f"Iniciando inicialización para {len(battery_ids)} baterías: {battery_ids}")
+        log_to_cmd(f"BatteryInitializer.initialize_batteries: Iniciando inicialización para {len(battery_ids)} baterías: {battery_ids}", "INFO", "INIT")
         
         results = {
             "status": "success",
@@ -169,37 +179,57 @@ class BatteryInitializer:
         
         try:
             # Procesar cada batería
-            for battery_id in battery_ids:
+            for i, battery_id in enumerate(battery_ids):
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: Procesando batería {i+1}/{len(battery_ids)}: ID={battery_id}", "INFO", "INIT")
+                
                 battery_result = self._initialize_single_battery(battery_id)
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: Resultado para batería {battery_id}: {battery_result['status']}", "INFO", "INIT")
                 
                 if battery_result["status"] == "success":
                     results["initialized_count"] += 1
                     self.initialized_batteries.add(battery_id)
+                    log_to_cmd(f"BatteryInitializer.initialize_batteries: Batería {battery_id} añadida a initialized_batteries, total ahora: {len(self.initialized_batteries)}", "INFO", "INIT")
                 else:
                     results["failed_count"] += 1
+                    log_to_cmd(f"BatteryInitializer.initialize_batteries: Batería {battery_id} falló inicialización: {battery_result.get('message', 'Sin mensaje')}", "WARNING", "INIT")
                 
                 results["batteries"].append(battery_result)
                 
                 # Pausa entre baterías para no saturar el bus
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: Pausa de 1 segundo antes de la siguiente batería", "DEBUG", "INIT")
                 time.sleep(1.0)
                 
             # Actualizar estado general
             if results["failed_count"] > 0 and results["initialized_count"] == 0:
                 results["status"] = "error"
                 results["message"] = f"No se pudo inicializar ninguna batería"
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: ERROR COMPLETO - Ninguna batería inicializada de {len(battery_ids)}", "ERROR", "INIT")
             elif results["failed_count"] > 0:
                 results["status"] = "partial"
                 results["message"] = f"Se inicializaron {results['initialized_count']} baterías, fallaron {results['failed_count']}"
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: ÉXITO PARCIAL - {results['initialized_count']} ok, {results['failed_count']} fallidos", "WARNING", "INIT")
             else:
                 results["message"] = f"Se inicializaron exitosamente {results['initialized_count']} baterías"
-                
-            logger.info(results["message"])
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: ÉXITO COMPLETO - {results['initialized_count']} baterías inicializadas", "INFO", "INIT")
             
+            # Logs adicionales para verificar el estado del módulo authentication_status 
+            try:
+                from modbus_app.authentication_status import get_all_batteries_status, authentication_status
+                auth_status = get_all_batteries_status()
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: Estado de autenticación - {len(auth_status)} baterías en caché", "INFO", "INIT")
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: IDs en authentication_status: {list(authentication_status.keys())}", "DEBUG", "INIT")
+            except Exception as e:
+                log_to_cmd(f"BatteryInitializer.initialize_batteries: Error al verificar estado de autenticación: {str(e)}", "ERROR", "INIT")
+                
         except Exception as e:
-            logger.error(f"Error durante la inicialización de baterías: {str(e)}")
+            log_to_cmd(f"BatteryInitializer.initialize_batteries: EXCEPCIÓN CRÍTICA: {str(e)}", "ERROR", "INIT")
+            import traceback
+            log_to_cmd(f"BatteryInitializer.initialize_batteries: Traceback: {traceback.format_exc()}", "ERROR", "INIT")
+            
             results["status"] = "error"
             results["message"] = f"Error general: {str(e)}"
         
+        log_to_cmd(f"BatteryInitializer.initialize_batteries: Finalizando, estado final: {results['status']}", "INFO", "INIT")
         return results
         
     def _initialize_single_battery(self, battery_id):
@@ -340,26 +370,31 @@ class BatteryInitializer:
                 )
             except Exception as e:
                 logger.error(f"Error al reportar éxito de lectura: {str(e)}")
+            
+            # CAMBIO: Actualizar directamente el caché global
+            update_result = update_device_info(battery_id, device_info)
+            if not update_result:
+                logger.error(f"Error al actualizar caché global para batería {battery_id}")
+                result["message"] = f"Error al actualizar caché para batería {battery_id}"
+                return result
+                
+            # Verificar si es un dispositivo Huawei desde el caché global
+            device_data = get_device_info(battery_id)
+            is_huawei = device_data.get("is_huawei", False)
+            if not is_huawei:
+                parsed_info = device_data.get("parsed_info", {})
+                result["message"] = f"Dispositivo incompatible: {parsed_info.get('manufacturer', 'Desconocido')} {parsed_info.get('model', 'Desconocido')}"
+                return result
                 
             # Procesamiento exitoso
             result["status"] = "success"
             result["message"] = f"Batería {battery_id} inicializada exitosamente"
             
-            # Almacenar en caché
-            self.battery_info_cache[battery_id] = {
-                "device_info": device_info,
-                "is_authenticated": True,
-                "initialized_timestamp": time.time()
-            }
+            # Solo guardar el ID en el conjunto de baterías inicializadas
+            self.initialized_batteries.add(battery_id)
             
-            # Procesar información
-            parsed_info = self._parse_device_info(device_info["combined_text"])
-            self.battery_info_cache[battery_id]["parsed_info"] = parsed_info
-            
-            # Verificar fabricante
-            is_huawei = self._validate_manufacturer(parsed_info)
-            self.battery_info_cache[battery_id]["is_huawei"] = is_huawei
-            
+            # Obtener información parseada desde el caché global para el log
+            parsed_info = device_data.get("parsed_info", {})
             logger.info(f"Batería {battery_id} inicializada: {parsed_info.get('manufacturer', 'Desconocido')} {parsed_info.get('model', 'Desconocido')}")
             
         except Exception as e:
@@ -595,6 +630,7 @@ class BatteryInitializer:
                 logger.warning(f"Error al decodificar bytes combinados: {str(e)}")
             
             return {
+                "device_id": battery_id,  # Añadir ID para el caché global
                 "raw_bytes": raw_bytes_all,
                 "combined_text": all_combined_text, 
                 "fragments": fragments
@@ -603,146 +639,15 @@ class BatteryInitializer:
         except Exception as e:
             logger.error(f"Error al leer información del dispositivo: {str(e)}")
             return {
+                "device_id": battery_id,
                 "raw_bytes": bytearray(),
                 "combined_text": "",
                 "fragments": {"error": str(e)}
             }
-            
-    def _parse_device_info(self, combined_text):
-        """
-        Procesa el texto combinado para extraer información estructurada.
-        
-        Args:
-            combined_text (str): Texto combinado de todos los índices
-            
-        Returns:
-            dict: Información estructurada del dispositivo
-        """
-        parsed_info = {
-            "manufacturer": "",
-            "model": "",
-            "barcode": "",
-            "manufactured_date": "",
-            "description": "",
-            "info_version": "",
-            "elabel_version": ""
-        }
-        
-        if not combined_text:
-            logger.warning("No hay texto combinado para analizar")
-            return parsed_info
-            
-        logger.debug(f"Analizando texto combinado ({len(combined_text)} caracteres)")
-        
-        # Definir patrones de búsqueda para cada campo
-        patterns = {
-            "manufacturer": ["VendorName="],
-            "model": ["BoardType=", "Model="],
-            "barcode": ["BarCode="],
-            "manufactured_date": ["Manufactured="],
-            "description": ["Description="],
-            "info_version": ["ArchivesInfoVersion="],
-            "elabel_version": ["ElabelVersion=", "/$ElabelVersion="]
-        }
-        
-        # Extraer cada campo usando los patrones
-        for field, search_patterns in patterns.items():
-            for pattern in search_patterns:
-                pos = combined_text.find(pattern)
-                if pos != -1:
-                    # Extraer desde el patrón hasta el siguiente salto de línea
-                    start_pos = pos + len(pattern)
-                    end_pos = combined_text.find("\n", start_pos)
-                    if end_pos == -1:
-                        end_pos = combined_text.find("\r", start_pos)
-                    if end_pos == -1:
-                        end_pos = len(combined_text)
-                    
-                    value = combined_text[start_pos:end_pos].strip()
-                    
-                    # Limpiar el valor
-                    value = ''.join(c for c in value if (ord(c) >= 32 and ord(c) <= 126))
-                    
-                    if value:
-                        parsed_info[field] = value
-                        logger.debug(f"{field} = '{value}' (usando patrón '{pattern}')")
-                        break
-        
-        # Normalizar la fecha de fabricación si es necesario
-        if parsed_info["manufactured_date"]:
-            date_value = parsed_info["manufactured_date"]
-            normalized_date = self._normalize_manufacture_date(date_value)
-            if normalized_date != date_value:
-                parsed_info["manufactured_date"] = normalized_date
-                logger.debug(f"Fecha normalizada: '{normalized_date}' (original: '{date_value}')")
-        
-        return parsed_info
-            
-    def _normalize_manufacture_date(self, date_str):
-        """
-        Normaliza el formato de la fecha de fabricación.
-        
-        Args:
-            date_str (str): Fecha en formato original
-            
-        Returns:
-            str: Fecha normalizada o la original si no se pudo normalizar
-        """
-        # Si está vacía, devolver vacío
-        if not date_str:
-            return ""
-        
-        # Si es solo un año corto (ej: "20")
-        if date_str.isdigit() and len(date_str) == 2:
-            return f"20{date_str}"  # Asumir 2000s (ej: "2020")
-        
-        # Si es solo un año completo (ej: "2020")
-        if date_str.isdigit() and len(date_str) == 4:
-            return date_str
-        
-        # Si ya tiene formato YYYY-MM-DD, dejarlo como está
-        if len(date_str) == 10 and date_str[4] == '-' and date_str[7] == '-':
-            return date_str
-        
-        # Si tiene formato YY-MM-DD, convertir a YYYY-MM-DD
-        if len(date_str) == 8 and date_str[2] == '-' and date_str[5] == '-':
-            year_part = date_str[0:2]
-            rest_part = date_str[2:]
-            return f"20{year_part}{rest_part}"
-        
-        # Para cualquier otro formato, devolver el original
-        return date_str
-        
-    def _validate_manufacturer(self, parsed_info):
-        """
-        Verifica que el dispositivo sea una batería Huawei.
-        
-        Args:
-            parsed_info (dict): Información parseada del dispositivo
-            
-        Returns:
-            bool: True si es un dispositivo Huawei compatible
-        """
-        manufacturer = parsed_info.get("manufacturer", "").lower()
-        model = parsed_info.get("model", "").lower()
 
-        if not manufacturer and not model:
-            logger.warning("No se pudo determinar fabricante ni modelo del dispositivo")
-            return False
-
-        is_huawei_manufacturer = "huawei" in manufacturer
-        is_huawei_model = model.startswith("esm")
-
-        if is_huawei_manufacturer or is_huawei_model:
-            logger.info(f"Dispositivo compatible detectado (Fabricante: '{manufacturer}', Modelo: '{model}')")
-            return True
-        else:
-            logger.error(f"Dispositivo incompatible detectado. Fabricante: '{manufacturer}', Modelo: '{model}'")
-            return False
-            
     def get_battery_info(self, battery_id):
         """
-        Obtiene la información de una batería desde la caché.
+        Obtiene la información de una batería desde el caché global.
         
         Args:
             battery_id (int): ID de la batería
@@ -750,41 +655,14 @@ class BatteryInitializer:
         Returns:
             dict: Información de la batería o error si no está inicializada
         """
-        if battery_id not in self.battery_info_cache:
+        if battery_id not in self.initialized_batteries:
             return {
                 "status": "error",
                 "message": f"Batería {battery_id} no inicializada"
             }
             
-        battery_cache = self.battery_info_cache[battery_id]
-        
-        # Si el dispositivo no es Huawei, devolver error
-        if not battery_cache.get("is_huawei", False):
-            parsed = battery_cache.get('parsed_info', {})
-            mf = parsed.get('manufacturer', 'Desconocido')
-            md = parsed.get('model', 'Desconocido')
-            message = f"Dispositivo incompatible detectado (Fabricante: {mf}, Modelo: {md}). Solo baterías Huawei ESM son soportadas."
-            
-            return {
-                "status": "error",
-                "message": message,
-                "is_authenticated": True,
-                "is_huawei": False,
-                "parsed_info": parsed
-            }
-            
-        # Devolver información completa
-        return {
-            "status": "success",
-            "message": "Información disponible",
-            "battery_id": battery_id,
-            "parsed_info": battery_cache.get("parsed_info", {}),
-            "combined_text": battery_cache.get("device_info", {}).get("combined_text", ""),
-            "fragments": battery_cache.get("device_info", {}).get("fragments", {}),
-            "timestamp": battery_cache.get("initialized_timestamp"),
-            "is_authenticated": True,
-            "is_huawei": True
-        }
+        # Obtener información directamente del caché global
+        return get_device_info(battery_id)
             
     def get_all_initialized_batteries(self):
         """
@@ -811,6 +689,9 @@ class BatteryInitializer:
         # Verificar si hay conexión serial activa
         if not self._is_connected or not self._serial or not self._serial.is_open:
             return {"status": "error", "message": "No hay conexión serial activa", "battery_id": battery_id}
+        
+        # Reiniciar el caché para esta batería
+        reset_device_info(battery_id)
         
         results = {
             "status": "success",
@@ -845,8 +726,18 @@ class BatteryInitializer:
             BatteryInitializer: Instancia global
         """
         global _initializer_instance
+        
+        # Log detallado sobre el estado actual
+        instance_id = id(_initializer_instance) if _initializer_instance else "None"
+        log_to_cmd(f"BatteryInitializer.get_instance: Valor actual de _initializer_instance: ID {instance_id}", "INFO", "INIT")
+        
         if _initializer_instance is None:
-            raise RuntimeError("No hay una instancia del inicializador disponible")
+            error_msg = "No hay una instancia del inicializador disponible"
+            log_to_cmd(f"BatteryInitializer.get_instance: ERROR - {error_msg}", "ERROR", "INIT")
+            raise RuntimeError(error_msg)
+        
+        # Log de éxito
+        log_to_cmd(f"BatteryInitializer.get_instance: Devolviendo instancia con ID {instance_id}", "INFO", "INIT")
         return _initializer_instance
 
     @classmethod
@@ -858,4 +749,15 @@ class BatteryInitializer:
             instance (BatteryInitializer): Instancia a guardar
         """
         global _initializer_instance
+        
+        # Log antes de asignación
+        old_instance_id = id(_initializer_instance) if _initializer_instance else "None"
+        new_instance_id = id(instance) if instance else "None"
+        log_to_cmd(f"BatteryInitializer.set_instance: Cambiando _initializer_instance de ID {old_instance_id} a ID {new_instance_id}", "INFO", "INIT")
+        
+        # Aquí está la posible línea problemática - verificar si no hay asignación
         _initializer_instance = instance
+        
+        # Log después de asignación para confirmar
+        actual_id = id(_initializer_instance) if _initializer_instance else "None"
+        log_to_cmd(f"BatteryInitializer.set_instance: Valor _initializer_instance después de asignación: ID {actual_id}", "INFO", "INIT")
