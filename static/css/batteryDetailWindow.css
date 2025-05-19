@@ -1,0 +1,363 @@
+/* batteryDetailWindow.css */
+
+/* Estilos para tabs */
+.battery-tabs .ui-tabs-nav {
+    background: #f8f9fa;
+    border-radius: 0;
+    border-width: 0 0 1px 0;
+}
+
+.battery-tabs .ui-tabs-nav li {
+    margin: 0 2px 0 0;
+}
+
+.battery-tabs .ui-tabs-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+}
+
+.tab-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Estilos para contenido de tabs */
+.battery-detail-container {
+    padding: 0;
+    overflow: auto;
+}
+
+.tab-content {
+    padding: 20px;
+}
+
+.tab-loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
+/* Estilos para métricas */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.metric-title {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.metric-value.charging {
+    color: #27ae60;
+}
+
+.metric-value.discharging {
+    color: #e74c3c;
+}
+
+.metric-value.critical {
+    color: #e74c3c;
+}
+
+.metric-value.warning {
+    color: #f39c12;
+}
+
+/* Estilos para barra SOC */
+.soc-bar {
+    height: 6px;
+    background-color: #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.soc-fill {
+    height: 100%;
+    background-color: #2ecc71;
+    border-radius: 3px;
+}
+
+/* Estilos para header y estado */
+.battery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.battery-header h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.battery-status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #f1f1f1;
+}
+
+.battery-status.charging {
+    background-color: #d5f5e3;
+    color: #27ae60;
+}
+
+.battery-status.discharging {
+    background-color: #fadbd8;
+    color: #e74c3c;
+}
+
+.battery-status.critical {
+    background-color: #fadbd8;
+    color: #e74c3c;
+}
+
+/* Sección de información del dispositivo */
+.device-info-section, .cells-info-section, .technical-info-section {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.device-info-section h4, .cells-info-section h4, .technical-info-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.info-item {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.info-label {
+    font-weight: bold;
+    margin-right: 8px;
+    color: #555;
+    width: 140px;
+}
+
+/* Botones de acción */
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.action-btn:hover {
+    background-color: #2980b9;
+}
+
+.action-icon {
+    margin-right: 8px;
+}
+
+/* Tabla de celdas */
+.cells-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.cells-table th, .cells-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.cells-table th {
+    background-color: #f2f2f2;
+}
+
+.cells-table tbody tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+/* Resultados de verificación */
+.verify-cells-result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+.verify-cells-result.loading {
+    background-color: #f8f9fa;
+    color: #666;
+    text-align: center;
+}
+
+.success-message {
+    color: #27ae60;
+}
+
+.error-message {
+    color: #e74c3c;
+}
+
+/* Datos históricos */
+.chart-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+}
+
+/* Datos crudos */
+.raw-data-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.raw-data-container pre {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 3px;
+    overflow: auto;
+    max-height: 300px;
+}
+/* Estilos para loading */
+.battery-detail-loading {
+    padding: 30px;
+    text-align: center;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Contenido centrado */
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Mensajes de resultado */
+.result-message {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* Estilos para botones de acción mejorados */
+.action-button {
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #2980b9;
+}
+
+.action-button.secondary {
+    background-color: #95a5a6;
+}
+
+.action-button.secondary:hover {
+    background-color: #7f8c8d;
+}
+
+.action-button.warning {
+    background-color: #e74c3c;
+}
+
+.action-button.warning:hover {
+    background-color: #c0392b;
+}
+
+/* Estilos adicionales para tabs */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.tab-loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}

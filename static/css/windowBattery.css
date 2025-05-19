@@ -1,0 +1,255 @@
+/**
+ * WindowBattery.css - Estilos para las ventanas de baterías
+ */
+
+/* Estilos generales para ventanas de baterías */
+.battery-dashboard-window {
+    padding: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.battery-detail-window {
+    padding: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Secciones de la ventana */
+.window-system-stats,
+.window-battery-grid,
+.detail-section {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Títulos */
+.battery-dashboard-window h3,
+.battery-detail-window h3,
+.battery-detail-window h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Grid de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 12px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Grid de baterías */
+.battery-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Tarjeta de batería */
+.battery-card {
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 5px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.battery-card.status-charging {
+    border-left-color: #2ecc71;
+}
+
+.battery-card.status-discharging {
+    border-left-color: #3498db;
+}
+
+.battery-card.status-critical {
+    border-left-color: #e74c3c;
+}
+
+.battery-card.status-warning {
+    border-left-color: #f39c12;
+}
+
+/* Cabecera de tarjeta */
+.card-header {
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.battery-status {
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background-color: #eee;
+}
+
+.status-charging .battery-status {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.status-discharging .battery-status {
+    background-color: #3498db;
+    color: white;
+}
+
+.status-critical .battery-status {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.status-warning .battery-status {
+    background-color: #f39c12;
+    color: white;
+}
+
+/* Cuerpo de tarjeta */
+.card-body {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.metric:last-child {
+    margin-bottom: 0;
+}
+
+.metric-label {
+    color: #666;
+}
+
+.metric-value {
+    font-weight: 500;
+}
+
+/* Grids para información detallada */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.detailed-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 12px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.info-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #333;
+}
+
+/* Valores crudos */
+.raw-values {
+    background-color: white;
+    padding: 12px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    overflow: auto;
+    max-height: 120px;
+}
+
+.raw-values pre {
+    margin: 0;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+/* Botón de detalles */
+.card-detail-btn {
+    padding: 8px;
+    background-color: #f8f9fa;
+    border: none;
+    border-top: 1px solid #eee;
+    cursor: pointer;
+    color: #1a73e8;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.card-detail-btn:hover {
+    background-color: #e8f0fe;
+}
+
+/* Estilos para el botón de "Ver en Ventana" */
+.window-button {
+    padding: 8px 15px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.window-button:hover {
+    background-color: #2b7de9;
+}
+
+.battery-icon {
+    font-size: 16px;
+}

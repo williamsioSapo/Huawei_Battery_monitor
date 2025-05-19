@@ -1,0 +1,152 @@
+/**
+ * Windows.css - Estilos para sistema de ventanas estilo Windows 10
+ * Basado en jQuery UI con personalización extendida
+ */
+
+/* Contenedor base de ventana */
+.ui-dialog.custom-window {
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: white;
+    overflow: visible;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Barra de título estilo Windows 10 */
+.ui-dialog.custom-window .ui-dialog-titlebar {
+    background: #1a73e8;
+    color: white;
+    font-weight: normal;
+    border: none;
+    border-radius: 0;
+    padding: 8px 10px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Título */
+.ui-dialog.custom-window .ui-dialog-title {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 32px;
+}
+
+/* Ventana inactiva */
+.ui-dialog.custom-window:not(.window-active) .ui-dialog-titlebar {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* Contenedor de botones */
+.ui-dialog.custom-window .window-controls {
+    display: flex;
+    height: 32px;
+}
+
+/* Botones de control base */
+.ui-dialog.custom-window .window-control-button {
+    width: 46px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ui-dialog.custom-window:not(.window-active) .window-control-button {
+    color: #333;
+}
+
+/* Botón cerrar */
+.ui-dialog.custom-window .window-button-close:hover {
+    background-color: #e81123;
+}
+
+/* Botones minimizar y maximizar */
+.ui-dialog.custom-window .window-button-maximize:hover,
+.ui-dialog.custom-window .window-button-minimize:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.ui-dialog.custom-window:not(.window-active) .window-button-maximize:hover,
+.ui-dialog.custom-window:not(.window-active) .window-button-minimize:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* Ocultar el botón de cerrar original de jQuery UI */
+.ui-dialog.custom-window .ui-dialog-titlebar-close {
+    display: none;
+}
+
+/* Iconos para los botones usando caracteres Unicode */
+.ui-dialog.custom-window .window-button-close::before {
+    content: "×";
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.ui-dialog.custom-window .window-button-maximize::before {
+    content: "□";
+    font-size: 16px;
+    line-height: 16px;
+}
+
+/* Cambiar icono cuando está maximizado */
+.ui-dialog.custom-window.window-maximized .window-button-maximize::before {
+    content: "⧉";
+    font-size: 16px;
+}
+
+.ui-dialog.custom-window .window-button-minimize::before {
+    content: "−";
+    font-size: 16px;
+    line-height: 16px;
+}
+
+/* Contenido de la ventana */
+.ui-dialog.custom-window .ui-dialog-content {
+    padding: 15px;
+    overflow: auto;
+}
+
+/* Estilos para ventana maximizada */
+.ui-dialog.custom-window.window-maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0;
+    border: none;
+}
+
+.ui-dialog.custom-window.window-maximized .ui-dialog-content {
+    max-height: calc(100vh - 32px - 30px) !important; /* Altura total - barra título - padding */
+}
+
+/* Estilos para ventana minimizada */
+.ui-dialog.custom-window.window-minimized {
+    display: none !important;
+}
+
+/* Manijas de redimensionamiento */
+.ui-dialog.custom-window .ui-resizable-handle {
+    display: block;
+    width: 8px;
+    height: 8px;
+}
+
+.ui-dialog.custom-window.window-maximized .ui-resizable-handle {
+    display: none !important;
+}

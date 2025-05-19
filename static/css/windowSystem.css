@@ -1,0 +1,76 @@
+/**
+ * windowSystem.css - Estilos adicionales para integración del sistema de ventanas
+ */
+
+/* Botón de acceso al sistema de ventanas en el encabezado */
+.header-button {
+    margin-left: 15px;
+    padding: 6px 12px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.header-button:hover {
+    background-color: #2b7de9;
+}
+
+.window-icon {
+    font-size: 16px;
+}
+
+/* Estilos para el contenedor de ventanas de notificación */
+.notification-window {
+    padding: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.notification-window h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.notification-content {
+    margin-bottom: 20px;
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.notification-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-button.primary {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.notification-button.primary:hover {
+    background-color: #2b7de9;
+}
+
+.notification-button.secondary {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.notification-button.secondary:hover {
+    background-color: #e5e5e5;
+}

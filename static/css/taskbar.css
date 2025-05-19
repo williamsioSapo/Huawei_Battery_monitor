@@ -1,0 +1,69 @@
+/**
+ * Taskbar.css - Estilos para la barra de tareas del sistema de ventanas
+ */
+
+/* Barra de tareas principal */
+#windows-taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 999;
+    box-sizing: border-box;
+}
+
+/* Elementos de la barra de tareas */
+.taskbar-item {
+    height: 32px;
+    min-width: 150px;
+    max-width: 200px;
+    background-color: #444;
+    color: #fff;
+    margin-right: 5px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s;
+    font-size: 13px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Elemento activo */
+.taskbar-item-active {
+    background-color: #1a73e8;
+}
+
+/* Elemento minimizado */
+.taskbar-item-minimized {
+    background-color: #555;
+}
+
+/* Hover sobre elemento */
+.taskbar-item:hover {
+    background-color: #666;
+}
+
+.taskbar-item-active:hover {
+    background-color: #2b7de9;
+}
+
+/* Iconos para los elementos (opcional) */
+.taskbar-item-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Análisis de Tráfico Modbus RTU en Sistema de Baterías de Litio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 25px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #3498db;
+            margin-top: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            font-weight: bold;
+        }
+        .code {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .subsection {
+            margin: 20px 0;
+            padding-left: 15px;
+            border-left: 3px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<h1>Informe de Análisis de Tráfico Modbus RTU en Sistema de Baterías de Litio</h1>
+
+    <div class="section">
+        <h2>1. Introducción</h2>
+        <p>Este informe presenta el análisis detallado del tráfico Modbus RTU capturado durante la comunicación entre el software "Lithium Battery Maintenance Tool" y un sistema de baterías de litio. El objetivo del análisis es identificar y mapear los registros Modbus utilizados, distinguiendo entre los comandos estándar y las extensiones propietarias implementadas por el fabricante.</p>
+        <p>La comunicación se realiza entre dos dispositivos con direcciones IP:</p>
+        <ul>
+            <li>192.168.45.218 (C0.A8.45.DA) - posiblemente el controlador o gateway Modbus</li>
+            <li>192.168.45.230 (C0.A8.45.E6) - posiblemente el sistema de baterías</li>
+        </ul>
+        <p>El modelo de batería analizado es un ESM-48150B1, que opera a un voltaje nominal de 48V con 16 celdas activas.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Metodología de Análisis</h2>
+        <p>El análisis se ha realizado siguiendo estos pasos:</p>
+        <ol>
+            <li>Examen de los encabezados Ethernet y TCP/IP para identificar el flujo de comunicación</li>
+            <li>Decodificación de tramas Modbus RTU encapsuladas dentro de los paquetes TCP/IP</li>
+            <li>Correlación de valores mostrados en la interfaz gráfica con datos en los paquetes</li>
+            <li>Identificación de patrones en comandos y respuestas no estándar</li>
+            <li>Mapeo de registros con sus descripciones y valores correspondientes</li>
+        </ol>
+    </div>
+<div class="section">
+        <h2>3. Registros Modbus RTU Estándar Identificados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Registro</th>
+                    <th>Valor</th>
+                    <th>Descripción</th>
+                    <th>Ubicación en UI</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0x0046</td>
+                    <td>0x77F8</td>
+                    <td>Voltaje del pack de batería</td>
+                    <td>48.82V</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0047</td>
+                    <td>0x26FB</td>
+                    <td>Estado de carga de batería</td>
+                    <td>6%</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0048</td>
+                    <td>0x01</td>
+                    <td>Estado de salud de batería</td>
+                    <td>94%</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0049</td>
+                    <td>Varios</td>
+                    <td>Corriente de batería</td>
+                    <td>0.00A</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr class="highlight">
+                    <td>0x1144</td>
+                    <td>0x0A92C3</td>
+                    <td>Descarga AH</td>
+                    <td>3207 AH</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0022</td>
+                    <td>0x10F62B</td>
+                    <td>Lecturas de temperatura</td>
+                    <td>26°C/23°C</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0012</td>
+                    <td>0x10F624</td>
+                    <td>Estado de batería</td>
+                    <td>Charge</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x001A</td>
+                    <td>0x172ECF</td>
+                    <td>Veces de descarga</td>
+                    <td>167</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0032</td>
+                    <td>0x08566F</td>
+                    <td>Estado del giroscopio</td>
+                    <td>Disable</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0300-0x030F</td>
+                    <td>Varios</td>
+                    <td>Voltajes de celdas (16 celdas)</td>
+                    <td>~3.051V por celda</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0106</td>
+                    <td>0x77D0</td>
+                    <td>Límite de corriente de carga</td>
+                    <td>0.500 C</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0101</td>
+                    <td>0x0B8C</td>
+                    <td>Coef. límite de carga predeterminado</td>
+                    <td>0.500 C</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x010F</td>
+                    <td>0xA7D2</td>
+                    <td>Límite de corriente de descarga</td>
+                    <td>0.680 C</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0206</td>
+                    <td>0x7794</td>
+                    <td>Acción de alarma DO1</td>
+                    <td>Close</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0200</td>
+                    <td>0xCC56</td>
+                    <td>Acción de alarma DO2</td>
+                    <td>Close</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x7D6B</td>
+                    <td>0x02BF9C</td>
+                    <td>Código de barras de batería</td>
+                    <td>UB2230029444</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0010</td>
+                    <td>Varios</td>
+                    <td>Estado de alarmas</td>
+                    <td>N/A</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0000</td>
+                    <td>Varios</td>
+                    <td>Estado general de batería</td>
+                    <td>N/A</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0001</td>
+                    <td>0xC611</td>
+                    <td>Configuración de batería</td>
+                    <td>N/A</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0002</td>
+                    <td>Varios</td>
+                    <td>Identificadores de batería</td>
+                    <td>N/A</td>
+                    <td>Lectura</td>
+                </tr>
+                <tr>
+                    <td>0x0006</td>
+                    <td>Varios</td>
+                    <td>Parámetros de carga</td>
+                    <td>N/A</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x0007</td>
+                    <td>0x162F</td>
+                    <td>Parámetros de voltaje</td>
+                    <td>N/A</td>
+                    <td>Lectura/Escritura</td>
+                </tr>
+                <tr>
+                    <td>0x004A</td>
+                    <td>0xB7FB</td>
+                    <td>Información de descarga adicional</td>
+                    <td>N/A</td>
+                    <td>Lectura</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+	<div class="section">
+        <h2>4. Extensiones Propietarias y Comandos No Estándar</h2>
+        
+        <div class="subsection">
+            <h3>4.1 Códigos de Función Propietarios</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Estructura</th>
+                        <th>Propósito Probable</th>
+                        <th>Ejemplo de Datos</th>
+                        <th>Frecuencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0xD603</td>
+                        <td>Estándar</td>
+                        <td>Comando principal de lectura/escritura</td>
+                        <td><span class="code">d6 03 00 00 00 02 d6 2c</span></td>
+                        <td>Alta</td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x0E</td>
+                        <td>Extendido</td>
+                        <td>Comando de configuración extendida</td>
+                        <td><span class="code">d6 03 0e 13 02 13 11 00 00 00 06 00 5e 00 1a 00 17 2e 8f</span></td>
+                        <td>Media</td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x14</td>
+                        <td>Propietario</td>
+                        <td>Posible comando de diagnóstico</td>
+                        <td><span class="code">d6 03 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 54 28</span></td>
+                        <td>Baja</td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x18</td>
+                        <td>Información</td>
+                        <td>Identificación del dispositivo</td>
+                        <td><span class="code">d6 03 18 45 53 4d 2d 34 38 31 35 30 42 31 ff ff ff ff ff ff ff ff ff ff ff ff ff db db</span></td>
+                        <td>Baja</td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x1C</td>
+                        <td>Propietario</td>
+                        <td>Posible comando de calibración</td>
+                        <td><span class="code">d6 03 1c 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ac c3</span></td>
+                        <td>Baja</td>
+                    </tr>
+                    <tr>
+                        <td>0xD683 0x02</td>
+                        <td>Alternativo</td>
+                        <td>Posible función de autenticación/seguridad</td>
+                        <td><span class="code">d6 83 02 70 c9 00</span></td>
+                        <td>Media</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="subsection">
+            <h3>4.2 Paquetes No Estándar Destacados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Datos del Paquete</th>
+                        <th>Análisis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>04:49:02,292</td>
+                        <td><span class="code">4c cc 6a f4 40 30 d4 ad 20 af 87 38 08 00 45 00 00 3b 31 ff 00 00 ff 06 7c ac c0 a8 45 e6 c0 a8 45 da 20 2b e5 85 00 02 0c f6 fc 73 46 7f 50 18 09 c8 27 eb 00 00 d6 03 0e 13 02 13 11 00 00 00 06 00 5e 00 1a 00 17 2e 8f</span></td>
+                        <td>Comando extendido con posible configuración de comunicación o seguridad</td>
+                    </tr>
+                    <tr>
+                        <td>04:49:05,492</td>
+                        <td><span class="code">4c cc 6a f4 40 30 d4 ad 20 af 87 38 08 00 45 00 00 41 32 31 00 00 ff 06 7c 74 c0 a8 45 e6 c0 a8 45 da 20 2b e5 85 00 02 0d c1 fc 73 47 47 50 18 09 00 30 1b 00 00 d6 03 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 54 28</span></td>
+                        <td>Comando diagnóstico con campos vacíos/reservados</td>
+                    </tr>
+                    <tr>
+                        <td>04:49:09,053</td>
+                        <td><span class="code">4c cc 6a f4 40 30 d4 ad 20 af 87 38 08 00 45 00 00 45 32 65 00 00 ff 06 7c 3c c0 a8 45 e6 c0 a8 45 da 20 2b e5 85 00 02 0f 8d fc 73 48 17 50 18 08 30 47 69 00 00 d6 03 18 45 53 4d 2d 34 38 31 35 30 42 31 ff ff ff ff ff ff ff ff ff ff ff ff ff db db</span></td>
+                        <td>Respuesta de identificación con modelo ESM-48150B1 en ASCII</td>
+                    </tr>
+                    <tr>
+                        <td>04:49:07,770</td>
+                        <td><span class="code">4c cc 6a f4 40 30 d4 ad 20 af 87 38 08 00 45 00 00 2d 32 55 00 00 ff 06 7c 64 c0 a8 45 e6 c0 a8 45 da 20 2b e5 85 00 02 0f 65 fc 73 47 d7 50 18 08 70 9e ee 00 00 d6 83 02 70 c9 00</span></td>
+                        <td>Posible autenticación/verificación de seguridad</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+	<div class="section">
+        <h2>5. Análisis de Configuración de Celdas</h2>
+        
+        <div class="subsection">
+            <h3>5.1 Registros Relacionados con la Configuración de Celdas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Registro</th>
+                        <th>Valor</th>
+                        <th>Descripción</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0x0300-0x030F</td>
+                        <td>~3.051V</td>
+                        <td>Lectura individual de voltajes de celdas</td>
+                        <td>16 celdas en total</td>
+                    </tr>
+                    <tr>
+                        <td>0x0332</td>
+                        <td>0x0C</td>
+                        <td>Posible indicador de número de celdas</td>
+                        <td>Podría representar la configuración</td>
+                    </tr>
+                    <tr>
+                        <td>0x1118</td>
+                        <td>ESM-48150B1</td>
+                        <td>Modelo de batería</td>
+                        <td>"48" indica 48V, podría codificar configuración</td>
+                    </tr>
+                    <tr>
+                        <td>0x0301</td>
+                        <td>0x01</td>
+                        <td>Posible indicador de configuración</td>
+                        <td>Podría señalar el arreglo de celdas</td>
+                    </tr>
+                    <tr>
+                        <td>0x0013</td>
+                        <td>Varios</td>
+                        <td>Banderas de estado/configuración</td>
+                        <td>Podría contener bits de configuración</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="subsection">
+            <h3>5.2 Análisis de Voltajes de Celdas</h3>
+            <p>La serie de registros 0x0300-0x030F contiene los voltajes individuales de las 16 celdas activas:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Celda</th>
+                        <th>Registro</th>
+                        <th>Valor</th>
+                        <th>Voltaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1st</td>
+                        <td>0x0300</td>
+                        <td>0x3.051V</td>
+                        <td>3.051V</td>
+                    </tr>
+                    <tr>
+                        <td>2nd</td>
+                        <td>0x0301</td>
+                        <td>0x3.051V</td>
+                        <td>3.051V</td>
+                    </tr>
+                    <tr>
+                        <td>3rd</td>
+                        <td>0x0302</td>
+                        <td>0x3.051V</td>
+                        <td>3.051V</td>
+                    </tr>
+                    <tr>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <td>12th</td>
+                        <td>0x030B</td>
+                        <td>0x3.033V</td>
+                        <td>3.033V</td>
+                    </tr>
+                    <tr>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <td>16th</td>
+                        <td>0x030F</td>
+                        <td>0x3.052V</td>
+                        <td>3.052V</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Esta distribución confirma que la batería actual utiliza una configuración de 16 celdas en serie.</p>
+        </div>
+    </div>
+	<div class="section">
+        <h2>6. Patrones de Comunicación Observados</h2>
+        
+        <div class="subsection">
+            <h3>6.1 Secuencia de Inicialización</h3>
+            <p>Al inicio de la comunicación, se observa una secuencia de comandos que sigue el siguiente patrón:</p>
+            <ol>
+                <li><strong>Autenticación/Handshake</strong>: Uso de códigos 0xD683</li>
+                <li><strong>Identificación</strong>: Solicitud 0xD603 0x18 para obtener información del modelo</li>
+                <li><strong>Lectura de Estado General</strong>: Múltiples comandos 0xD603 para leer estado y configuración</li>
+                <li><strong>Lectura de Voltajes de Celdas</strong>: Comandos para leer registros 0x0300-0x030F</li>
+                <li><strong>Configuración de Parámetros</strong>: Posible establecimiento de umbrales y límites</li>
+            </ol>
+        </div>
+
+        <div class="subsection">
+            <h3>6.2 Ciclo de Monitoreo Regular</h3>
+            <p>Durante el monitoreo normal, se observa un patrón cíclico de comandos:</p>
+            <ol>
+                <li>Lectura de voltaje de pack y celdas</li>
+                <li>Lectura de corriente y estado de carga</li>
+                <li>Lectura de temperaturas</li>
+                <li>Verificación de alarmas</li>
+                <li>Comandos periódicos de diagnóstico/mantenimiento (códigos 0xD603 0x14)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>7. Conclusiones y Recomendaciones</h2>
+        
+        <div class="subsection">
+            <h3>7.1 Principales Hallazgos</h3>
+            <ol>
+                <li>El sistema implementa Modbus RTU con numerosas extensiones propietarias</li>
+                <li>La batería ESM-48150B1 utiliza una configuración de 16 celdas en serie a 48V nominales</li>
+                <li>El protocolo incluye mecanismos de seguridad y autenticación (código 0xD683)</li>
+                <li>Existen comandos específicos para identificación, diagnóstico y configuración avanzada</li>
+                <li>Los parámetros críticos como límites de corriente y acciones de alarma son accesibles a través de registros específicos</li>
+            </ol>
+        </div>
+
+        <div class="subsection">
+            <h3>7.2 Recomendaciones para Análisis Futuro</h3>
+            
+            <h4>1. Comparación con Otras Baterías</h4>
+            <ul>
+                <li>Comparar tráfico con modelos de 11 y 24 celdas para identificar registros de configuración</li>
+                <li>Buscar diferencias en el registro 0x0332 y área 0x0300</li>
+            </ul>
+            
+            <h4>2. Pruebas de Escritura de Parámetros</h4>
+            <ul>
+                <li>Realizar pruebas modificando valores como límites de corriente (registros 0x0106, 0x010F)</li>
+                <li>Documentar la estructura exacta de los comandos de escritura</li>
+            </ul>
+            
+            <h4>3. Análisis de Seguridad</h4>
+            <ul>
+                <li>Profundizar en el análisis del código 0xD683 y su mecanismo de autenticación</li>
+                <li>Evaluar posibles vulnerabilidades en la implementación</li>
+            </ul>
+            
+            <h4>4. Captura de Eventos</h4>
+            <ul>
+                <li>Capturar tráfico durante eventos de alarma o cambios de estado</li>
+                <li>Identificar registros para diagnóstico y gestión de eventos</li>
+            </ul>
+            
+            <h4>5. Decodificación Completa</h4>
+            <ul>
+                <li>Realizar ingeniería inversa de los comandos propietarios 0xD603 0x0E, 0x14, 0x1C</li>
+                <li>Crear un diccionario completo de registros y comandos</li>
+            </ul>
+        </div>
+
+        <div class="subsection">
+            <h3>7.3 Aplicaciones Potenciales</h3>
+            <p>Este análisis puede servir como base para:</p>
+            <ol>
+                <li>Desarrollo de software alternativo compatible con estos sistemas de baterías</li>
+                <li>Integración con sistemas de gestión de energía de terceros</li>
+                <li>Diagnóstico avanzado y monitoreo personalizado</li>
+                <li>Mejora de la seguridad y robustez del sistema</li>
+            </ol>
+        </div>
+    </div>
+	<div class="section">
+        <h2>Apéndice A: Estructura del Modelo de Batería</h2>
+        <p>Basado en el análisis, el modelo ESM-48150B1 parece seguir una convención de nomenclatura específica:</p>
+        <ul>
+            <li><strong>ESM</strong>: Identificador del fabricante o línea de producto</li>
+            <li><strong>48</strong>: Voltaje nominal (48V)</li>
+            <li><strong>150</strong>: Posible capacidad (150Ah) o configuración específica</li>
+            <li><strong>B1</strong>: Versión o variante del producto</li>
+        </ul>
+        <p>Esta convención puede ayudar a identificar otras variantes y sus características esperadas.</p>
+    </div>
+
+    <div class="section">
+        <h2>Apéndice B: Mapa de Códigos de Función Modbus</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción Estándar</th>
+                    <th>Uso Observado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0x01</td>
+                    <td>Read Coils</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x02</td>
+                    <td>Read Discrete Inputs</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x03</td>
+                    <td>Read Holding Registers</td>
+                    <td>Observado como parte de 0xD603</td>
+                </tr>
+                <tr>
+                    <td>0x04</td>
+                    <td>Read Input Registers</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x05</td>
+                    <td>Write Single Coil</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x06</td>
+                    <td>Write Single Register</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x0F</td>
+                    <td>Write Multiple Coils</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0x10</td>
+                    <td>Write Multiple Registers</td>
+                    <td>No observado</td>
+                </tr>
+                <tr>
+                    <td>0xD6</td>
+                    <td>No estándar</td>
+                    <td>Usado como prefijo común</td>
+                </tr>
+                <tr>
+                    <td>0x83</td>
+                    <td>Exception Code</td>
+                    <td>Posiblemente reutilizado para autenticación</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

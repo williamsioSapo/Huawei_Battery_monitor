@@ -1,0 +1,84 @@
+REGISTROS BÁSICOS (0x00-0x4F)
+0x0000 | Voltaje de Batería | V | 0.01 | Unsigned | R | Confirmado
+0x0001 | Voltaje del Pack | V | 0.01 | Unsigned | R | Confirmado
+0x0002 | Corriente de Batería | A | 0.01 | Signed | R | Confirmado
+0x0003 | Estado de Carga (SOC) | % | 1 | Unsigned | R | Confirmado
+0x0004 | Estado de Salud (SOH) | % | 1 | Unsigned | R | Confirmado
+0x0005 | Estado General | - | 1 | Unsigned | R | Confirmado
+0x0006 | Registro Reservado | - | 1 | Unsigned | R | Confirmado
+0x0007 | Parámetros de Voltaje | - | - | Unsigned | R/W | En duda
+0x0010 | Estado de Alarmas | - | - | Unsigned | R | Confirmado
+0x0011 | Banderas de Estado | - | - | Unsigned | R | En duda
+0x0012 | Estado de Batería | - | - | Unsigned | R | Confirmado
+0x0013-0x0019 | Configuración y Banderas | - | - | Unsigned | R | En duda
+0x001A | Ciclos de Descarga | ciclos | 1 | Unsigned | R | Confirmado
+0x0022 | Lecturas de Temperatura | °C | 0.1 | Signed | R | Confirmado
+0x0032 | Estado del Giroscopio | - | - | Unsigned | R/W | Confirmado
+0x0046 | Voltaje del Pack (Alt) | V | 0.01 | Unsigned | R | Confirmado
+0x0047 | SOC (Alt) | % | 1 | Unsigned | R | Confirmado
+0x0048 | SOH (Alt) | % | 1 | Unsigned | R | Confirmado
+0x0049 | Corriente (Alt) | A | 0.01 | Signed | R | Confirmado
+0x004A | Info Descarga Adicional | - | - | Unsigned | R | Confirmado
+REGISTROS DE TEMPERATURAS (0x12-0x21)
+0x0012-0x0021 | Temperaturas de Celdas | °C | 0.1 | Signed | R | Confirmado
+REGISTROS DE VOLTAJES CELDAS (0x22-0x3D)
+0x0022-0x0030 | Voltajes de Celdas 1-15 | V | 0.001 | Unsigned | R | Confirmado
+0x0032-0x003D | Voltajes de Celdas 16+ | V | 0.001 | Unsigned | R | Confirmado
+REGISTROS DE CONFIGURACIÓN (0x100-0x2FF)
+0x0101 | Coef. Límite de Carga | - | - | Unsigned | R/W | Confirmado
+0x0106 | Límite Corriente de Carga | A | 0.01 | Unsigned | R/W | Confirmado
+0x010A | Límite Corriente Descarga 1 | A | 0.01 | Unsigned | R/W | En duda
+0x010F | Límite Corriente Descarga 2 | A | 0.01 | Unsigned | R/W | Confirmado
+0x0200 | Acción de Alarma DO2 | - | - | Unsigned | R/W | Confirmado
+0x0206 | Acción de Alarma DO1 | - | - | Unsigned | R/W | Confirmado
+REGISTROS VOLTAJES CELDAS ALTERNATIVOS (0x300-0x30F)
+0x0300-0x030F | Voltajes de Celdas (Alt) | V | 0.001 | Unsigned | R | Confirmado
+REGISTROS DE CONFIGURACIÓN AVANZADA (0x330-0x33F)
+0x0332 | Configuración de Celdas | - | - | Unsigned | R | En duda
+REGISTROS DE HISTÓRICOS (0x1100-0x11FF)
+0x1144 | Descarga AH Acumulada | Ah | 1 | Unsigned | R | Confirmado
+0x1145 | Carga AH Acumulada | Ah | 1 | Unsigned | R | En duda
+0x1146 | Tiempo Total de Operación | horas | 1 | Unsigned | R | En duda
+0x1149 | Total de Eventos de Descarga | - | 1 | Unsigned | R | En duda
+0x114A | Total de Eventos de Carga | - | 1 | Unsigned | R | En duda
+0x1150 | Máximo Voltaje Histórico | V | 0.01 | Unsigned | R | En duda
+0x1151 | Mínimo Voltaje Histórico | V | 0.01 | Unsigned | R | En duda
+0x1152 | Máxima Corriente Carga | A | 0.01 | Unsigned | R | En duda
+0x1153 | Máxima Corriente Descarga | A | 0.01 | Unsigned | R | En duda
+0x1154 | Máxima Temperatura | °C | 0.1 | Signed | R | En duda
+0x1155 | Mínima Temperatura | °C | 0.1 | Signed | R | En duda
+REGISTROS DE INFORMACIÓN DEL DISPOSITIVO (0x1100-0x13FF)
+0x1118-0x1127 | Información del Dispositivo | - | - | ASCII | R | Confirmado
+0x1190 | Umbral de Advertencia SOC Bajo | % | 1 | Unsigned | R/W | En duda
+0x1195-0x11B4 | Información Avanzada | - | - | Unsigned | R | En duda
+0x1294 | Energía Total Descargada | kWh | 0.1 | Unsigned | R | En duda
+0x12F0 | Registro de Diagnóstico | - | - | Unsigned | R | En duda
+0x12F2 | Temperatura MOSFET 1 | °C | 0.1 | Signed | R | En duda
+0x12F3 | Temperatura MOSFET 2 | °C | 0.1 | Signed | R | En duda
+0x12FF | Versión de Firmware | - | - | ASCII | R | En duda
+0x1300-0x130F | Registros de Eventos | - | - | Unsigned | R | En duda
+REGISTROS DE IDENTIFICACIÓN (0x7D00-0x7DFF)
+0x7D6B | Código de Barras/Serial | - | - | ASCII | R | Confirmado
+CÓDIGOS DE FUNCIÓN MODBUS
+0x03 | Read Holding Registers | Confirmado
+0x06 | Write Single Register | Confirmado
+0x10 | Write Multiple Registers | Confirmado
+0x41 | Función Personalizada para Autenticación | Confirmado
+COMANDOS PROPIETARIOS Y SECUENCIAS
+
+FC41 + 0x06 0x03 0x04 0x00 + índice | Lectura de información detallada | Confirmado
+FC41 + 0x05 0x01 0x04 | Validación de acceso | Confirmado
+FC10 + fecha/hora | Sincronización de fecha y hora | Confirmado
+FC03 + 0x01 0x06 0x00 0x01 | Comando de desbloqueo | Confirmado
+
+NOTAS IMPORTANTES
+
+El sistema admite 16 celdas en total
+Existen registros duplicados para mayor robustez
+Los registros de amperios-hora (0x1144) son críticos para monitorear vida útil
+Los ciclos de batería se encuentran en 0x001A
+Algunas funciones requieren la secuencia de autenticación de 3 pasos
+Los valores de temperatura usan factor 0.1 y pueden ser con signo
+Los valores de corriente usan complemento a 2 para valores negativos
+El modelo ESM-48150B1 indica: 48V nominal, 150Ah, variante B1
+Los voltajes de celdas son accesibles en múltiples ubicaciones

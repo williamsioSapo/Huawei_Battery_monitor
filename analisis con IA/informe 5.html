@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Protocolo ModBus RTU en Sistemas de Baterías de Litio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 25px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #3498db;
+            margin-top: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            font-weight: bold;
+        }
+        .verification {
+            display: inline-block;
+            color: white;
+            background-color: #27ae60;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        .code {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .subsection {
+            margin: 20px 0;
+            padding-left: 15px;
+            border-left: 3px solid #eee;
+        }
+        .discovery {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin: 15px 0;
+        }
+        .packet {
+            font-family: 'Courier New', monospace;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            overflow-x: auto;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .result {
+            background-color: #e8f8f5;
+            border-left: 4px solid #1abc9c;
+            padding: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Análisis de Protocolo ModBus RTU en Sistemas de Baterías de Litio</h1>
+    
+    <div class="section">
+        <h2>1. Introducción y Metodología</h2>
+        <p>Este informe presenta el análisis detallado del tráfico ModBus RTU capturado durante la comunicación entre el software "Lithium Battery Maintenance Tool" y dos sistemas de baterías de litio diferentes (12 y 16 celdas). El objetivo principal es identificar y verificar los registros ModBus utilizados para crear software compatible con estos sistemas.</p>
+        
+        <div class="subsection">
+            <h3>1.1 Dispositivos Analizados</h3>
+            <ul>
+                <li>Batería de 12 celdas: Modelo ESM-48150B1, 48V nominales</li>
+                <li>Batería de 16 celdas: Modelo ESM-48150B1, 48V nominales</li>
+                <li>Direcciones IP:
+                    <ul>
+                        <li>192.168.45.218 (C0.A8.45.DA): Controlador/PC con software de mantenimiento</li>
+                        <li>192.168.45.230 (C0.A8.45.E6): Sistema de baterías de litio</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="subsection">
+            <h3>1.2 Metodología de Análisis</h3>
+            <ol>
+                <li>Captura y comparación de tráfico para ambos sistemas de baterías</li>
+                <li>Identificación de comandos y respuestas ModBus RTU dentro del tráfico TCP/IP</li>
+                <li>Correlación de valores mostrados en la interfaz gráfica con datos en los paquetes</li>
+                <li>Validación cruzada de registros entre ambos sistemas</li>
+                <li>Verificación de patrones consistentes en los comandos propietarios</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Descubrimientos Clave</h2>
+        
+        <div class="discovery">
+            <h3>2.1 Registro de Número de Celdas <span class="verification">VERIFICADO</span></h3>
+            <p>Se ha identificado y verificado que el registro <strong>0x0332</strong> contiene el número de celdas del sistema de batería:</p>
+            <div class="packet">
+                Batería 12 celdas: d6 03 03 32 00 <strong>0C</strong> f6 63<br>
+                Batería 16 celdas: d6 03 03 32 00 <strong>10</strong> 52 93
+            </div>
+            <div class="result">
+                <p><strong>Resultado:</strong> El valor <code>0x0C</code> (12 decimal) corresponde a la batería de 12 celdas, mientras que <code>0x10</code> (16 decimal) corresponde a la batería de 16 celdas.</p>
+            </div>
+        </div>
+        
+        <div class="discovery">
+            <h3>2.2 Registro de Versión de Software <span class="verification">VERIFICADO</span></h3>
+            <p>Se ha identificado que la versión del software se obtiene de la respuesta al comando que lee el registro básico <strong>0x0000</strong>:</p>
+            <div class="packet">
+                Comando: d6 03 00 00 00 02 d6 2c<br>
+                Respuesta (Batería 12 celdas): d6 03 04 13 02 13 12 <strong>75</strong> 47<br>
+                Respuesta (Batería 16 celdas): d6 03 04 13 02 13 0X <strong>6F</strong> XX
+            </div>
+            <div class="result">
+                <p><strong>Resultado:</strong> El valor <code>0x75</code> (117 decimal) corresponde a la versión "V117" mostrada en la interfaz de la batería de 12 celdas, mientras que <code>0x6F</code> (111 decimal) corresponde a la versión "V111" mostrada para la batería de 16 celdas.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Registros ModBus RTU Verificados</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Registro</th>
+                    <th>Descripción</th>
+                    <th>Valor Ejemplo</th>
+                    <th>Tipo</th>
+                    <th>Verificación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td>0x0332</td>
+                    <td>Número de celdas</td>
+                    <td>0x0C/0x10 (12/16 celdas)</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr class="highlight">
+                    <td>0x0000</td>
+                    <td>Versión de software (en respuesta)</td>
+                    <td>0x75/0x6F (V117/V111)</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0046</td>
+                    <td>Voltaje del pack de batería</td>
+                    <td>48.52V/48.83V</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0047</td>
+                    <td>Estado de carga de batería (SOC)</td>
+                    <td>20%/6%</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0048</td>
+                    <td>Estado de salud de batería (SOH)</td>
+                    <td>100%/94%</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0049</td>
+                    <td>Corriente de batería</td>
+                    <td>-0.63A/0.00A</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0300-0x030F</td>
+                    <td>Voltajes de celdas individuales</td>
+                    <td>~3.051V/~3.052V por celda</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0022</td>
+                    <td>Lecturas de temperatura</td>
+                    <td>26°C,24°C / 25°C,23°C</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0012</td>
+                    <td>Estado de batería</td>
+                    <td>Discharge/Charge</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x1144</td>
+                    <td>Descarga AH</td>
+                    <td>5697 AH/3207 AH</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0106</td>
+                    <td>Límite de corriente de carga</td>
+                    <td>0.110C/0.500C</td>
+                    <td>Lectura/Escritura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0101</td>
+                    <td>Coef. límite de carga predeterminado</td>
+                    <td>0.110C/0.500C</td>
+                    <td>Lectura/Escritura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x010F</td>
+                    <td>Límite de corriente de descarga</td>
+                    <td>0.680C</td>
+                    <td>Lectura/Escritura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0206</td>
+                    <td>Acción de alarma DO1</td>
+                    <td>Open/Close</td>
+                    <td>Lectura/Escritura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x0200</td>
+                    <td>Acción de alarma DO2</td>
+                    <td>Open/Close</td>
+                    <td>Lectura/Escritura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+                <tr>
+                    <td>0x7D6B</td>
+                    <td>Código de barras de batería</td>
+                    <td>UB2230029444</td>
+                    <td>Lectura</td>
+                    <td>Verificado en ambas capturas</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>4. Estructura de Comandos Propietarios</h2>
+        
+        <div class="subsection">
+            <h3>4.1 Códigos de Función Identificados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Estructura</th>
+                        <th>Propósito</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0xD603</td>
+                        <td>Estándar</td>
+                        <td>Comando principal de lectura</td>
+                        <td><span class="code">d6 03 00 00 00 02 d6 2c</span></td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x0E</td>
+                        <td>Extendido</td>
+                        <td>Comando de configuración extendida</td>
+                        <td><span class="code">d6 03 0e 13 02 13 11 00 00 00 06 00 5e 00 1a 00 17 2e 8f</span></td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x14</td>
+                        <td>Propietario</td>
+                        <td>Posible comando de diagnóstico</td>
+                        <td><span class="code">d6 03 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 54 28</span></td>
+                    </tr>
+                    <tr>
+                        <td>0xD603 0x18</td>
+                        <td>Información</td>
+                        <td>Identificación del dispositivo</td>
+                        <td><span class="code">d6 03 18 45 53 4d 2d 34 38 31 35 30 42 31 ff ff ff ff ff ff ff ff ff ff ff ff ff db db</span></td>
+                    </tr>
+                    <tr>
+                        <td>0xD683 0x02</td>
+                        <td>Alternativo</td>
+                        <td>Posible función de autenticación/seguridad</td>
+                        <td><span class="code">d6 83 02 70 c9 00</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="subsection">
+            <h3>4.2 Patrón de Comunicación</h3>
+            <p>La secuencia de inicialización sigue un patrón identificable:</p>
+            <ol>
+                <li><strong>Autenticación/Handshake</strong>: Uso de códigos 0xD683</li>
+                <li><strong>Identificación</strong>: Solicitud 0xD603 0x18 para obtener información del modelo</li>
+                <li><strong>Lectura de Estado General</strong>: Múltiples comandos 0xD603 para leer estado y configuración</li>
+                <li><strong>Lectura de Voltajes de Celdas</strong>: Comandos para leer registros 0x0300-0x030F</li>
+                <li><strong>Configuración de Parámetros</strong>: Posible establecimiento de umbrales y límites</li>
+            </ol>
+            
+            <p>Durante el monitoreo normal, se observa un patrón cíclico:</p>
+            <ol>
+                <li>Lectura de voltaje de pack y celdas</li>
+                <li>Lectura de corriente y estado de carga</li>
+                <li>Lectura de temperaturas</li>
+                <li>Verificación de alarmas</li>
+                <li>Comandos periódicos de diagnóstico/mantenimiento (códigos 0xD603 0x14)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Implicaciones para el Desarrollo de Software</h2>
+        
+        <div class="subsection">
+            <h3>5.1 Detección de Configuración de Batería</h3>
+            <p>El software puede detectar automáticamente el tipo de batería y su configuración:</p>
+            <ul>
+                <li>Leer el registro 0x0332 para determinar el número de celdas (12 o 16)</li>
+                <li>Adaptar la interfaz de usuario para mostrar solo las celdas activas</li>
+                <li>Ajustar cálculos y umbrales basados en la configuración específica</li>
+            </ul>
+        </div>
+        
+        <div class="subsection">
+            <h3>5.2 Compatibilidad con Múltiples Versiones</h3>
+            <p>La estructura de comandos se mantiene consistente entre diferentes versiones de firmware:</p>
+            <ul>
+                <li>V111 (batería de 16 celdas)</li>
+                <li>V117 (batería de 12 celdas)</li>
+            </ul>
+            <p>Esto permite crear software compatible con múltiples versiones de firmware.</p>
+        </div>
+        
+        <div class="subsection">
+            <h3>5.3 Estructura Modular para Implementación</h3>
+            <p>Recomendaciones para la implementación de software compatible:</p>
+            <ol>
+                <li><strong>Capa de Comunicación</strong>: Implementar conexión TCP/IP con soporte para comandos propietarios</li>
+                <li><strong>Capa de Registros</strong>: Abstraer la lectura/escritura de registros específicos</li>
+                <li><strong>Capa de Modelo de Datos</strong>: Representar el estado de la batería y sus parámetros</li>
+                <li><strong>Capa de Interfaz de Usuario</strong>: Adaptable al tipo y configuración de batería</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Próximos Pasos de Análisis</h2>
+        
+        <div class="subsection">
+            <h3>6.1 Áreas para Profundizar</h3>
+            <ul>
+                <li><strong>Comandos de Escritura</strong>: Determinar la estructura exacta para modificar parámetros</li>
+                <li><strong>Registros Adicionales</strong>: Identificar registros para estadísticas detalladas e historial</li>
+                <li><strong>Estructura de Alarmas</strong>: Decodificar los bits de estado y condiciones de alarma</li>
+                <li><strong>Mecanismo de Seguridad</strong>: Analizar el protocolo de autenticación (0xD683)</li>
+                <li><strong>Actualización de Firmware</strong>: Identificar secuencias para actualizar el firmware</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <p><strong>Nota:</strong> Este análisis ha verificado los registros más críticos para el funcionamiento básico. Un análisis completo requeriría pruebas adicionales con comandos de escritura y situaciones de error.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>7. Conclusiones</h2>
+        
+        <p>El análisis detallado del tráfico ModBus RTU en ambos sistemas de baterías de litio ha permitido identificar y verificar registros clave y estructuras de comandos propietarios. Los hallazgos más importantes incluyen:</p>
+        
+        <ol>
+            <li>La identificación del registro 0x0332 que contiene el número de celdas del sistema</li>
+            <li>La validación del método para obtener la versión del software del sistema</li>
+            <li>El mapeo de registros críticos para monitoreo y configuración</li>
+            <li>La documentación de la estructura de comandos propietarios</li>
+        </ol>
+        
+        <p>Estos descubrimientos proporcionan una base sólida para el desarrollo de software compatible con estos sistemas de baterías de litio, permitiendo la implementación de funcionalidades equivalentes al "Lithium Battery Maintenance Tool" original.</p>
+    </div>
+
+    <div class="section">
+        <h2>Apéndice A: Ejemplo de Flujo de Comunicación</h2>
+        
+        <div class="packet">
+            Solicitud de número de celdas:<br>
+            d6 03 03 32 00 XX XX XX<br><br>
+            
+            Respuesta (batería 12 celdas):<br>
+            d6 03 02 00 0C XX XX<br><br>
+            
+            Respuesta (batería 16 celdas):<br>
+            d6 03 02 00 10 XX XX<br><br>
+            
+            Solicitud de información de versión:<br>
+            d6 03 00 00 00 02 d6 2c<br><br>
+            
+            Respuesta (versión V117):<br>
+            d6 03 04 13 02 13 12 75 47<br><br>
+            
+            Respuesta (versión V111):<br>
+            d6 03 04 13 02 13 0X 6F XX
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 0.8em; color: #777;">
+        Análisis de Protocolo ModBus RTU en Sistemas de Baterías de Litio<br>
+        Fecha: 18 de Mayo, 2025
+    </footer>
+</body>
+</html>

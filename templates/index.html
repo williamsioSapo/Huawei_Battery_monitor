@@ -4,38 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interfaz Modbus RTU - Sistema de Baterías Huawei</title>
-    <!-- Enlace a hojas de estilos CSS -->
+    
+    <!-- jQuery y jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- React (para componentes como el monitor de autenticación) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- Estilos CSS de la aplicación original -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/authentication_monitor.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/batteryDetailView.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/batteryDetailWindow.css') }}">
+    <!-- NUEVO: Estilos para el sistema de ventanas -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/windows.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowDemo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowBattery.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowSystem.css') }}">
 
-    <!-- Favicon (opcional, pero evita el error 404 en consola) -->
+    <!-- Favicon -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
     <div id="auth-monitor-container" class="auth-monitor-container"></div>
-	<!-- Botón de consola persistente -->
-	<div class="console-toggle-button" id="consoleToggleBtn">
-		<i class="console-icon">⚙️</i> Consola
-	</div>
+    
+    <!-- Botón de consola persistente -->
+    <div class="console-toggle-button" id="consoleToggleBtn">
+        <i class="console-icon">⚙️</i> Consola
+    </div>
 
-	<!-- Ventana flotante de consola -->
-	<div class="console-modal" id="consoleModal">
-		<div class="console-modal-content">
-			<div class="console-modal-header">
-				<span class="console-title">Consola de Depuración</span>
-				<span class="console-close" id="consoleCloseBtn">×</span>
-			</div>
-			<div class="console-container">
-				<div id="console-output"></div>
-			</div>
-			<div class="console-modal-footer">
-				<button id="clearConsoleBtn">Limpiar</button>
-				<button id="pauseConsoleBtn">Pausar</button>
-			</div>
-		</div>
-	</div>
+    <!-- Ventana flotante de consola -->
+    <div class="console-modal" id="consoleModal">
+        <div class="console-modal-content">
+            <div class="console-modal-header">
+                <span class="console-title">Consola de Depuración</span>
+                <span class="console-close" id="consoleCloseBtn">×</span>
+            </div>
+            <div class="console-container">
+                <div id="console-output"></div>
+            </div>
+            <div class="console-modal-footer">
+                <button id="clearConsoleBtn">Limpiar</button>
+                <button id="pauseConsoleBtn">Pausar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Contenedor Principal -->
     <div class="container">
@@ -45,6 +66,10 @@
                 <span class="dot"></span>
                 <span class="text">Desconectado</span>
             </div>
+            <!-- Botón para el sistema de ventanas -->
+            <button id="openWindowSystemBtn" class="header-button">
+                <span class="window-icon">🪟</span> Sistema de Ventanas
+            </button>
         </header>
 
         <main>
@@ -237,30 +262,45 @@
         </main>
     </div>
 
-    <!-- Scripts JavaScript -->
-    <!-- Librerías React y Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- Contenedor para la barra de tareas del sistema de ventanas -->
+    <div id="windows-taskbar"></div>
 
-    <!-- Scripts de la aplicación (Orden Importante) -->
-	<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <!-- 1. API Helper -->
+    <!-- Scripts JavaScript de la aplicación original -->
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
-    <!-- 2. Módulos refactorizados (NUEVOS) -->
     <script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
     <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
-    <!-- 4. Componente BatteryMiniPanel (NUEVO) -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/batteryMiniPanel.js') }}"></script>
-    <!-- 5. Componente BatteryDetailView -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/batteryDetailView.js') }}"></script>
-    <!-- 6. Componente React para múltiples baterías -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/batteryMiniPanel-jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/batteryDetailWindow.js') }}"></script>
     <script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
-    <!-- 7. Lógica principal (ACTUALIZADO) -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <!-- 9. Lógica de la Consola Web -->
     <script src="{{ url_for('static', filename='js/console.js') }}"></script>
 
+    <!-- NUEVO: Scripts para el sistema de ventanas -->
+    <script src="{{ url_for('static', filename='js/windowManager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/windowDemo.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/windowTest.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/windowIntegration.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/windowSystemInit.js') }}"></script>
+
+    <!-- Inicializar el sistema de ventanas automáticamente -->
+    <script>
+        $(document).ready(function() {
+            // Verificar si el sistema de ventanas está activo
+            setTimeout(function() {
+                if (typeof WindowManager === 'undefined') {
+                    console.error("Error: WindowManager no disponible");
+                } else {
+                    console.log("Sistema de ventanas inicializado correctamente");
+                    // Opcionalmente, mostrar una pequeña notificación
+                    if (location.search.includes('windowDemo=true')) {
+                        // Si hay un parámetro en la URL, mostrar la demostración
+                        WindowTest.runFullTest();
+                    }
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
