@@ -2,7 +2,7 @@
 
 /**
  * Módulo para gestionar la interfaz de usuario y la visualización de paneles
- * Maneja la presentación visual y el cambio entre vistas
+ * Versión refactorizada para conexión única - sin PyModbus separado
  */
 const UiManager = (function() {
     // Referencias a elementos DOM para secciones UI
@@ -10,252 +10,200 @@ const UiManager = (function() {
         connectionStatusEl: null,
         connectionStatusText: null,
         connectionSection: null,
+        conexionUnicaSection: null,
         multiBatterySection: null,
         readSection: null,
         writeSection: null,
-        deviceInfoSection: null,
-        
-        // Nuevas secciones para separación de conexiones
-        lowLevelConnectionSection: null,
-        modbusConnectionSection: null
-    };
-    
-    // Referencias a elementos de selección de vista
-    let viewControls = {
-        singleViewBtn: null,
-        multiViewBtn: null
+        deviceInfoSection: null
     };
     
     // Estado actual de la vista
     let currentView = 'single'; // 'single' o 'multi'
     
-    /**
-     * Actualiza la UI basado en el estado de conexión
-     * @param {Object} connections - Objeto con estados de conexión {lowLevel, modbus}
-     */
-    function updateConnectionUI(connections) {
-		if (!sections.connectionStatusEl || !sections.connectionStatusText) return;
-		
-		const { lowLevel, modbus } = connections || { lowLevel: false, modbus: false };
-		
-		console.log(`UiManager: Actualizando UI de conexión (bajo nivel: ${lowLevel}, modbus: ${modbus})`);
-		
-		// Actualizar indicador de estado
-		if (modbus) {
-			sections.connectionStatusEl.className = 'status-indicator connected';
-			sections.connectionStatusText.textContent = 'PyModbus Conectado';
-		} else if (lowLevel) {
-			sections.connectionStatusEl.className = 'status-indicator partial';
-			sections.connectionStatusText.textContent = 'Bajo Nivel Conectado';
-		} else {
-			sections.connectionStatusEl.className = 'status-indicator disconnected';
-			sections.connectionStatusText.textContent = 'Desconectado';
-		}
-		
-		// Mostrar/ocultar secciones basado en estado de conexión
-		
-		// Secciones que requieren al menos conexión de bajo nivel
-		if (lowLevel) {
-			if (sections.lowLevelConnectionSection) sections.lowLevelConnectionSection.style.display = 'block';
-		} else {
-			// Si no hay conexión de bajo nivel, ocultar todo excepto la sección de conexión
-			if (sections.lowLevelConnectionSection) sections.lowLevelConnectionSection.style.display = 'none';
-		}
-		
-		// Secciones que requieren PyModbus conectado y autenticación completa
-		if (modbus && window.allBatteriesAuthenticated) {
-			// Mostrar siempre el panel múltiple cuando hay conexión PyModbus
-			if (sections.multiBatterySection) {
-				sections.multiBatterySection.style.display = 'block';
-			}
-			
-			// Mostrar siempre estas secciones cuando hay conexión PyModbus y autenticación completa
-			if (sections.readSection) sections.readSection.style.display = 'block';
-			if (sections.writeSection) sections.writeSection.style.display = 'block';
-			if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'block';
-		} else {
-			// Ocultar todas las secciones que requieren PyModbus
-			if (sections.multiBatterySection) sections.multiBatterySection.style.display = 'none';
-			if (sections.readSection) sections.readSection.style.display = 'none';
-			if (sections.writeSection) sections.writeSection.style.display = 'none';
-			if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'none';
-			
-			// Mostrar el monitor de autenticación si está disponible y hay conexión de bajo nivel
-			if (lowLevel && !window.allBatteriesAuthenticated) {
-				if (window.AuthMonitor && window.AuthMonitor.show) {
-					window.AuthMonitor.show();
-				}
-			}
-		}
-		
-		// Actualizar la sección de conexión Modbus si existe
-		if (sections.modbusConnectionSection) {
-			sections.modbusConnectionSection.style.display = lowLevel ? 'block' : 'none';
-		}
-	}
+    // Estado de conexión unificado
+    let conexionState = {
+        conectado: false,
+        sistemaCompleto: false
+    };
     
     /**
-     * Crea e inicializa el selector de vistas
+     * Actualiza la UI basado en el estado de conexión única
+     * @param {Object} estado - Estado de conexión {conectado, sistemaCompleto}
      */
-    function initViewSelector() {
-		console.log("UiManager: initViewSelector - Inicializando selector de vista...");
-		
-		// Verificar si el selector ya existe para evitar duplicados
-		if (document.querySelector('.view-selector')) {
-			console.log("UiManager: initViewSelector - Selector de vista ya existe");
-			return;
-		}
-		
-		// Crear container para los botones de selección de vista
-		const viewSelectorContainer = document.createElement('div');
-		viewSelectorContainer.className = 'view-selector';
-		viewSelectorContainer.style.marginTop = '15px';
-		viewSelectorContainer.style.textAlign = 'center';
-		
-		// Crear solo el botón para la vista múltiple
-		const multiViewBtn = document.createElement('button');
-		multiViewBtn.textContent = '🔄 Panel Múltiple de Baterías';
-		multiViewBtn.className = 'view-btn active';
-		multiViewBtn.onclick = () => switchView('multi');
-		viewControls.multiViewBtn = multiViewBtn;
-		
-		// Añadir botón al container
-		viewSelectorContainer.appendChild(multiViewBtn);
-		
-		// Añadir container después de los botones de conexión
-		if (sections.modbusConnectionSection) {
-			const connectionButtons = sections.modbusConnectionSection.querySelector('.button-group');
-			if (connectionButtons) {
-				connectionButtons.parentNode.insertBefore(viewSelectorContainer, connectionButtons.nextSibling);
-				console.log("UiManager: initViewSelector - Selector de vista añadido correctamente");
-			} else {
-				console.error("UiManager: initViewSelector - No se encontró .button-group en modbusConnectionSection");
-			}
-		} else if (sections.connectionSection) {
-			const connectionButtons = sections.connectionSection.querySelector('.button-group');
-			if (connectionButtons) {
-				connectionButtons.parentNode.insertBefore(viewSelectorContainer, connectionButtons.nextSibling);
-				console.log("UiManager: initViewSelector - Selector de vista añadido correctamente");
-			} else {
-				console.error("UiManager: initViewSelector - No se encontró .button-group en connectionSection");
-			}
-		} else {
-			console.error("UiManager: initViewSelector - No se encontró sección de conexión");
-		}
-		
-		// Establecer estilos CSS inline para el botón
-		multiViewBtn.style.padding = '8px 15px';
-		multiViewBtn.style.border = '1px solid #2980b9';
-		multiViewBtn.style.borderRadius = '4px';
-		multiViewBtn.style.backgroundColor = '#3498db';
-		multiViewBtn.style.color = 'white';
-		multiViewBtn.style.cursor = 'pointer';
-		multiViewBtn.style.transition = 'all 0.2s';
-		
-		console.log("UiManager: initViewSelector - Selector de vista inicializado completamente");
-	}
-    
-    /**
-     * Actualiza los estilos de los botones según la vista activa
-     */
-    function updateViewButtonStyles() {
-        // Reset all buttons
-        const btns = document.querySelectorAll('.view-btn');
-        btns.forEach(btn => {
-            btn.classList.remove('active');
-            btn.style.backgroundColor = '#f8f9fa';
-            btn.style.color = '#333';
-            btn.style.borderColor = '#ddd';
-        });
+    function updateConnectionUI(estado) {
+        if (!sections.connectionStatusEl || !sections.connectionStatusText) return;
         
-        // Highlight active button
-        if (currentView === 'single' && viewControls.singleViewBtn) {
-            viewControls.singleViewBtn.classList.add('active');
-            viewControls.singleViewBtn.style.backgroundColor = '#3498db';
-            viewControls.singleViewBtn.style.color = 'white';
-            viewControls.singleViewBtn.style.borderColor = '#2980b9';
-        } else if (currentView === 'multi' && viewControls.multiViewBtn) {
-            viewControls.multiViewBtn.classList.add('active');
-            viewControls.multiViewBtn.style.backgroundColor = '#3498db';
-            viewControls.multiViewBtn.style.color = 'white';
-            viewControls.multiViewBtn.style.borderColor = '#2980b9';
+        const { conectado, sistemaCompleto } = estado || { conectado: false, sistemaCompleto: false };
+        
+        console.log(`UiManager: Actualizando UI de conexión (conectado: ${conectado}, sistema completo: ${sistemaCompleto})`);
+        
+        // Guardar estado interno
+        conexionState = { conectado, sistemaCompleto };
+        
+        // Actualizar indicador de estado principal
+        if (sistemaCompleto) {
+            sections.connectionStatusEl.className = 'status-indicator connected';
+            sections.connectionStatusText.textContent = 'Sistema Listo';
+        } else if (conectado) {
+            sections.connectionStatusEl.className = 'status-indicator partial';
+            sections.connectionStatusText.textContent = 'Sistema Conectado';
+        } else {
+            sections.connectionStatusEl.className = 'status-indicator disconnected';
+            sections.connectionStatusText.textContent = 'Desconectado';
+        }
+        
+        // Mostrar/ocultar secciones basado en estado de conexión
+        updateSectionVisibility(conectado, sistemaCompleto);
+    }
+    
+    /**
+     * Actualiza la visibilidad de secciones según el estado de conexión
+     * @param {boolean} conectado - Si hay conexión base
+     * @param {boolean} sistemaCompleto - Si el sistema está completamente listo
+     */
+    function updateSectionVisibility(conectado, sistemaCompleto) {
+        // Secciones que siempre deben estar visibles
+        if (sections.connectionSection) sections.connectionSection.style.display = 'block';
+        if (sections.conexionUnicaSection) sections.conexionUnicaSection.style.display = 'block';
+        
+        // Secciones que requieren conexión base (conectado)
+        if (conectado) {
+            // Estas secciones se muestran cuando hay conexión base
+            if (sections.readSection) sections.readSection.style.display = 'block';
+            if (sections.writeSection) sections.writeSection.style.display = 'block';
+            if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'block';
+            
+            console.log('UiManager: Secciones operativas habilitadas (sistema conectado)');
+        } else {
+            // Ocultar secciones que requieren conexión
+            if (sections.readSection) sections.readSection.style.display = 'none';
+            if (sections.writeSection) sections.writeSection.style.display = 'none';
+            if (sections.deviceInfoSection) sections.deviceInfoSection.style.display = 'none';
+            
+            console.log('UiManager: Secciones operativas deshabilitadas (sistema desconectado)');
+        }
+        
+        // La sección multiBattery se mantiene oculta por defecto 
+        // ya que ahora usamos ventana flotante para el dashboard
+        if (sections.multiBatterySection) {
+            sections.multiBatterySection.style.display = 'none';
         }
     }
     
     /**
-     * Cambia entre vistas (panel individual o múltiple)
+     * Crea e inicializa el botón de dashboard
+     */
+    function initDashboardButton() {
+        console.log("UiManager: initDashboardButton - Inicializando botón de dashboard...");
+        
+        // Verificar si el botón ya existe
+        const existingBtn = document.getElementById('openDashboardBtn');
+        if (existingBtn) {
+            console.log("UiManager: Botón de dashboard ya existe, configurando evento");
+            existingBtn.addEventListener('click', () => openDashboard());
+            return;
+        }
+        
+        // Si no existe, intentar crearlo dinámicamente (por compatibilidad)
+        const conexionUnicaSection = sections.conexionUnicaSection || document.getElementById('conexion-unica-section');
+        if (!conexionUnicaSection) {
+            console.warn("UiManager: No se encontró sección de conexión única para añadir botón");
+            return;
+        }
+        
+        // Buscar contenedor de dashboard o crearlo
+        let dashboardContainer = conexionUnicaSection.querySelector('.dashboard-access');
+        if (!dashboardContainer) {
+            dashboardContainer = document.createElement('div');
+            dashboardContainer.className = 'dashboard-access';
+            dashboardContainer.style.marginTop = '20px';
+            dashboardContainer.innerHTML = `
+                <h3>📊 Monitorización</h3>
+                <p>Una vez conectado el sistema, acceda al dashboard de múltiples baterías:</p>
+                <div class="view-selector">
+                    <button class="dashboard-btn" id="openDashboardBtn" disabled>
+                        🔄 Abrir Dashboard de Baterías
+                    </button>
+                </div>
+            `;
+            conexionUnicaSection.appendChild(dashboardContainer);
+        }
+        
+        // Configurar evento del botón
+        const dashboardBtn = dashboardContainer.querySelector('#openDashboardBtn');
+        if (dashboardBtn) {
+            dashboardBtn.addEventListener('click', () => openDashboard());
+            console.log("UiManager: Botón de dashboard creado y configurado");
+        }
+    }
+    
+    /**
+     * Abre el dashboard de baterías
+     */
+    function openDashboard() {
+        console.log("UiManager: Solicitando apertura de dashboard");
+        
+        // Verificar estado de conexión
+        if (!conexionState.conectado) {
+            console.log("UiManager: No se puede abrir dashboard - sin conexión");
+            showMessage(
+                sections.conexionUnicaSection?.querySelector('.message-area'),
+                'Se requiere conexión activa para abrir el dashboard de baterías.',
+                'error'
+            );
+            return;
+        }
+        
+        // Verificar que MultiBatteryWindow esté disponible
+        if (typeof window.MultiBatteryWindow === 'undefined') {
+            console.error("UiManager: MultiBatteryWindow no está disponible");
+            showMessage(
+                sections.conexionUnicaSection?.querySelector('.message-area'),
+                'Dashboard no disponible. Verifique la carga de scripts.',
+                'error'
+            );
+            return;
+        }
+        
+        console.log("UiManager: Abriendo dashboard de baterías en ventana flotante");
+        
+        // Abrir ventana flotante del dashboard
+        const windowId = window.MultiBatteryWindow.open();
+        
+        if (windowId) {
+            console.log("UiManager: Dashboard abierto exitosamente en ventana:", windowId);
+            
+            // Actualizar estado interno
+            currentView = 'multi';
+            
+            // Disparar evento para compatibilidad con otros módulos
+            document.dispatchEvent(new CustomEvent('view-changed', {
+                detail: { view: 'multi', windowId: windowId }
+            }));
+        } else {
+            console.error("UiManager: Error al abrir dashboard");
+            showMessage(
+                sections.conexionUnicaSection?.querySelector('.message-area'),
+                'Error al abrir el dashboard de baterías.',
+                'error'
+            );
+        }
+    }
+    
+    /**
+     * Cambia entre vistas (mantenido por compatibilidad)
      * @param {string} viewType - Tipo de vista ('single' o 'multi')
      */
     function switchView(viewType) {
-		console.log(`UiManager: switchView - Cambiando a vista: ${viewType}`);
-		
-		// NUEVO: Verificar si todas las baterías están autenticadas
-		if (!window.allBatteriesAuthenticated) {
-			console.log("UiManager: switchView - No se puede cambiar vista porque no todas las baterías están autenticadas");
-			
-			// Mostrar el monitor de autenticación
-			if (window.AuthMonitor && window.AuthMonitor.show) {
-				window.AuthMonitor.show();
-			}
-			
-			return;
-		}
-		
-		// Verificar si hay conexión PyModbus activa
-		if (!window.ConnectionHandler || !window.ConnectionHandler.isModbusConnected()) {
-			console.log("UiManager: switchView - No se puede cambiar la vista porque no hay conexión PyModbus activa");
-			return;
-		}
-		
-		// Actualizar el estado interno - forzar siempre a 'multi'
-		currentView = 'multi';
-		
-		// Actualizar estilos de los botones
-		updateViewButtonStyles();
-		
-		// Mostrar el panel múltiple
-		if (sections.multiBatterySection) {
-			sections.multiBatterySection.style.display = 'block';
-			console.log("UiManager: switchView - Panel múltiple visible");
-			
-			// Actualizar el panel múltiple
-			if (typeof window.updateMultiBatteryDashboard === 'function') {
-				console.log("UiManager: switchView - Actualizando datos del panel múltiple");
-				window.updateMultiBatteryDashboard({
-					forceUpdate: true,
-					initialLoading: false
-				});
-				
-				// NUEVO: Mejor enfoque - llamar directamente a la función global si está disponible
-				console.log("UiManager: switchView - Verificando si startMultiBatteryMonitoring está disponible");
-				if (typeof window.startMultiBatteryMonitoring === 'function') {
-					console.log("UiManager: switchView - Llamando directamente a startMultiBatteryMonitoring");
-					window.startMultiBatteryMonitoring();
-				} else {
-					console.warn("UiManager: switchView - La función startMultiBatteryMonitoring no está disponible");
-					
-					// Mantener el intento de clic como fallback
-					console.log("UiManager: switchView - Utilizando fallback: simulando inicio automático de monitoreo múltiple");
-					const batteryDashboard = document.querySelector('#multi-battery-dashboard');
-					if (batteryDashboard) {
-						const startMonitoringBtn = batteryDashboard.querySelector('.start-btn');
-						if (startMonitoringBtn && !startMonitoringBtn.disabled) {
-							startMonitoringBtn.click();
-						} else {
-							console.warn("UiManager: switchView - No se encontró el botón .start-btn o está deshabilitado");
-						}
-					} else {
-						console.warn("UiManager: switchView - No se encontró el contenedor #multi-battery-dashboard");
-					}
-				}
-			}
-		}
-		
-		// Disparar evento personalizado para informar del cambio de vista
-		document.dispatchEvent(new CustomEvent('view-changed', {
-			detail: { view: 'multi' }
-		}));
-	}
+        console.log(`UiManager: switchView - Solicitada vista: ${viewType}`);
+        
+        if (viewType === 'multi') {
+            openDashboard();
+        } else {
+            console.log("UiManager: Vista 'single' - no se requiere acción especial");
+            currentView = 'single';
+        }
+    }
     
     /**
      * Muestra un mensaje en un elemento específico
@@ -283,53 +231,44 @@ const UiManager = (function() {
     }
     
     /**
-     * Actualiza el estado de autenticación de todas las baterías
-     * @param {boolean} allAuthenticated - true si todas las baterías están autenticadas, false si no
+     * Actualiza el estado de autenticación (mantenido por compatibilidad)
+     * @param {boolean} allAuthenticated - true si todas las baterías están autenticadas
      */
     function updateAuthenticationStatus(allAuthenticated) {
         console.log(`UiManager: updateAuthenticationStatus - Todas autenticadas: ${allAuthenticated}`);
         
-        // Guardar estado global
-        window.allBatteriesAuthenticated = allAuthenticated;
+        // En el nuevo sistema, esto se maneja automáticamente en ConnectionHandler
+        // Pero mantenemos la función por compatibilidad
         
-        // Actualizar UI basada en el nuevo estado
-        if (window.ConnectionHandler) {
-            const connections = {
-                lowLevel: window.ConnectionHandler.isLowLevelConnected(),
-                modbus: window.ConnectionHandler.isModbusConnected()
-            };
-            updateConnectionUI(connections);
+        // Actualizar estado global si es necesario
+        if (typeof window.allBatteriesAuthenticated !== 'undefined') {
+            window.allBatteriesAuthenticated = allAuthenticated;
         }
         
-        // Actualizar estado de botones si es necesario
-        updateModbusConnectButtonState(allAuthenticated);
+        // Si todas están autenticadas y hay conexión, considerar sistema completo
+        if (allAuthenticated && conexionState.conectado) {
+            updateConnectionUI({
+                conectado: true,
+                sistemaCompleto: true
+            });
+        }
     }
     
     /**
-     * Actualiza el estado del botón de conexión PyModbus
+     * Actualiza el estado del botón de dashboard según la conexión
      * @param {boolean} enabled - true para habilitar, false para deshabilitar
      */
-    function updateModbusConnectButtonState(enabled) {
-        // Buscar el botón de conexión PyModbus
-        const modbusConnectBtn = document.getElementById('modbusConnectBtn');
-        if (modbusConnectBtn) {
-            // Habilitar solo si todas las baterías están autenticadas y no hay conexión PyModbus actual
-            const modbusConnected = window.ConnectionHandler && window.ConnectionHandler.isModbusConnected();
-            modbusConnectBtn.disabled = !enabled || modbusConnected;
+    function updateDashboardButtonState(enabled) {
+        const dashboardBtn = document.getElementById('openDashboardBtn');
+        if (dashboardBtn) {
+            dashboardBtn.disabled = !enabled;
             
-            if (enabled && !modbusConnected) {
-                modbusConnectBtn.classList.add('ready');
-                
-                // Añadir tooltip o indicador visual
-                modbusConnectBtn.title = "Baterías autenticadas correctamente. Listo para conectar PyModbus.";
+            if (enabled) {
+                dashboardBtn.classList.add('ready');
+                dashboardBtn.title = "Sistema listo. Click para abrir dashboard.";
             } else {
-                modbusConnectBtn.classList.remove('ready');
-                
-                if (!enabled) {
-                    modbusConnectBtn.title = "Todas las baterías deben estar autenticadas antes de conectar PyModbus.";
-                } else {
-                    modbusConnectBtn.title = "";
-                }
+                dashboardBtn.classList.remove('ready');
+                dashboardBtn.title = "Sistema debe estar conectado para abrir dashboard.";
             }
         }
     }
@@ -341,72 +280,47 @@ const UiManager = (function() {
          * @param {Object} domSections - Referencias a secciones DOM
          */
         init: function(domSections) {
-		console.log('UiManager: Inicializando...');
-		
-		// Guardar referencias a elementos DOM
-		sections = { ...sections, ...domSections };
-		
-		// Inicializar selector de vista
-		initViewSelector();
-		
-		// Establecer estado inicial como desconectado
-		updateConnectionUI({
-			lowLevel: false,
-			modbus: false
-		});
-		
-		// Inicializar estado de autenticación
-		window.allBatteriesAuthenticated = false;
-		
-		// Establecer vista inicial como 'multi'
-		currentView = 'multi';
-		
-		// Escuchar eventos de cambio de estado de conexión
-		document.addEventListener('low-level-connection-status-change', (e) => {
-			console.log("UiManager: Evento 'low-level-connection-status-change' recibido:", e.detail);
-			if (e && e.detail && typeof e.detail.connected !== 'undefined') {
-				// Obtener también el estado modbus para actualización completa
-				const modbusConnected = window.ConnectionHandler ? 
-										window.ConnectionHandler.isModbusConnected() : false;
-										
-				updateConnectionUI({
-					lowLevel: e.detail.connected,
-					modbus: modbusConnected
-				});
-			}
-		});
-		
-		document.addEventListener('modbus-connection-status-change', (e) => {
-			console.log("UiManager: Evento 'modbus-connection-status-change' recibido:", e.detail);
-			if (e && e.detail && typeof e.detail.connected !== 'undefined') {
-				// Obtener también el estado de bajo nivel para actualización completa
-				const lowLevelConnected = window.ConnectionHandler ? 
-										 window.ConnectionHandler.isLowLevelConnected() : false;
-										 
-				updateConnectionUI({
-					lowLevel: lowLevelConnected,
-					modbus: e.detail.connected
-				});
-			}
-		});
-		
-		// Por compatibilidad, mantener también el evento original
-		document.addEventListener('connection-status-change', (e) => {
-			console.log("UiManager: Evento 'connection-status-change' recibido:", e.detail);
-			if (e && e.detail && typeof e.detail.connected !== 'undefined') {
-				// Este evento ahora se considera PyModbus, para mantener compatibilidad
-				const lowLevelConnected = window.ConnectionHandler ? 
-										 window.ConnectionHandler.isLowLevelConnected() : false;
-				
-				updateConnectionUI({
-					lowLevel: lowLevelConnected,
-					modbus: e.detail.connected
-				});
-			}
-		});
-		
-		console.log('UiManager: Inicialización completada');
-	},
+            console.log('UiManager: Inicializando con conexión única...');
+            
+            // Guardar referencias a elementos DOM
+            sections = { ...sections, ...domSections };
+            
+            // Inicializar botón de dashboard
+            initDashboardButton();
+            
+            // Establecer estado inicial como desconectado
+            updateConnectionUI({
+                conectado: false,
+                sistemaCompleto: false
+            });
+            
+            // Establecer vista inicial
+            currentView = 'single';
+            
+            // Escuchar eventos de cambio de estado de conexión única
+            document.addEventListener('conexion-unica-status-change', (e) => {
+                console.log("UiManager: Evento 'conexion-unica-status-change' recibido:", e.detail);
+                if (e && e.detail) {
+                    const { conectado, sistemaCompleto } = e.detail;
+                    updateConnectionUI({ conectado, sistemaCompleto });
+                    updateDashboardButtonState(conectado);
+                }
+            });
+            
+            // Mantener compatibilidad con eventos antiguos (deprecated)
+            document.addEventListener('connection-status-change', (e) => {
+                console.log("UiManager: Evento 'connection-status-change' recibido (deprecated):", e.detail);
+                if (e && e.detail && typeof e.detail.connected !== 'undefined') {
+                    updateConnectionUI({
+                        conectado: e.detail.connected,
+                        sistemaCompleto: e.detail.connected // Asumir completo si está conectado
+                    });
+                    updateDashboardButtonState(e.detail.connected);
+                }
+            });
+            
+            console.log('UiManager: Inicialización completada');
+        },
         
         /**
          * Cambia la vista actual
@@ -416,7 +330,7 @@ const UiManager = (function() {
         
         /**
          * Obtiene la vista actual
-         * @returns {string} - Tipo de vista actual ('single' o 'multi')
+         * @returns {string} - Tipo de vista actual
          */
         getCurrentView: function() {
             return currentView;
@@ -424,15 +338,15 @@ const UiManager = (function() {
         
         /**
          * Actualiza la UI de conexión manualmente
-         * @param {Object} connections - Estados de conexión {lowLevel, modbus}
+         * @param {Object} estado - Estado de conexión {conectado, sistemaCompleto}
          */
-        updateConnectionStatus: function(connections) {
-            updateConnectionUI(connections);
+        updateConnectionStatus: function(estado) {
+            updateConnectionUI(estado);
         },
         
         /**
-         * Actualiza el estado de autenticación de todas las baterías
-         * @param {boolean} allAuthenticated - true si todas las baterías están autenticadas, false si no
+         * Actualiza el estado de autenticación (compatibility)
+         * @param {boolean} allAuthenticated - Estado de autenticación
          */
         updateAuthenticationStatus: updateAuthenticationStatus,
         
@@ -440,16 +354,30 @@ const UiManager = (function() {
          * Muestra un mensaje en un elemento específico
          * @param {HTMLElement} element - Elemento donde mostrar el mensaje
          * @param {string} message - Mensaje a mostrar
-         * @param {string} type - Tipo de mensaje (success, error, info)
+         * @param {string} type - Tipo de mensaje
          */
         showMessage: showMessage,
         
         /**
-         * Propiedad para indicar si todas las baterías están autenticadas
-         * (para acceso desde otros módulos)
+         * Propiedad para indicar si el sistema está listo
+         */
+        get sistemaListo() {
+            return conexionState.conectado && conexionState.sistemaCompleto;
+        },
+        
+        /**
+         * Propiedad para indicar si hay conexión (compatibility)
          */
         get allBatteriesAuthorized() {
-            return window.allBatteriesAuthenticated || false;
+            console.warn("UiManager.allBatteriesAuthorized deprecated. Use sistemaListo");
+            return conexionState.sistemaCompleto;
+        },
+        
+        /**
+         * Estado actual de conexión
+         */
+        get conexionState() {
+            return { ...conexionState };
         }
     };
 })();

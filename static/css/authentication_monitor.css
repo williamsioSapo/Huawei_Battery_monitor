@@ -1,176 +1,320 @@
-/* static/css/authentication_monitor.css */
+/**
+ * authentication_monitor.css - Monitor de Autenticación de Baterías
+ * Versión optimizada usando variables.css y eliminando duplicaciones
+ */
+
+/* ========== CONTENEDOR PRINCIPAL ========== */
 
 .auth-monitor {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin: 15px 0;
-    max-height: 400px;
-    overflow-y: auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--surface-primary);
+  border: var(--border-width) var(--border-style) var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin: var(--space-4) 0;
+  max-height: var(--auth-monitor-max-height);
+  overflow-y: auto;
+  font-family: var(--font-primary);
 }
 
+/* ========== HEADER DEL MONITOR ========== */
+
 .auth-monitor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--surface-secondary);
+  border-bottom: var(--border-width) var(--border-style) var(--border-color-light);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
 }
 
 .auth-monitor-header h3 {
-    margin: 0;
-    font-size: 16px;
-    color: #2c3e50;
+  margin: 0;
+  font-size: var(--font-base);
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #7f8c8d;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
+/* Botón de cerrar - usando estilos base del sistema */
+.auth-monitor-header .close-btn {
+  background: none;
+  border: none;
+  font-size: var(--font-xl);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: var(--transition-colors);
 }
 
-.close-btn:hover {
-    color: #e74c3c;
+.auth-monitor-header .close-btn:hover {
+  color: var(--error-red);
 }
+
+/* ========== ESTADOS DE CARGA Y VACÍO ========== */
 
 .auth-monitor-loading,
 .auth-monitor-empty {
-    padding: 20px;
-    text-align: center;
-    color: #7f8c8d;
-    font-style: italic;
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
+/* ========== LISTA Y TABLA ========== */
+
 .auth-monitor-list {
-    padding: 10px;
+  padding: var(--space-3);
 }
 
 .auth-monitor-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .auth-monitor-table th,
 .auth-monitor-table td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
+  padding: var(--table-cell-padding);
+  text-align: center;
+  border-bottom: var(--border-width) var(--border-style) var(--table-border-color);
+  font-size: var(--font-sm);
 }
 
 .auth-monitor-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    font-size: 14px;
-    color: #555;
+  background-color: var(--table-header-bg);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* ========== FILAS DE BATERÍA ========== */
+
 .auth-row {
-    transition: background-color 0.3s;
+  transition: var(--transition-colors);
 }
 
 .auth-row:hover {
-    background-color: #f1f5f9;
+  background-color: var(--table-row-hover-bg);
 }
 
 .battery-id {
-    font-weight: 600;
-    color: #2c3e50;
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  text-align: left;
 }
 
+/* ========== FASES DE AUTENTICACIÓN ========== */
+
 .phase {
-    position: relative;
-    width: 100px;
+  position: relative;
+  width: 100px;
 }
 
 .phase-indicator {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 4px;
+  font-size: var(--font-lg);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-1);
 }
 
 .phase-label {
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
+  font-size: var(--font-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+  color: var(--text-muted);
 }
 
-/* Estados de fases */
+/* Estados de fases usando variables del sistema */
 .phase.success {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #27ae60;
+  background-color: var(--battery-charging-bg);
+  color: var(--battery-charging);
 }
 
 .phase.in-progress {
-    background-color: rgba(52, 152, 219, 0.1);
-    color: #2980b9;
-    animation: pulse 1.5s infinite;
+  background-color: var(--battery-discharging-bg);
+  color: var(--battery-discharging);
+  animation: var(--animation-pulse);
 }
 
 .phase.failed {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: #c0392b;
+  background-color: var(--battery-critical-bg);
+  color: var(--battery-critical);
 }
 
 .phase.not-started {
-    color: #7f8c8d;
+  color: var(--text-muted);
 }
 
-/* Estado global */
+/* ========== ESTADO GLOBAL DE BATERÍA ========== */
+
 .status {
-    font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .status.success {
-    color: #27ae60;
+  color: var(--battery-charging);
 }
 
 .status.in-progress {
-    color: #2980b9;
+  color: var(--battery-discharging);
 }
 
 .status.failed {
-    color: #c0392b;
+  color: var(--battery-critical);
 }
 
 .status.waiting {
-    color: #7f8c8d;
+  color: var(--text-muted);
 }
 
-/* Animación de pulso para estados en progreso */
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    100% {
-        opacity: 1;
-    }
+/* ========== ACCIONES DEL MONITOR ========== */
+
+.auth-monitor-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-top: var(--border-width) var(--border-style) var(--border-color-light);
+  margin-top: var(--space-3);
+  align-items: center;
+  gap: var(--space-4);
 }
 
-/* Estilos para hacerlo responsivo */
+/* Botones de acción - usando clases base del sistema */
+.auth-monitor-actions button {
+  /* Los estilos base están en style.css */
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-sm);
+}
+
+.auth-monitor-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========== NOTAS Y MENSAJES ========== */
+
+.auth-monitor-actions p {
+  color: var(--error-red);
+  font-style: italic;
+  margin: 0;
+  font-size: var(--font-xs);
+  max-width: 60%;
+  line-height: var(--line-height-normal);
+}
+
+.auth-monitor-actions strong {
+  font-weight: var(--font-semibold);
+}
+
+/* ========== TIMESTAMP ========== */
+
+.auth-monitor div[style*="text-align: center"]:last-child {
+  margin-top: var(--space-3);
+  text-align: center;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  padding: var(--space-2);
+  background-color: var(--surface-secondary);
+  border-radius: var(--radius-base);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
 @media (max-width: 768px) {
-    .auth-monitor-table {
-        font-size: 13px;
-    }
-    
-    .phase {
-        width: 70px;
-    }
-    
-    .phase-label {
-        max-width: 70px;
-    }
+  .auth-monitor-table {
+    font-size: var(--font-xs);
+  }
+  
+  .phase {
+    width: 70px;
+  }
+  
+  .phase-label {
+    max-width: 70px;
+  }
+  
+  .auth-monitor-header {
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .auth-monitor-header h3 {
+    font-size: var(--font-sm);
+  }
+  
+  .auth-monitor-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+  
+  .auth-monitor-actions p {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .auth-monitor-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-monitor {
+    margin: var(--space-2) 0;
+  }
+  
+  .auth-monitor-table th,
+  .auth-monitor-table td {
+    padding: var(--space-1) var(--space-2);
+  }
+  
+  .phase {
+    width: 60px;
+  }
+  
+  .phase-label {
+    max-width: 60px;
+    font-size: 10px;
+  }
+  
+  .battery-id {
+    font-size: var(--font-xs);
+  }
+}
+
+/* ========== ACCESIBILIDAD ========== */
+
+.auth-monitor-table:focus-within {
+  box-shadow: 0 0 0 2px var(--primary-blue);
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+  .auth-monitor {
+    border-width: var(--border-width-thick);
+  }
+  
+  .phase.success,
+  .phase.in-progress,
+  .phase.failed {
+    border: var(--border-width) var(--border-style) currentColor;
+  }
+  
+  .auth-monitor-table th,
+  .auth-monitor-table td {
+    border-width: var(--border-width-thick);
+  }
+}
+
+/* Reducir animaciones para usuarios sensibles */
+@media (prefers-reduced-motion: reduce) {
+  .phase.in-progress {
+    animation: none;
+  }
+  
+  .auth-row {
+    transition: none;
+  }
 }

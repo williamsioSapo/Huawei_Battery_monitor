@@ -1,409 +1,440 @@
-/* static/css/multiBatteryDashboard.css */
+/**
+ * multiBatteryDashboard.css - Dashboard de Múltiples Baterías
+ * ACTUALIZADO: Diseño moderno integrado con vista moderna
+ * Reutiliza variables de batteryModernView.css y variables.css
+ */
 
-/* Estilos para el dashboard de baterías múltiples */
-.multi-battery-dashboard {
-    margin: 20px 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ========== CONTENEDOR PRINCIPAL MODERNIZADO ========== */
+
+.multi-battery-dashboard-window.modern-dashboard {
+  font-family: var(--font-primary);
+  height: 100%;
+  background: var(--modern-bg-primary, #1a1a1a);
+  color: var(--modern-text-primary, #ffffff);
+  overflow: hidden;
+  position: relative;
 }
 
-.dashboard-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
+/* Efecto de fondo sutil como en vista moderna */
+.multi-battery-dashboard-window.modern-dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.dashboard-header h2 {
-    margin: 0;
-    color: #2c3e50;
-    font-weight: 600;
+.multi-battery-dashboard-window.modern-dashboard > * {
+  position: relative;
+  z-index: 1;
 }
 
-.control-buttons {
-    display: flex;
-    gap: 10px;
+/* ========== HEADER MODERNO ========== */
+
+.modern-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5, 1.25rem) var(--space-6, 1.5rem);
+  margin-bottom: var(--space-5, 1.25rem);
+  
+  /* Reutilizar estilos de vista moderna */
+  background: var(--modern-gradient-primary, linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%));
+  border: var(--modern-border, 1px solid rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  box-shadow: var(--modern-shadow, 0 8px 32px rgba(0, 0, 0, 0.4));
+  
+  position: relative;
+  overflow: hidden;
 }
 
-.start-btn, .stop-btn, .refresh-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
+/* Línea de acento superior */
+.modern-dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--modern-text-accent, #00d4ff), rgba(0, 212, 255, 0.5));
+  opacity: 0.6;
 }
 
-.start-btn {
-    background-color: #2ecc71;
-    color: white;
+/* ========== SECCIÓN DEL TÍTULO ========== */
+
+.header-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
 }
 
-.start-btn:hover {
-    background-color: #27ae60;
+.modern-title {
+  font-size: 24px;
+  font-weight: 300;
+  margin: 0;
+  color: var(--modern-text-primary, #ffffff);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
 }
 
-.stop-btn {
-    background-color: #e74c3c;
-    color: white;
+.last-update-time {
+  font-size: 12px;
+  color: var(--modern-text-muted, #999999);
+  font-family: 'Courier New', monospace;
+  opacity: 0.8;
+  font-weight: 400;
 }
 
-.stop-btn:hover {
-    background-color: #c0392b;
+/* ========== BOTÓN TOGGLE MODERNO ========== */
+
+.modern-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+  
+  /* Reutilizar estilos de botón moderno */
+  background: var(--modern-gradient-secondary, linear-gradient(135deg, #404040 0%, #2c2c2c 100%));
+  border: var(--modern-border, 1px solid rgba(255, 255, 255, 0.1));
+  color: var(--modern-text-primary, #ffffff);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 160px;
+  justify-content: center;
 }
 
-.refresh-btn {
-    background-color: #3498db;
-    color: white;
+/* Efecto de brillo al hover */
+.modern-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
-.refresh-btn:hover {
-    background-color: #2980b9;
+.modern-toggle-btn:hover {
+  border-color: var(--modern-text-accent, #00d4ff);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
 }
 
-.view-filters {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
+.modern-toggle-btn:hover::before {
+  left: 100%;
 }
 
-.view-filters span {
-    margin-right: 8px;
-    font-weight: 500;
+/* ========== ESTADOS DEL BOTÓN TOGGLE ========== */
+
+/* Estado detenido */
+.modern-toggle-btn.stopped {
+  border-color: rgba(46, 204, 113, 0.3);
 }
 
-.view-filters select {
-    padding: 6px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9em;
+.modern-toggle-btn.stopped:hover {
+  border-color: #2ecc71;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
 }
 
-/* Sistema Overview */
-.system-overview {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+/* Estado cargando */
+.modern-toggle-btn.loading {
+  border-color: rgba(243, 156, 18, 0.3);
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
-.system-overview h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.1em;
-    color: #555;
+.modern-toggle-btn.loading .toggle-icon {
+  animation: spin 1s linear infinite;
 }
 
-.system-metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+/* Estado monitorizando */
+.modern-toggle-btn.monitoring {
+  border-color: rgba(231, 76, 60, 0.3);
 }
 
-.metric {
-    background-color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    min-width: 120px;
+.modern-toggle-btn.monitoring:hover {
+  border-color: #e74c3c;
+  box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
 }
 
-.metric-label {
-    font-size: 0.8em;
-    color: #7f8c8d;
-    margin-bottom: 5px;
+/* ========== ICONOS Y TEXTO DEL TOGGLE ========== */
+
+.toggle-icon {
+  font-size: 16px;
+  transition: transform 0.3s ease;
 }
 
-.metric-value {
-    font-size: 1.4em;
-    font-weight: 600;
-    color: #2c3e50;
+.toggle-text {
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
-.metric-value.critical {
-    color: #e74c3c;
+/* Animación de rotación para loading */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* ========== SECCIÓN DEL GAUGE ========== */
+
+.gauge-section {
+  margin-bottom: var(--space-5, 1.25rem);
+  padding: 0 var(--space-4, 1rem);
+  display: flex;
+  justify-content: center;
 }
 
-.metric-value.warning {
-    color: #f39c12;
+/* El gauge hereda estilos de currentGauge.css */
+#current-gauge-container {
+  /* Tamaño consistente con paneles de batería */
+  width: var(--dashboard-card-min-width, 220px);
+  height: 200px;
+  
+  /* Asegurar que use variables modernas */
+  --gauge-accent-color: var(--modern-text-accent, #00d4ff);
+  --gauge-text-primary: var(--modern-text-primary, #ffffff);
+  --gauge-text-secondary: var(--modern-text-secondary, #cccccc);
+  --gauge-text-muted: var(--modern-text-muted, #999999);
 }
 
-.metric-value.charging {
-    color: #2ecc71;
-}
+/* ========== GRID DE BATERÍAS MODERNIZADO ========== */
 
-.metric-value.discharging {
-    color: #e67e22;
-}
-
-/* Grid de mini-paneles de baterías */
 .batteries-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: var(--dashboard-grid-gap, 1rem);
+  padding: 0 var(--space-4, 1rem) var(--space-4, 1rem);
+  overflow-y: auto;
+  max-height: calc(100vh - 400px); /* Ajustar según header + gauge */
 }
 
-.battery-mini-panel {
-    background-color: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-}
+/* ========== ESTADOS DE CARGA Y ERROR MODERNIZADOS ========== */
 
-.battery-mini-panel:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.battery-mini-panel.critical {
-    border-left: 4px solid #e74c3c;
-}
-
-.battery-mini-panel.warning {
-    border-left: 4px solid #f39c12;
-}
-
-.battery-mini-panel.charging {
-    border-left: 4px solid #2ecc71;
-}
-
-.battery-mini-panel.discharging {
-    border-left: 4px solid #e67e22;
-}
-
-.battery-mini-panel.error {
-    border-left: 4px solid #7f8c8d;
-    background-color: #f7f7f7;
-}
-
-.mini-panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-.battery-id {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 0.95em;
-}
-
-.battery-status {
-    font-size: 0.8em;
-    padding: 3px 8px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 500;
-}
-
-.battery-status.charging {
-    background-color: #2ecc71;
-}
-
-.battery-status.discharging {
-    background-color: #e67e22;
-}
-
-.battery-status.critical {
-    background-color: #e74c3c;
-}
-
-.battery-status.warning {
-    background-color: #f39c12;
-}
-
-.battery-status.normal {
-    background-color: #3498db;
-}
-
-.battery-status.error {
-    background-color: #7f8c8d;
-}
-
-.mini-panel-body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 8px;
-}
-
-.mini-metric {
-    display: flex;
-    flex-direction: column;
-}
-
-.mini-label {
-    font-size: 0.7em;
-    color: #7f8c8d;
-    margin-bottom: 2px;
-}
-
-.mini-value {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 0.95em;
-}
-
-.no-data-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 30px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    color: #7f8c8d;
-    font-style: italic;
-}
-
+/* Contenedor de error moderno */
 .error-message {
-    background-color: #feeaea;
-    color: #e74c3c;
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    border: 1px solid #f4c0c0;
+  margin: 0 var(--space-4, 1rem) var(--space-4, 1rem);
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  
+  /* Usar gradiente moderno para errores */
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.05) 100%);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: 12px;
+  color: var(--modern-error, #ff3333);
+  
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);
 }
 
-/* Ventana modal para vista detallada de batería */
-
-
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #7f8c8d;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
+.error-message::before {
+  content: '⚠️';
+  font-size: 20px;
 }
 
-
-
-
-
-/* Estilos responsivos */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .control-buttons {
-        margin-top: 10px;
-    }
-    
-    .view-filters {
-        width: 100%;
-        margin-top: 10px;
-    }
-    
-    .system-metrics {
-        flex-direction: column;
-    }
-    
-    .metric {
-        width: 100%;
-    }
-    
-    .batteries-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Estilos adicionales para multiBatteryDashboard.css */
-
-/* Estilos para el indicador de progreso de carga */
-.loading-progress {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    text-align: center;
-}
-
-.loading-progress h3 {
-    color: #3498db;
-    margin-top: 0;
-    margin-bottom: 15px;
-}
-
-.progress-bar-container {
-    width: 100%;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #2ecc71;
-    transition: width 0.5s ease;
-}
-
-/* Estilos para la sección de información detallada */
-.detailed-info-section {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #3498db;
-}
-
-.loading-info, .no-detailed-info {
-    padding: 15px;
-    text-align: center;
-    font-style: italic;
-    color: #7f8c8d;
-}
-
-/* Estilos para contenedor de carga */
+/* Contenedor de carga moderno */
 .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  margin: 0 var(--space-4, 1rem);
+  
+  /* Usar superficie moderna */
+  background: var(--modern-surface, #2a2a2a);
+  border: var(--modern-border, 1px solid rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  box-shadow: var(--modern-shadow, 0 8px 32px rgba(0, 0, 0, 0.4));
 }
 
 .loading-container p {
-    font-size: 1.2em;
-    color: #3498db;
+  font-size: var(--font-lg, 1.125rem);
+  color: var(--modern-text-accent, #00d4ff);
+  margin: var(--space-4, 1rem) 0 0 0;
+  font-weight: 500;
 }
 
-/* Mejoras para la visualización de la información detallada */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
+/* Spinner moderno */
+.loading-container::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 212, 255, 0.2);
+  border-top: 3px solid var(--modern-text-accent, #00d4ff);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.info-item {
-    margin-bottom: 10px;
+/* ========== MENSAJE SIN DATOS MODERNIZADO ========== */
+
+.no-data-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-8, 2rem);
+  
+  /* Usar superficie moderna */
+  background: var(--modern-surface, #2a2a2a);
+  border: var(--modern-border, 1px solid rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  color: var(--modern-text-secondary, #cccccc);
+  font-style: italic;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  position: relative;
+  overflow: hidden;
 }
 
-.info-label {
-    font-size: 0.8em;
-    color: #7f8c8d;
-    display: block;
-    margin-bottom: 2px;
+.no-data-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--modern-text-accent, #00d4ff), transparent);
+  opacity: 0.3;
 }
 
-.info-value {
-    font-weight: 500;
-    color: #2c3e50;
+}
+/* ========== AGREGAR AL FINAL DEL ARCHIVO ========== */
+
+/* Header con gauge integrado */
+.modern-dashboard-header.with-gauge {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  min-height: 80px;  /* AUMENTADO de 60px */
+  gap: var(--space-4, 1rem);
+}
+
+.header-left {
+  justify-self: start;
+}
+
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-center .current-gauge-compact {
+  width: 120px;
+  height: 40px;
+}
+
+.header-center .current-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+}
+
+.header-right {
+  justify-self: end;
+}
+
+/* Gauge en header */
+.header-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  padding: var(--space-2, 0.5rem);
+  width: 140px;
+  height: 70px;  /* ← ERA MUY ALTO */
+}
+
+.header-gauge-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  width: 100%;
+  justify-content: center;  /* NUEVO: Centrar contenido */
+}
+
+.header-gauge-content .current-gauge-compact {
+  width: 100%;
+  height: 35px;  /* REDUCIDO: Era 40px */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.header-gauge-content .current-gauge-container {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  width: 120px;
+  height: 40px;
+}
+
+.header-gauge-content .current-gauge-container::before {
+  display: none;
+}
+
+.header-gauge-content .current-gauge-svg {
+  width: 110px;
+  height: 30px;
+}
+
+.gauge-value-display-compact {
+  text-align: center;
+  margin: 0;
+}
+
+.gauge-value-display-compact .current-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--modern-text-primary, #ffffff);
+  font-family: 'Courier New', monospace;
+  line-height: 1;
+  margin: 0;
+  transition: var(--transition-colors, all 0.3s ease);
+}
+
+.header-gauge-container .current-value.charging {
+  color: var(--battery-charging, #2ecc71);
+  text-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+}
+
+.header-gauge-container .current-value.discharging {
+  color: var(--battery-discharging, #e74c3c);
+  text-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+}
+
+.header-gauge-container .current-value.neutral {
+  color: var(--modern-text-primary, #ffffff);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+}
+.battery-number {
+    color: #00d4ff !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+    margin-bottom: 8px !important;
+    text-align: center !important;
+    letter-spacing: 1px !important;
+    font-family: 'Courier New', monospace !important;
 }

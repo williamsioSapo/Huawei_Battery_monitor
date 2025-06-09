@@ -1,0 +1,479 @@
+/**
+ * currentGauge.css - Estilos del Gauge de Corriente Total del Sistema
+ * VERSIÓN COMPLETA: Incluye modo compacto y estilos modernos
+ * Compatible con vista moderna de baterías y MultiBatteryWindow
+ */
+
+/* ========== VARIABLES ESPECÍFICAS DEL GAUGE ========== */
+
+:root {
+  /* Tamaños del gauge normal */
+  --gauge-container-width: 280px;
+  --gauge-container-height: 200px;
+  --gauge-svg-size: 200px;
+  --gauge-svg-height: 120px;
+  
+  /* Tamaños del gauge compacto */
+  --gauge-compact-width: 200px;
+  --gauge-compact-height: 140px;
+  --gauge-compact-svg-size: 140px;
+  --gauge-compact-svg-height: 84px;
+  
+  /* Colores del gauge (compatibles con vista moderna) */
+  --gauge-charge-color: #2ecc71;
+  --gauge-discharge-color: #e74c3c;
+  --gauge-neutral-color: rgba(255, 255, 255, 0.1);
+  --gauge-needle-color: #ffffff;
+  --gauge-accent-color: #00d4ff;
+  --gauge-text-primary: #ffffff;
+  --gauge-text-secondary: #cccccc;
+  --gauge-text-muted: #999999;
+  
+  /* Efectos del gauge */
+  --gauge-glow-charge: 0 0 15px rgba(46, 204, 113, 0.4);
+  --gauge-glow-discharge: 0 0 15px rgba(231, 76, 60, 0.4);
+  --gauge-glow-neutral: 0 0 8px rgba(0, 212, 255, 0.3);
+  
+  /* Transiciones */
+  --gauge-transition: all 0.3s ease;
+  --gauge-needle-transition: transform 0.5s ease-out;
+}
+
+/* ========== CONTENEDOR PRINCIPAL ========== */
+
+.current-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: var(--gauge-container-width);
+  height: var(--gauge-container-height);
+  padding: var(--space-4, 1rem);
+  
+  /* Reutilizar estilos de vista moderna */
+  background: var(--modern-gradient-primary, linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%));
+  border: var(--modern-border, 1px solid rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  box-shadow: var(--modern-shadow, 0 8px 32px rgba(0, 0, 0, 0.4));
+  
+  position: relative;
+  overflow: hidden;
+  transition: var(--gauge-transition);
+}
+
+/* NUEVO: Modo compacto */
+.current-gauge-container.compact {
+  width: var(--gauge-compact-width);
+  height: var(--gauge-compact-height);
+  padding: var(--space-2, 0.5rem);
+}
+
+/* Efecto de hover en el contenedor */
+.current-gauge-container:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--modern-shadow, 0 8px 32px rgba(0, 0, 0, 0.4)), 
+              var(--gauge-glow-neutral);
+}
+
+/* Línea de acento superior (como en vista moderna) */
+.current-gauge-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gauge-accent-color), rgba(0, 212, 255, 0.5));
+  opacity: 0.6;
+}
+
+/* ========== WRAPPER DEL SVG ========== */
+
+.gauge-svg-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2, 0.5rem) 0;
+}
+
+/* NUEVO: Wrapper compacto */
+.gauge-svg-wrapper.compact {
+  padding: var(--space-1, 0.25rem) 0;
+}
+
+.current-gauge-svg {
+  width: var(--gauge-svg-size);
+  height: var(--gauge-svg-height);
+  overflow: visible;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* NUEVO: SVG compacto */
+.current-gauge-container.compact .current-gauge-svg {
+  width: var(--gauge-compact-svg-size);
+  height: var(--gauge-compact-svg-height);
+}
+
+/* ========== ELEMENTOS DEL SVG ========== */
+
+/* Arcos del gauge */
+.gauge-arcs {
+  /* Contenedor de arcos - sin estilos específicos */
+}
+
+.gauge-background {
+  /* Arco de fondo - estilos se aplican desde JS */
+  transition: var(--gauge-transition);
+}
+
+.gauge-charge {
+  /* Arco de carga - estilos se aplican desde JS */
+  transition: var(--gauge-transition);
+  filter: drop-shadow(0 0 4px var(--gauge-charge-color));
+}
+
+.gauge-discharge {
+  /* Arco de descarga - estilos se aplican desde JS */
+  transition: var(--gauge-transition);
+  filter: drop-shadow(0 0 4px var(--gauge-discharge-color));
+}
+
+/* Aguja del gauge */
+.gauge-needle {
+  transition: var(--gauge-needle-transition);
+  transform-origin: center bottom;
+}
+
+.needle-line {
+  transition: var(--gauge-transition);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.needle-center {
+  transition: var(--gauge-transition);
+  filter: drop-shadow(0 0 4px var(--gauge-accent-color));
+}
+
+/* Etiquetas del gauge */
+.gauge-labels {
+  /* Contenedor de etiquetas */
+}
+
+.gauge-label {
+  /* Estilos de etiquetas se aplican desde JS */
+  transition: var(--gauge-transition);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Marcas del gauge */
+.gauge-ticks {
+  /* Contenedor de marcas */
+}
+
+.gauge-ticks line {
+  transition: var(--gauge-transition);
+}
+
+/* ========== SECCIÓN DE VALOR ========== */
+
+.gauge-value-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2, 0.5rem);
+}
+
+.gauge-value {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+}
+
+/* Valor principal */
+.current-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gauge-text-primary);
+  font-family: 'Courier New', monospace;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  transition: var(--gauge-transition);
+  user-select: none;
+}
+
+/* NUEVO: Valor compacto */
+.current-gauge-container.compact .current-value {
+  font-size: 18px;
+}
+
+/* Subtítulo */
+.gauge-subtitle {
+  font-size: 12px;
+  color: var(--gauge-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  line-height: 1;
+  user-select: none;
+}
+
+/* NUEVO: Subtítulo compacto */
+.current-gauge-container.compact .gauge-subtitle {
+  font-size: 10px;
+}
+
+/* ========== ESTADOS DEL VALOR ========== */
+
+/* Estado de carga (positivo) */
+.current-value.charging {
+  color: var(--gauge-charge-color);
+  text-shadow: var(--gauge-glow-charge);
+}
+
+/* Estado de descarga (negativo) */
+.current-value.discharging {
+  color: var(--gauge-discharge-color);
+  text-shadow: var(--gauge-glow-discharge);
+}
+
+/* Estado neutro (cerca de 0) */
+.current-value.neutral {
+  color: var(--gauge-text-primary);
+  text-shadow: var(--gauge-glow-neutral);
+}
+
+/* ========== ESTADOS DEL CONTENEDOR ========== */
+
+/* Contenedor en estado de carga */
+.current-gauge-container.charging {
+  border-color: rgba(46, 204, 113, 0.3);
+}
+
+.current-gauge-container.charging::before {
+  background: linear-gradient(90deg, var(--gauge-charge-color), rgba(46, 204, 113, 0.5));
+}
+
+/* Contenedor en estado de descarga */
+.current-gauge-container.discharging {
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.current-gauge-container.discharging::before {
+  background: linear-gradient(90deg, var(--gauge-discharge-color), rgba(231, 76, 60, 0.5));
+}
+
+/* Contenedor en estado neutro */
+.current-gauge-container.neutral {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+/* ========== ANIMACIONES ========== */
+
+/* Pulso sutil para valores extremos */
+@keyframes gauge-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+/* Aplicar pulso a valores altos */
+.current-value.high-current {
+  animation: gauge-pulse 2s ease-in-out infinite;
+}
+
+/* Rotación suave de la aguja */
+.gauge-needle.animating {
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glow pulsante para el centro de la aguja */
+@keyframes needle-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px var(--gauge-accent-color));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--gauge-accent-color));
+  }
+}
+
+.needle-center.active {
+  animation: needle-glow 2s ease-in-out infinite;
+}
+
+/* Animación de rotación para loading */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========== EFECTOS INTERACTIVOS ========== */
+
+/* Hover en la aguja */
+.gauge-needle:hover .needle-center {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* Hover en el contenedor completo */
+.current-gauge-container:hover .gauge-charge,
+.current-gauge-container:hover .gauge-discharge {
+  opacity: 1;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Para pantallas medianas */
+@media (max-width: 1200px) {
+  .current-gauge-container {
+    width: 240px;
+    height: 180px;
+  }
+  
+  .current-gauge-svg {
+    width: 180px;
+    height: 108px;
+  }
+  
+  .current-value {
+    font-size: 20px;
+  }
+  
+  .gauge-subtitle {
+    font-size: 11px;
+  }
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .current-gauge-container {
+    width: 200px;
+    height: 160px;
+    padding: var(--space-3, 0.75rem);
+  }
+  
+  .current-gauge-svg {
+    width: 160px;
+    height: 96px;
+  }
+  
+  .current-value {
+    font-size: 18px;
+  }
+  
+  .gauge-subtitle {
+    font-size: 10px;
+  }
+  
+  .gauge-label {
+    font-size: 8px !important;
+  }
+}
+
+/* ========== MODO REDUCED MOTION ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .current-gauge-container,
+  .gauge-needle,
+  .needle-line,
+  .needle-center,
+  .current-value {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .gauge-needle {
+    transition: transform 0.1s linear !important;
+  }
+}
+
+/* ========== MODO ALTO CONTRASTE ========== */
+
+@media (prefers-contrast: high) {
+  .current-gauge-container {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .gauge-charge,
+  .gauge-discharge {
+    opacity: 1 !important;
+  }
+  
+  .gauge-label {
+    fill: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  .needle-line {
+    stroke-width: 3 !important;
+  }
+}
+
+/* ========== ESTADOS DE ERROR/CARGA ========== */
+
+/* Estado de error */
+.current-gauge-container.error {
+  border-color: rgba(231, 76, 60, 0.5);
+  opacity: 0.7;
+}
+
+.current-gauge-container.error .current-value {
+  color: var(--gauge-discharge-color);
+}
+
+.current-gauge-container.error .gauge-subtitle::after {
+  content: ' - ERROR';
+  color: var(--gauge-discharge-color);
+  font-size: 10px;
+}
+
+/* Estado de carga */
+.current-gauge-container.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.current-gauge-container.loading .gauge-needle {
+  animation: gauge-pulse 1s ease-in-out infinite;
+}
+
+/* ========== UTILIDADES ========== */
+
+/* Ocultar gauge */
+.current-gauge-container.hidden {
+  display: none;
+}
+
+
+/* ========== ACCESIBILIDAD ========== */
+
+.current-gauge-container:focus {
+  outline: 2px solid var(--gauge-accent-color);
+  outline-offset: 2px;
+}
+
+/* Información para lectores de pantalla */
+.current-gauge-container[aria-label] {
+  /* El gauge debe tener aria-label con el valor actual */
+}
+
+/* ========== COMPATIBILIDAD HACIA ATRÁS ========== */
+
+/* Mantener compatibilidad con implementaciones anteriores */
+#system-current-gauge {
+  /* Hereda todos los estilos de .current-gauge-container */
+}
+
+#current-gauge-container {
+  /* Alias para compatibilidad */
+}

@@ -253,3 +253,39 @@
 .battery-icon {
     font-size: 16px;
 }
+.battery-number {
+    /* Estilo para el número de batería sobre el SVG */
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.panel-controls {
+    /* Estilo para los botones en la parte inferior */
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.panel-btn {
+    /* Estilo para botones más compactos */
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.info-badges {
+    position: absolute;
+    top: 5px;
+    width: 259px
+    display: flex;
+    justify-content: space-between;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}

@@ -228,14 +228,18 @@ const WindowManager = (function($) {
             
             // Modificar función close para hacer limpieza completa
             windowOptions.close = function(event, ui) {
+				console.log("🔥 WindowManager close ejecutado!");
                 try {
                     // Limpiar todos los temporizadores y observadores si existen
                     $(this).find('*').off();
                     
                     // Si hay una función close original, la llamamos
                     if (typeof originalClose === 'function') {
+						console.log("🚀 Ejecutando callback original...");
                         originalClose.call(this, event, ui);
-                    }
+                    }else {
+						console.log("❌ No hay callback original");
+					}
                     
                     // Destruir y remover - importantes para evitar contenido huérfano
                     $(this).dialog('destroy').remove();
@@ -360,7 +364,7 @@ const WindowManager = (function($) {
          */
         closeWindow: function(windowId) {
             if (!windows[windowId]) return;
-            
+					console.log("🔥 WindowManager.closeWindow llamado para:", windowId);
             try {
                 // Referencia a elementos importantes
                 const dialogContent = windows[windowId].dialogContent;
@@ -368,9 +372,11 @@ const WindowManager = (function($) {
                 
                 // Primero, intentar usar el método dialog('destroy') que limpia mejor que close
                 if (dialogContent && dialogContent.hasClass('ui-dialog-content')) {
+					console.log("🔥 Intentando cerrar diálogo jQuery UI...");
                     try {
                         // Primero intentamos el método más limpio: destroy
-                        dialogContent.dialog('destroy');
+                        dialogContent.dialog('close');
+						console.log("✅ dialog('close') ejecutado");
                     } catch (e) {
                         console.warn(`No se pudo destruir el diálogo: ${e.message}, intentando cerrar...`);
                         try {

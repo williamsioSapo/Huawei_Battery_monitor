@@ -1,363 +1,498 @@
-/* batteryDetailWindow.css */
+/**
+ * batteryDetailWindow.css - Ventana de Detalles de Batería
+ * Versión optimizada usando variables.css - Solo optimización interna
+ */
 
-/* Estilos para tabs */
+/* ========== TABS SYSTEM ========== */
+
 .battery-tabs .ui-tabs-nav {
-    background: #f8f9fa;
-    border-radius: 0;
-    border-width: 0 0 1px 0;
+  background: var(--surface-secondary);
+  border-radius: 0;
+  border-width: 0 0 var(--border-width) 0;
+  border-style: var(--border-style);
+  border-color: var(--border-color);
 }
 
 .battery-tabs .ui-tabs-nav li {
-    margin: 0 2px 0 0;
+  margin: 0 var(--space-1) 0 0;
 }
 
 .battery-tabs .ui-tabs-nav li a {
-    display: flex;
-    align-items: center;
-    padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  transition: var(--transition-colors);
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
+}
+
+.battery-tabs .ui-tabs-nav li.ui-tabs-active a {
+  color: var(--primary-blue);
+  background-color: var(--surface-primary);
 }
 
 .tab-icon {
-    margin-right: 8px;
-    font-size: 16px;
+  margin-right: var(--space-2);
+  font-size: var(--font-base);
 }
 
-/* Estilos para contenido de tabs */
+/* ========== CONTAINER Y CONTENT ========== */
+
 .battery-detail-container {
-    padding: 0;
-    overflow: auto;
+  padding: 0;
+  overflow: auto;
+  font-family: var(--font-primary);
 }
 
 .tab-content {
-    padding: 20px;
+  padding: var(--space-5);
 }
 
 .tab-loading {
-    padding: 20px;
-    text-align: center;
-    color: #666;
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
-/* Estilos para métricas */
-.metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+.tab-error {
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--error-red);
+  background-color: var(--battery-critical-bg);
+  border-radius: var(--radius-base);
+  margin: var(--space-3);
 }
 
-.metric-card {
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+/* ========== LOADING STATES ========== */
+
+.battery-detail-loading {
+  padding: var(--space-8);
+  text-align: center;
 }
 
-.metric-title {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
+/* Loading spinner ya definido en style.css como .loading::after */
+.battery-detail-loading .loading-spinner {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto var(--space-4);
 }
 
-.metric-value {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 5px;
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-.metric-value.charging {
-    color: #27ae60;
-}
+/* ========== HEADERS Y TÍTULOS ========== */
 
-.metric-value.discharging {
-    color: #e74c3c;
-}
-
-.metric-value.critical {
-    color: #e74c3c;
-}
-
-.metric-value.warning {
-    color: #f39c12;
-}
-
-/* Estilos para barra SOC */
-.soc-bar {
-    height: 6px;
-    background-color: #ddd;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.soc-fill {
-    height: 100%;
-    background-color: #2ecc71;
-    border-radius: 3px;
-}
-
-/* Estilos para header y estado */
 .battery-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--border-width) var(--border-style) var(--border-color-light);
 }
 
 .battery-header h3 {
-    margin: 0;
-    font-size: 22px;
+  margin: 0;
+  font-size: var(--font-2xl);
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
 }
 
 .battery-status {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-weight: bold;
-    background-color: #f1f1f1;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-base);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Estados de batería usando variables */
 .battery-status.charging {
-    background-color: #d5f5e3;
-    color: #27ae60;
+  background-color: var(--battery-charging-bg);
+  color: var(--battery-charging);
 }
 
 .battery-status.discharging {
-    background-color: #fadbd8;
-    color: #e74c3c;
+  background-color: var(--battery-discharging-bg);
+  color: var(--battery-discharging);
 }
 
 .battery-status.critical {
-    background-color: #fadbd8;
-    color: #e74c3c;
+  background-color: var(--battery-critical-bg);
+  color: var(--battery-critical);
 }
 
-/* Sección de información del dispositivo */
-.device-info-section, .cells-info-section, .technical-info-section {
-    background-color: #f8f9fa;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 20px;
+.battery-status.warning {
+  background-color: var(--battery-warning-bg);
+  color: var(--battery-warning);
 }
 
-.device-info-section h4, .cells-info-section h4, .technical-info-section h4 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 16px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 8px;
+.battery-status.normal {
+  background-color: var(--battery-normal-bg);
+  color: var(--battery-normal);
 }
+
+/* ========== MÉTRICAS GRID ========== */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.metric-card {
+  padding: var(--metric-card-padding);
+  border-radius: var(--metric-card-radius);
+  background-color: var(--surface-secondary);
+  box-shadow: var(--metric-card-shadow);
+  border: var(--border-width) var(--border-style) var(--border-color-light);
+  transition: var(--transition-shadow);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.metric-title {
+  font-size: var(--metric-title-size);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: var(--font-2xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+}
+
+/* Estados de valores de métrica */
+.metric-value.charging {
+  color: var(--battery-charging);
+}
+
+.metric-value.discharging {
+  color: var(--battery-discharging);
+}
+
+.metric-value.critical {
+  color: var(--battery-critical);
+}
+
+.metric-value.warning {
+  color: var(--battery-warning);
+}
+
+/* ========== INDICADOR SOC ========== */
+
+.metric-indicator {
+  margin-top: var(--space-2);
+}
+
+.soc-bar {
+  height: 6px;
+  background-color: var(--gray-200);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+  position: relative;
+}
+
+.soc-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--battery-critical), var(--battery-warning), var(--battery-charging));
+  border-radius: var(--radius-base);
+  transition: width var(--duration-slow) var(--ease-out);
+  position: relative;
+}
+
+.soc-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ========== SECCIONES DE INFORMACIÓN ========== */
+
+.device-info-section,
+.cells-info-section,
+.technical-info-section {
+  background-color: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+  border: var(--border-width) var(--border-style) var(--border-color-light);
+}
+
+.device-info-section h4,
+.cells-info-section h4,
+.technical-info-section h4 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  font-size: var(--font-lg);
+  border-bottom: var(--border-width) var(--border-style) var(--border-color);
+  padding-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-weight: var(--font-medium);
+}
+
+/* ========== INFO GRID ========== */
 
 .info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
 }
 
 .info-item {
-    display: flex;
-    margin-bottom: 5px;
+  display: flex;
+  margin-bottom: var(--space-2);
 }
 
 .info-label {
-    font-weight: bold;
-    margin-right: 8px;
-    color: #555;
-    width: 140px;
+  font-weight: var(--font-semibold);
+  margin-right: var(--space-2);
+  color: var(--text-secondary);
+  width: 140px;
+  font-size: var(--font-sm);
+  flex-shrink: 0;
 }
 
-/* Botones de acción */
+.info-value {
+  color: var(--text-primary);
+  font-size: var(--font-sm);
+  flex: 1;
+}
+
+/* ========== BOTONES DE ACCIÓN ========== */
+
 .quick-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
 }
 
-.action-btn {
-    padding: 8px 15px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.action-btn:hover {
-    background-color: #2980b9;
-}
+/* Los estilos base .action-btn ya están definidos en style.css */
 
 .action-icon {
-    margin-right: 8px;
+  margin-right: var(--space-2);
+  font-size: var(--font-base);
 }
 
-/* Tabla de celdas */
+/* ========== TABLAS ========== */
+
 .cells-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-4);
+  background-color: var(--surface-primary);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-.cells-table th, .cells-table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
+.cells-table th,
+.cells-table td {
+  padding: var(--table-cell-padding);
+  text-align: left;
+  border: var(--border-width) var(--border-style) var(--table-border-color);
+  font-size: var(--font-sm);
 }
 
 .cells-table th {
-    background-color: #f2f2f2;
+  background-color: var(--table-header-bg);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .cells-table tbody tr:nth-child(even) {
-    background-color: #f8f8f8;
+  background-color: var(--surface-secondary);
 }
 
-/* Resultados de verificación */
+.cells-table tbody tr:hover {
+  background-color: var(--table-row-hover-bg);
+}
+
+/* ========== RESULTADOS Y MENSAJES ========== */
+
 .verify-cells-result {
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-secondary);
+  border: var(--border-width) var(--border-style) var(--border-color);
 }
 
 .verify-cells-result.loading {
-    background-color: #f8f9fa;
-    color: #666;
-    text-align: center;
+  background-color: var(--surface-secondary);
+  color: var(--text-muted);
+  text-align: center;
 }
 
-.success-message {
-    color: #27ae60;
+/* Los estilos de mensajes base ya están en style.css como .message-area */
+.result-message {
+  margin-top: var(--space-3);
 }
 
-.error-message {
-    color: #e74c3c;
-}
+/* ========== GRÁFICOS ========== */
 
-/* Datos históricos */
 .chart-container {
-    width: 100%;
-    height: 300px;
-    margin-top: 20px;
+  width: 100%;
+  height: 300px;
+  margin-top: var(--space-5);
+  background-color: var(--surface-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  border: var(--border-width) var(--border-style) var(--border-color-light);
 }
 
-/* Datos crudos */
+/* ========== DATOS CRUDOS ========== */
+
 .raw-data-container {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-    margin-top: 15px;
+  background-color: var(--surface-secondary);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-4);
+  border: var(--border-width) var(--border-style) var(--border-color-light);
 }
 
 .raw-data-container pre {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 3px;
-    overflow: auto;
-    max-height: 300px;
-}
-/* Estilos para loading */
-.battery-detail-loading {
-    padding: 30px;
-    text-align: center;
-}
-
-.loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 2s linear infinite;
-    margin: 0 auto 15px;
+  background-color: var(--gray-100);
+  padding: var(--space-3);
+  border-radius: var(--radius-base);
+  overflow: auto;
+  max-height: 300px;
+  font-family: var(--font-monospace);
+  font-size: var(--font-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--text-primary);
+  margin: 0;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* ========== RESPONSIVE DESIGN ========== */
+/* Solo reglas específicas para la ventana de detalles */
+/* Las reglas base responsive ya están en style.css */
+
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Contenido centrado */
-.centered-content {
-    display: flex;
+@media (max-width: 768px) {
+  .battery-header {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .battery-header h3 {
+    font-size: var(--font-xl);
+  }
+  
+  .info-label {
+    width: 120px;
+  }
+  
+  .cells-table {
+    font-size: var(--font-xs);
+  }
 }
 
-/* Mensajes de resultado */
-.result-message {
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin-top: 10px;
+@media (max-width: 480px) {
+  .info-item {
+    flex-direction: column;
+  }
+  
+  .info-label {
+    width: auto;
+    margin-bottom: var(--space-1);
+  }
 }
 
-.success-message {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+/* ========== ACCESIBILIDAD ========== */
+/* Solo reglas específicas - las reglas base ya están en style.css */
+
+.cells-table:focus-within {
+  box-shadow: 0 0 0 2px var(--primary-blue);
 }
 
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+/* Modo de alto contraste - solo reglas específicas */
+@media (prefers-contrast: high) {
+  .metric-card,
+  .device-info-section,
+  .cells-info-section,
+  .technical-info-section {
+    border-width: var(--border-width-thick);
+  }
+  
+  .battery-status {
+    border: var(--border-width) var(--border-style) currentColor;
+  }
 }
 
-.warning-message {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-}
+/* ========== ESTADOS DE TABS ========== */
 
-/* Estilos para botones de acción mejorados */
-.action-button {
-    padding: 8px 15px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.2s;
-}
-
-.action-button:hover {
-    background-color: #2980b9;
-}
-
-.action-button.secondary {
-    background-color: #95a5a6;
-}
-
-.action-button.secondary:hover {
-    background-color: #7f8c8d;
-}
-
-.action-button.warning {
-    background-color: #e74c3c;
-}
-
-.action-button.warning:hover {
-    background-color: #c0392b;
-}
-
-/* Estilos adicionales para tabs */
 .tab-pane {
-    display: none;
+  display: none;
 }
 
 .tab-pane.active {
-    display: block;
+  display: block;
 }
 
-.tab-loading {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-style: italic;
+/* ========== UTILIDADES ESPECÍFICAS DEL DETALLE ========== */
+/* Solo elementos únicos de la ventana de detalle */
+
+.action-button {
+  /* Variante específica del action-btn base */
+  gap: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ========== INTEGRACIÓN CON HEALTH TAB ========== */
+
+.health-icon {
+  color: var(--success-green);
+}
+
+#tab-health .health-info-container {
+  padding: var(--space-3);
+}
+
+#tab-health .gauge-container canvas {
+  max-width: 180px !important;
+  max-height: 180px !important;
+}
+
+#tab-health .degradation-chart-container {
+  height: 250px;
 }

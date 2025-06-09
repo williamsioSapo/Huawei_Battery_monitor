@@ -1,3 +1,4 @@
+MAPA DE REGISTROS MODBUS - BATERÍA HUAWEI ESM-48150B1 -> Ingeniero Choclo Vega
 REGISTROS BÁSICOS (0x00-0x4F)
 0x0000 | Voltaje de Batería | V | 0.01 | Unsigned | R | Confirmado
 0x0001 | Voltaje del Pack | V | 0.01 | Unsigned | R | Confirmado
@@ -25,7 +26,7 @@ REGISTROS DE VOLTAJES CELDAS (0x22-0x3D)
 0x0022-0x0030 | Voltajes de Celdas 1-15 | V | 0.001 | Unsigned | R | Confirmado
 0x0032-0x003D | Voltajes de Celdas 16+ | V | 0.001 | Unsigned | R | Confirmado
 REGISTROS DE CONFIGURACIÓN (0x100-0x2FF)
-0x0101 | Coef. Límite de Carga | - | - | Unsigned | R/W | Confirmado
+0x0101 | Versión de Firmware | - | - | Unsigned | R | Confirmado
 0x0106 | Límite Corriente de Carga | A | 0.01 | Unsigned | R/W | Confirmado
 0x010A | Límite Corriente Descarga 1 | A | 0.01 | Unsigned | R/W | En duda
 0x010F | Límite Corriente Descarga 2 | A | 0.01 | Unsigned | R/W | Confirmado
@@ -55,7 +56,7 @@ REGISTROS DE INFORMACIÓN DEL DISPOSITIVO (0x1100-0x13FF)
 0x12F0 | Registro de Diagnóstico | - | - | Unsigned | R | En duda
 0x12F2 | Temperatura MOSFET 1 | °C | 0.1 | Signed | R | En duda
 0x12F3 | Temperatura MOSFET 2 | °C | 0.1 | Signed | R | En duda
-0x12FF | Versión de Firmware | - | - | ASCII | R | En duda
+0x12FF | Versión de Firmware (Alt) | - | - | ASCII | R | En duda
 0x1300-0x130F | Registros de Eventos | - | - | Unsigned | R | En duda
 REGISTROS DE IDENTIFICACIÓN (0x7D00-0x7DFF)
 0x7D6B | Código de Barras/Serial | - | - | ASCII | R | Confirmado
@@ -65,14 +66,13 @@ CÓDIGOS DE FUNCIÓN MODBUS
 0x10 | Write Multiple Registers | Confirmado
 0x41 | Función Personalizada para Autenticación | Confirmado
 COMANDOS PROPIETARIOS Y SECUENCIAS
-
 FC41 + 0x06 0x03 0x04 0x00 + índice | Lectura de información detallada | Confirmado
 FC41 + 0x05 0x01 0x04 | Validación de acceso | Confirmado
 FC10 + fecha/hora | Sincronización de fecha y hora | Confirmado
 FC03 + 0x01 0x06 0x00 0x01 | Comando de desbloqueo | Confirmado
 
-NOTAS IMPORTANTES
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+NOTAS IMPORTANTES -> Ingeniero Williamsio Sapo
 El sistema admite 16 celdas en total
 Existen registros duplicados para mayor robustez
 Los registros de amperios-hora (0x1144) son críticos para monitorear vida útil
@@ -82,3 +82,72 @@ Los valores de temperatura usan factor 0.1 y pueden ser con signo
 Los valores de corriente usan complemento a 2 para valores negativos
 El modelo ESM-48150B1 indica: 48V nominal, 150Ah, variante B1
 Los voltajes de celdas son accesibles en múltiples ubicaciones
+El registro 0x0101 contiene la versión de firmware en formato (byte_alto.byte_bajo):
+
+0x010A = v1.10
+0x010B = v1.11
+0x010E = v1.14
+
+Nota extra
+El registro 0x000A ha sido identificado como un probable indicador del número de alarmas activas en el sistema. La evidencia encontrada sugiere una fuerte correlación entre el valor de este registro y el estado de la batería:
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Notas Adicionales para Análisis de Baterías Huawei ESM-48150B1 -> Ingeniero San Bartolo.
+Hallazgos y Dudas sobre Registros de Alarmas
+Tras analizar capturas de tráfico Modbus de baterías con diferentes estados de alarma (2 vs 3 alarmas reportadas), se detectan las siguientes inconsistencias y posibles interpretaciones:
+Registro 0x000A
+
+Observación crítica: Muestra valor constante 0x0003 en ambas baterías a pesar de tener diferente número de alarmas reportadas.
+Hipótesis: Probablemente no es un contador directo de alarmas sino un registro de estado donde cada bit representa un tipo específico de alarma (0b0000_0011 = bits 0 y 1 activos).
+Recomendación: Verificar con pruebas adicionales si este registro utiliza codificación de bits para representar tipos de alarmas específicas.
+
+Registro 0x0046
+
+Observación clave: Muestra valores significativamente diferentes: 0x0006 (6) en batería con 3 alarmas y 0x0000 (0) en batería con 2 alarmas.
+Inconsistencia con informe previo: Documentado como "Voltaje del Pack (Alt)" pero los valores observados no corresponden a lecturas de voltaje.
+Hipótesis: Posible contador secundario de alarmas o indicador de severidad.
+Recomendación: Realizar pruebas específicas para verificar la relación entre este registro y la cantidad/severidad de alarmas.
+
+Comportamiento del sistema con sensores
+
+Observación: Las diferencias en bloques de lecturas de celdas (0x0022-0x0030) muestran valores 0x7FFF en batería con 3 alarmas (típico de sensor desconectado) vs valores reales en batería con 2 alarmas.
+Hipótesis: El sistema podría estar contabilizando alarmas de forma diferente según estén o no conectados los sensores de celda.
+Sugerencia: Comprobar si la presencia/ausencia de sensores afecta al registro 0x0046.
+
+Consideraciones para pruebas futuras
+
+Analizar comportamiento de registros 0x0010 ("Estado de Alarmas") y 0x0011 ("Banderas de Estado").
+Verificar si existe una combinación de registros que determine el estado completo de alarmas.
+Realizar capturas controladas activando/desactivando alarmas específicas para observar cambios en 0x000A y 0x0046.
+Estudiar posibles diferencias en interpretación según versión de firmware (confirmadas v1.10 y v1.14).
+
+Nota importante
+El análisis sugiere que el sistema utiliza un esquema más complejo que un simple contador para representar alarmas. Muy probablemente utiliza codificación de bits en múltiples registros para reflejar diferentes tipos y severidades de alarmas.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Nota Técnica: Registro en busqueda de entender el proceso de fallas. -> Ingeniero Tintin Uria 
+
+## REGISTROS VERIFICADOS
+1. 0x0046: Indica severidad/número alarmas → 0x0006 (3 alarmas), 0x0000 (2 alarmas)
+2. 0x000A: Valor constante 0x0003 en ambas baterías, posible codificación bits
+3. 0x0000-0x0007: Estado general batería, valores distintos según condición
+
+## SECUENCIA CRÍTICA
+1. Autenticación: FC41+05 01 04 → FC41+05 06 04 → FC41+06 03 04 (indices 00-0A) → FC41+0C 01 04
+2. Post-autenticación (solo baterías con falla): 
+   - Lectura 0x0046-0x004A (diferencia en 0x0046)
+   - Excepción en 0x0320 (ambas)
+   - Lectura bloques 0x1200-0x12FF (temperaturas/diagnóstico)
+
+## TEMPERATURAS (0x1200-0x1232)
+- Valores 0x0AFB-0x1518 = 28.11°C-54.00°C (factor 0.1)
+- Valores 0x7FFF = sensor desconectado
+
+## REGISTROS DIAGNÓSTICO
+- 0x12F0 = 0x00FF (máscara bits diagnóstico)
+- 0x12F2 = 0x00FF (25.5°C MOSFET1)
+- 0x12F3 = 0x0020 (3.2°C MOSFET2) 
+
+## CONCLUSIONES
+1. Registro 0x0046 es indicador confiable de estado alarmas
+2. Misma secuencia diagnóstico en baterías con falla, valores diferentes
+3. Disparidad temperaturas MOSFETs (0x12F2-0x12F3) sugiere problema circuito
+4. 0x12F0-0x12F1 contienen codificación bits para diagnóstico específico

@@ -1,0 +1,343 @@
+/* Estilos para la interfaz de celdas */
+.cells-info-container-v3 {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.cells-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.header-controls {
+  display: flex;
+  gap: 10px;
+}
+
+/* Barra de estado debajo de las botellas */
+.battery-status-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+  gap: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.status-item {
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.status-item.excellent {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-item.good {
+  background-color: #f1f8e9;
+  color: #558b2f;
+}
+
+.status-item.warning {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-item.critical {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-item.unknown {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+/* Estilos para la visualización de botellas */
+.bottle-grid-section {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bottle-grid {
+  display: grid;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.bottle-cell {
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.bottle-header {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bottle-container {
+  height: 100px;
+  position: relative;
+  margin: 0 auto;
+  width: 40px;
+}
+
+.bottle-body {
+  height: 80px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid #999;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bottle-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  transition: height 0.5s ease;
+}
+
+.bottle-neck {
+  height: 10px;
+  width: 20px;
+  background: #999;
+  margin: 0 auto;
+  border-radius: 5px 5px 0 0;
+}
+
+.bottle-cap {
+  height: 8px;
+  width: 25px;
+  background: #666;
+  margin: 0 auto;
+  border-radius: 5px 5px 0 0;
+}
+
+.bottle-value {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+/* Estilos para estados de voltaje */
+.bottle-cell.normal .bottle-fill {
+  background-color: #4CAF50; /* Verde */
+}
+
+.bottle-cell.high .bottle-fill {
+  background-color: #8BC34A; /* Verde claro */
+}
+
+.bottle-cell.critical-low .bottle-fill {
+  background-color: #F44336; /* Rojo */
+}
+
+.bottle-cell.critical-high .bottle-fill {
+  background-color: #F44336; /* Rojo */
+}
+
+.bottle-cell.highest .bottle-fill {
+  background-color: #FFEB3B; /* Amarillo */
+}
+
+.bottle-cell.lowest .bottle-fill {
+  background-color: #81D4FA; /* Celeste */
+}
+
+/* Estilos para estados de temperatura */
+.bottle-cell.temp-cold .bottle-fill {
+  background-color: #81D4FA; /* Celeste */
+}
+
+.bottle-cell.temp-hot .bottle-fill {
+  background-color: #FF9800; /* Naranja */
+}
+
+.bottle-cell.temp-highest .bottle-fill {
+  background-color: #F44336; /* Rojo */
+}
+
+.bottle-cell.temp-lowest .bottle-fill {
+  background-color: #2196F3; /* Azul */
+}
+
+/* Estilos para destacar celdas */
+.bottle-cell.critical-high, 
+.bottle-cell.critical-low,
+.bottle-cell.temp-hot {
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.8);
+  background: #FFEBEE;
+}
+
+.bottle-cell.temp-cold {
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.8);
+  background: #E3F2FD;
+}
+
+.bottle-cell.highest {
+  box-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+  background: #FFFDE7;
+}
+
+.bottle-cell.lowest {
+  box-shadow: 0 0 8px rgba(129, 212, 250, 0.8);
+  background: #E1F5FE;
+}
+
+/* Estilos para los iconos de temperatura */
+.bottle-icon {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+/* Estilos para el botón de cambio de vista */
+.toggle-view-btn {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-view-btn:hover {
+  background-color: #1976D2;
+}
+
+.refresh-cells-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.refresh-cells-btn:hover {
+  background-color: #388E3C;
+}
+
+/* Estilos para las secciones */
+.balance-section, .thermal-section, .technical-section {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para las barras de balance y temperatura */
+.bar-track {
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.bar-fill.excellent {
+  background: linear-gradient(to right, #4CAF50, #8BC34A);
+}
+
+.bar-fill.good {
+  background: linear-gradient(to right, #8BC34A, #CDDC39);
+}
+
+.bar-fill.warning {
+  background: linear-gradient(to right, #FFEB3B, #FFC107);
+}
+
+.bar-fill.critical {
+  background: linear-gradient(to right, #FF9800, #F44336);
+}
+
+.bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Estilos para la sección técnica */
+.technical-header {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.technical-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.technical-table th, .technical-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.technical-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.technical-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Estilos para estados de carga/error */
+.loading-state, .error-state {
+  text-align: center;
+  padding: 30px;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #F44336;
+}

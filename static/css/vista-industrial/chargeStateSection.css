@@ -1,0 +1,355 @@
+/**
+ * chargeStateSection.css - Estilos Dedicados para la Sección de Estado de Carga
+ * Vista Moderna de Batería - Diseño Compacto con Anillos Animados
+ */
+
+/* ========== LAYOUT PRINCIPAL CHARGE STATE ========== */
+
+.charge-state-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 15px;
+  align-items: center;
+  padding: 20px;
+  background: var(--modern-gradient-primary);
+  border: var(--modern-border);
+  border-radius: 16px;
+  box-shadow: var(--modern-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Título ocupa toda la fila superior */
+.charge-state-section .section-title {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+/* ========== CONTENEDORES DE ELEMENTOS ========== */
+
+/* Contenedor de voltaje (izquierda) */
+.voltage-container {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor central (batería + SOC) */
+.battery-central-container {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Contenedor de corriente (derecha) */
+.current-container {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ========== ANILLOS ANIMADOS ÉPICOS ========== */
+
+.metric-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--modern-surface);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
+  transition: transform 0.3s ease;
+}
+
+/* Anillo exterior animado - El efecto principal */
+.metric-ring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  padding: 4px;
+  background: conic-gradient(
+    from 0deg, 
+    var(--ring-primary-color),
+    var(--ring-secondary-color),
+    transparent,
+    var(--ring-primary-color)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: var(--ring-animation) linear infinite;
+  z-index: 1;
+}
+
+/* Anillo interior con glow pulsante */
+.metric-ring::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--ring-glow-color);
+  box-shadow: 
+    0 0 8px var(--ring-glow-color),
+    inset 0 0 8px rgba(255, 255, 255, 0.1);
+  z-index: 0;
+  opacity: 0.6;
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ========== CONFIGURACIÓN POR TIPO DE ANILLO ========== */
+
+/* Anillo de Voltaje (Azul) - Rotación Horaria */
+.voltage-ring {
+  --ring-primary-color: #00d4ff;
+  --ring-secondary-color: #0099cc;
+  --ring-glow-color: rgba(0, 212, 255, 0.5);
+  --ring-animation: rotate-clockwise 3s;
+}
+
+/* Anillo de Corriente (Verde) - Rotación Anti-horaria */
+.current-ring {
+  --ring-primary-color: #00ff88;
+  --ring-secondary-color: #00cc6a;
+  --ring-glow-color: rgba(0, 255, 136, 0.5);
+  --ring-animation: rotate-counter-clockwise 4s;
+}
+
+/* ========== CONTENIDO DE LOS ANILLOS ========== */
+
+.ring-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ring-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--modern-text-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.ring-label {
+  font-size: 9px;
+  color: var(--modern-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ========== BATERÍA Y SOC CENTRAL ========== */
+
+.battery-visual-compact {
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.3));
+}
+
+.soc-display-compact {
+  text-align: center;
+}
+
+.soc-value-compact {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--modern-text-primary);
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+}
+
+.soc-label-compact {
+  font-size: 10px;
+  color: var(--modern-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 500;
+}
+
+/* ========== ANIMACIONES ÉPICAS ========== */
+
+@keyframes rotate-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter-clockwise {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    opacity: 0.4;
+    box-shadow: 
+      0 0 8px var(--ring-glow-color),
+      inset 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 
+      0 0 16px var(--ring-glow-color),
+      inset 0 0 12px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ========== EFECTOS INTERACTIVOS ========== */
+
+.metric-ring:hover {
+  transform: scale(1.08);
+  cursor: pointer;
+}
+
+.metric-ring:hover::before {
+  animation-duration: 1.5s; /* Acelera la rotación al hover */
+}
+
+.metric-ring:hover::after {
+  opacity: 1;
+  box-shadow: 
+    0 0 20px var(--ring-glow-color),
+    inset 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Efecto de clic */
+.metric-ring:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* ========== ESTADOS ESPECIALES ========== */
+
+/* Estado de carga crítica */
+.charge-state-section.critical .soc-value-compact {
+  color: var(--modern-error);
+  text-shadow: 0 0 15px rgba(255, 51, 51, 0.6);
+  animation: critical-pulse 1.5s ease-in-out infinite;
+}
+
+/* Estado de carga */
+.charge-state-section.charging .current-ring {
+  --ring-primary-color: #ffeb3b;
+  --ring-secondary-color: #ffc107;
+  --ring-glow-color: rgba(255, 235, 59, 0.5);
+}
+
+/* Estado de descarga */
+.charge-state-section.discharging .current-ring {
+  --ring-primary-color: #ff5722;
+  --ring-secondary-color: #d84315;
+  --ring-glow-color: rgba(255, 87, 34, 0.5);
+}
+
+@keyframes critical-pulse {
+  0%, 100% { 
+    text-shadow: 0 0 15px rgba(255, 51, 51, 0.6);
+  }
+  50% { 
+    text-shadow: 0 0 25px rgba(255, 51, 51, 1);
+  }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Para pantallas medianas */
+@media (max-width: 1200px) {
+  .charge-state-section {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .charge-state-section .section-title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  .battery-central-container {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  
+  .voltage-container,
+  .current-container {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  
+  /* Anillos más pequeños en modo compacto */
+  .metric-ring {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .ring-value {
+    font-size: 12px;
+  }
+  
+  .ring-label {
+    font-size: 8px;
+  }
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .charge-state-section {
+    padding: 15px;
+    gap: 8px;
+  }
+  
+  .soc-value-compact {
+    font-size: 24px;
+  }
+  
+  .metric-ring {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .ring-value {
+    font-size: 10px;
+  }
+  
+  .ring-label {
+    font-size: 7px;
+  }
+}
+
+/* ========== MODO REDUCED MOTION ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-ring::before,
+  .metric-ring::after {
+    animation: none;
+  }
+  
+  .charge-state-section.critical .soc-value-compact {
+    animation: none;
+  }
+}

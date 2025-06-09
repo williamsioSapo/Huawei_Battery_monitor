@@ -1,25 +1,26 @@
-// static/js/main.js (versión corregida)
+// static/js/main.js (versión refactorizada para conexión única)
 
 // Esperamos a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
-    Utils.logInfo("Inicializando aplicación", "Main");
+    Utils.logInfo("Inicializando aplicación con conexión única", "Main");
     
-    // Recopilar referencias a elementos DOM principales para conexión
-    // CORREGIDO: Usar los mismos nombres y IDs que la versión original
+    // Recopilar referencias a elementos DOM principales para conexión única
     const connectionElements = {
-        // Elementos para la conexión a bajo nivel - usar nombres compatibles con el HTML actual
-        lowLevelConnectBtn: document.getElementById('lowLevelConnectBtn'),
-        lowLevelDisconnectBtn: document.getElementById('lowLevelDisconnectBtn'),
+        // NUEVOS elementos para conexión única
+        conexionUnicaConnectBtn: document.getElementById('conexionUnicaConnectBtn'),
+        conexionUnicaDisconnectBtn: document.getElementById('conexionUnicaDisconnectBtn'),
         initializeBtn: document.getElementById('initializeBtn'),
+        openDashboardBtn: document.getElementById('openDashboardBtn'),
         
-        // Elementos para la conexión PyModbus
-        modbusConnectBtn: document.getElementById('modbusConnectBtn'),
-        modbusDisconnectBtn: document.getElementById('modbusDisconnectBtn'),
+        // Elementos de estado visual
+        comunicacionStatus: document.getElementById('comunicacionStatus'),
+        bateriasStatus: document.getElementById('bateriasStatus'),
+        sistemaStatus: document.getElementById('sistemaStatus'),
         
-        // Elementos comunes
-        messageEl: document.getElementById('connectionMessage'),
+        // Elemento de mensajes unificado
+        messageEl: document.getElementById('conexionUnicaMessage'),
         
-        // Elementos de parámetros
+        // Elementos de parámetros (sin cambios)
         slaveIdSelect: document.getElementById('slaveId'),
         portInput: document.getElementById('port'),
         baudrateSelect: document.getElementById('baudrate'),
@@ -30,22 +31,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     // Recopilar referencias a secciones principales
-    // CORREGIDO: Usar solo las secciones originales para mantener compatibilidad
     const uiSections = {
         connectionStatusEl: document.getElementById('connectionStatus'),
         connectionStatusText: document.querySelector('#connectionStatus .text'),
         connectionSection: document.getElementById('connection-section'),
+        conexionUnicaSection: document.getElementById('conexion-unica-section'),
         multiBatterySection: document.getElementById('multi-battery-section'),
         readSection: document.getElementById('read-section'),
         writeSection: document.getElementById('write-section'),
         deviceInfoSection: document.getElementById('device-info-section')
     };
     
-    // CORREGIDO: Asegurarse de que las secciones críticas estén visibles
-    const lowLevelSection = document.getElementById('low-level-connection-section');
-    if (lowLevelSection) {
-        lowLevelSection.style.display = 'block';
-    }
+    // Verificar que las secciones críticas estén visibles
+    const sectionsToShow = ['connection-section', 'conexion-unica-section'];
+    sectionsToShow.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            section.style.display = 'block';
+            Utils.logInfo(`Sección ${id} visible`, "Main");
+        }
+    });
     
     // Inicializar módulos principales
     initConnectionHandler(connectionElements);
@@ -54,34 +59,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar componentes adicionales
     initReadSection();
     initWriteSection();
-    initDeviceInfoSection();
-    initMultiBatteryIntegration();
-    
+    initDeviceInfoSection();    
     // Configurar listeners para eventos de sistema
     setupEventListeners();
     
-    Utils.logInfo("Inicialización completada", "Main");
+    Utils.logInfo("Inicialización completada con conexión única", "Main");
     
-    // CORREGIDO: Verificar nuevamente que las secciones críticas estén visibles
+    // Verificar nuevamente que las secciones críticas estén visibles
     setTimeout(() => {
-        if (lowLevelSection && lowLevelSection.style.display !== 'block') {
-            Utils.logInfo("Forzando visibilidad de sección critical de conexión", "Main");
-            lowLevelSection.style.display = 'block';
-        }
+        sectionsToShow.forEach(id => {
+            const section = document.getElementById(id);
+            if (section && section.style.display !== 'block') {
+                Utils.logInfo(`Forzando visibilidad de sección ${id}`, "Main");
+                section.style.display = 'block';
+            }
+        });
     }, 500);
 });
 
 /**
- * Inicializa el gestor de conexiones
+ * Inicializa el gestor de conexiones unificadas
  */
 function initConnectionHandler(elements) {
-    // CORREGIDO: Usar la verificación original
     if (typeof window.ConnectionHandler === 'undefined') {
         Utils.logError("Error crítico - ConnectionHandler no encontrado", "Main");
         return;
     }
     
-    Utils.logInfo("Inicializando ConnectionHandler", "Main");
+    Utils.logInfo("Inicializando ConnectionHandler con conexión única", "Main");
     window.ConnectionHandler.init(elements);
 }
 
@@ -94,7 +99,7 @@ function initUiManager(sections) {
         return;
     }
     
-    Utils.logInfo("Inicializando UiManager", "Main");
+    Utils.logInfo("Inicializando UiManager con conexión única", "Main");
     window.UiManager.init(sections);
 }
 
@@ -124,9 +129,8 @@ function initReadSection() {
         if (dataTableBody) dataTableBody.innerHTML = '';
         
         try {
-            const result = await readModbusRegisters(params);
+            const result = await readRegisters(params); // Función renombrada
             if (result.status === 'success' && Array.isArray(result.data)) {
-                // CORREGIDO: Usar la función de Utils
                 Utils.displayRegisterData(dataTableBody, result.data, params.address);
                 readResultEl.textContent = JSON.stringify(result.data, null, 2);
             } else {
@@ -177,12 +181,7 @@ function initWriteSection() {
             
         } catch (parseError) {
             Utils.logWarn(`Error en valores: ${parseError.message}`, "Main");
-            if (window.UiManager) {
-                window.UiManager.showMessage(writeMessageEl, `Error en valores: ${parseError.message}`, 'error');
-            } else {
-                writeMessageEl.textContent = `Error en valores: ${parseError.message}`;
-                writeMessageEl.className = 'message-area error';
-            }
+            Utils.showMessage(writeMessageEl, `Error en valores: ${parseError.message}`, 'error');
             return;
         }
         
@@ -193,30 +192,14 @@ function initWriteSection() {
             values: values
         };
         
-        if (window.UiManager) {
-            window.UiManager.showMessage(writeMessageEl, 'Escribiendo...', 'info');
-        } else {
-            writeMessageEl.textContent = 'Escribiendo...';
-            writeMessageEl.className = 'message-area info';
-        }
+        Utils.showMessage(writeMessageEl, 'Escribiendo...', 'info');
         
         try {
-            const result = await writeModbusRegisters(params);
-            
-            if (window.UiManager) {
-                window.UiManager.showMessage(writeMessageEl, result.message, result.status || 'info');
-            } else {
-                writeMessageEl.textContent = result.message;
-                writeMessageEl.className = `message-area ${result.status || 'info'}`;
-            }
+            const result = await writeRegisters(params); // Función renombrada
+            Utils.showMessage(writeMessageEl, result.message, result.status || 'info');
         } catch (error) {
             Utils.logError(`Error al escribir registros: ${error.message}`, "Main");
-            if (window.UiManager) {
-                window.UiManager.showMessage(writeMessageEl, `Error: ${error.message}`, 'error');
-            } else {
-                writeMessageEl.textContent = `Error: ${error.message}`;
-                writeMessageEl.className = 'message-area error';
-            }
+            Utils.showMessage(writeMessageEl, `Error: ${error.message}`, 'error');
         }
     });
 }
@@ -235,13 +218,7 @@ function initDeviceInfoSection() {
         const readSlaveIdInput = document.getElementById('readSlaveId');
         const slaveId = parseInt(readSlaveIdInput?.value || '217');
         
-        if (window.UiManager) {
-            window.UiManager.showMessage(deviceInfoMessageEl, 'Leyendo información del dispositivo...', 'info');
-        } else if (deviceInfoMessageEl) {
-            deviceInfoMessageEl.textContent = 'Leyendo información del dispositivo...';
-            deviceInfoMessageEl.className = 'message-area info';
-        }
-        
+        Utils.showMessage(deviceInfoMessageEl, 'Leyendo información del dispositivo...', 'info');
         deviceInfoResultEl.textContent = 'Cargando...';
         
         try {
@@ -255,27 +232,14 @@ function initDeviceInfoSection() {
             
             if (result.status === 'success' && result.fragments) {
                 displayDeviceInfo(result.fragments);
-                
-                if (window.UiManager) {
-                    window.UiManager.showMessage(deviceInfoMessageEl, 'Información leída correctamente.', 'success');
-                } else if (deviceInfoMessageEl) {
-                    deviceInfoMessageEl.textContent = 'Información leída correctamente.';
-                    deviceInfoMessageEl.className = 'message-area success';
-                }
+                Utils.showMessage(deviceInfoMessageEl, 'Información leída correctamente.', 'success');
             } else {
                 throw new Error(result.message || 'No se pudo obtener información');
             }
             
         } catch (error) {
             Utils.logError(`Error al leer información del dispositivo: ${error.message}`, "Main");
-            
-            if (window.UiManager) {
-                window.UiManager.showMessage(deviceInfoMessageEl, `Error: ${error.message}`, 'error');
-            } else if (deviceInfoMessageEl) {
-                deviceInfoMessageEl.textContent = `Error: ${error.message}`;
-                deviceInfoMessageEl.className = 'message-area error';
-            }
-            
+            Utils.showMessage(deviceInfoMessageEl, `Error: ${error.message}`, 'error');
             deviceInfoResultEl.textContent = `Error al obtener información: ${error.message}`;
         }
     });
@@ -349,282 +313,98 @@ function initDeviceInfoSection() {
 }
 
 /**
- * Inicializa la integración del panel múltiple
- */
-function initMultiBatteryIntegration() {
-    Utils.logInfo("Inicializando integración de panel múltiple", "Main");
-    
-    // Estado inicial para el panel múltiple cuando está desconectado
-    const disconnectedProps = {
-        error: "No hay conexión activa con el bus Modbus"
-    };
-    
-    // Función para manejar cambios en el estado de conexión
-    const handleMultiBatteryConnectionChange = (connected) => {
-        const multiBatterySection = document.getElementById('multi-battery-section');
-        if (!multiBatterySection) {
-            Utils.logError("No se encontró la sección #multi-battery-section", "Main");
-            return;
-        }
-        
-        if (connected) {
-            Utils.logInfo("Estado de multiBatterySection cambiado a CONECTADO", "Main");
-            
-            // No mostrar automáticamente, solo preparar para cuando el usuario cambie la vista
-            
-            // Actualizar panel a estado inicial/cargando
-            if (typeof window.updateMultiBatteryDashboard === 'function') {
-                window.updateMultiBatteryDashboard({
-                    initialLoading: true,
-                    error: null
-                });
-                Utils.logInfo("Panel múltiple actualizado a estado 'Cargando'", "Main");
-            } else {
-                Utils.logWarn("updateMultiBatteryDashboard no definido al conectar", "Main");
-            }
-            
-        } else {
-            Utils.logInfo("Estado de multiBatterySection cambiado a DESCONECTADO", "Main");
-            
-            // Ocultar sección (aunque UiManager ya lo hace)
-            multiBatterySection.style.display = 'none';
-            
-            // Actualizar panel a estado desconectado
-            if (typeof window.updateMultiBatteryDashboard === 'function') {
-                window.updateMultiBatteryDashboard(disconnectedProps);
-                Utils.logInfo("Panel múltiple actualizado a estado 'Desconectado'", "Main");
-            } else {
-                Utils.logWarn("updateMultiBatteryDashboard no definido al desconectar", "Main");
-            }
-        }
-    };
-    
-    // Escuchar el evento personalizado de cambio de conexión
-    Utils.logInfo("Añadiendo listener para 'connection-status-change'", "Main");
-    document.addEventListener('connection-status-change', (e) => {
-        Utils.logInfo("Evento 'connection-status-change' recibido para panel múltiple", "Main");
-        // CORREGIDO: Comprobar e.detail de manera segura
-        if (e && e.detail && typeof e.detail.connected !== 'undefined') {
-            handleMultiBatteryConnectionChange(e.detail.connected);
-        } else {
-            Utils.logError("Evento 'connection-status-change' recibido sin detalle válido para panel múltiple", "Main");
-        }
-    });
-}
-
-/**
  * Configura event listeners para eventos del sistema
  */
 function setupEventListeners() {
-    Utils.logInfo("Configurando listeners para eventos de conexión", "Main");
+    Utils.logInfo("Configurando listeners para eventos de conexión única", "Main");
     
-    // CORREGIDO: Asegurar visibilidad de secciones críticas
-    const criticalSections = ['low-level-connection-section', 'connection-section'];
+    // Asegurar visibilidad de secciones críticas
+    const criticalSections = ['connection-section', 'conexion-unica-section'];
     criticalSections.forEach(id => {
         const section = document.getElementById(id);
         if (section) section.style.display = 'block';
     });
     
-    // Conexión de bajo nivel
-    document.addEventListener('low-level-connection-status-change', (e) => {
-        Utils.logInfo(`Evento 'low-level-connection-status-change' recibido: ${e.detail?.connected}`, "Main");
+    // NUEVO: Conexión única (evento principal)
+    document.addEventListener('conexion-unica-status-change', (e) => {
+        Utils.logInfo(`Evento 'conexion-unica-status-change' recibido: conectado=${e.detail?.conectado}, completo=${e.detail?.sistemaCompleto}`, "Main");
         
-        // CORREGIDO: Asegurar que e.detail existe
-        const isConnected = e && e.detail && e.detail.connected;
+        const { conectado, sistemaCompleto } = e.detail || { conectado: false, sistemaCompleto: false };
         
-        // CORREGIDO: Asegurar que la sección de conexión a bajo nivel siempre esté visible
-        const lowLevelSection = document.getElementById('low-level-connection-section');
-        if (lowLevelSection) lowLevelSection.style.display = 'block';
+        // Asegurar que la sección de conexión única siempre esté visible
+        const conexionUnicaSection = document.getElementById('conexion-unica-section');
+        if (conexionUnicaSection) conexionUnicaSection.style.display = 'block';
         
+        // Actualizar UiManager con estado unificado
         if (window.UiManager) {
             window.UiManager.updateConnectionStatus({
-                lowLevel: isConnected,
-                modbus: window.ConnectionHandler ? window.ConnectionHandler.isModbusConnected() : false
+                conectado: conectado,
+                sistemaCompleto: sistemaCompleto
             });
         }
         
-        if (isConnected) {
-            Utils.logInfo("Conexión a bajo nivel ACTIVA", "Main");
-            if (window.ConnectionHandler && window.ConnectionHandler.initializeBatteries) {
-                Utils.logInfo("Iniciando automáticamente la inicialización de baterías", "Main");
-                window.ConnectionHandler.initializeBatteries();
-            }
-        } else {
-            Utils.logInfo("Conexión a bajo nivel INACTIVA", "Main");
+        if (conectado) {
+            Utils.logInfo(`Sistema CONECTADO (completo: ${sistemaCompleto})`, "Main");
             
+            // Si hay autenticación automática activa y está completo, no hacer nada más
+            // El proceso ya se maneja en ConnectionHandler
+            
+        } else {
+            Utils.logInfo("Sistema DESCONECTADO", "Main");
+            
+            // Ocultar monitor de autenticación si está visible
             if (window.AuthMonitor && window.AuthMonitor.hide) {
                 window.AuthMonitor.hide();
             }
         }
     });
     
-    // Conexión PyModbus
-    document.addEventListener('modbus-connection-status-change', (e) => {
-        Utils.logInfo(`Evento 'modbus-connection-status-change' recibido: ${e.detail?.connected}`, "Main");
+    // DEPRECATED: Mantener compatibilidad con eventos antiguos
+    document.addEventListener('low-level-connection-status-change', (e) => {
+        Utils.logWarn("Evento 'low-level-connection-status-change' deprecated. Use 'conexion-unica-status-change'", "Main");
         
-        // CORREGIDO: Asegurar que e.detail existe
-        const isConnected = e && e.detail && e.detail.connected;
-        
-        if (window.UiManager) {
-            window.UiManager.updateConnectionStatus({
-                lowLevel: window.ConnectionHandler ? window.ConnectionHandler.isLowLevelConnected() : false,
-                modbus: isConnected
-            });
-        }
-        
-        if (isConnected) {
-            Utils.logInfo("Conexión PyModbus ACTIVA", "Main");
-            
-            // Si se ha conectado PyModbus y todas las baterías están autenticadas,
-            // podemos cambiar a la vista multi-batería automáticamente
-            if (window.allBatteriesAuthenticated && window.UiManager) {
-                setTimeout(() => {
-                    window.UiManager.switchView('multi');
-                }, 500);
-            }
-        } else {
-            Utils.logInfo("Conexión PyModbus INACTIVA", "Main");
-        }
-    });
-    
-    // Estado de autenticación
-    document.addEventListener('authentication-status-change', (e) => {
-        Utils.logInfo(`Evento 'authentication-status-change' recibido: ${JSON.stringify(e.detail)}`, "Main");
-        
-        // CORREGIDO: Comprobar e.detail de manera segura
-        if (e && e.detail && typeof e.detail.allAuthenticated !== 'undefined') {
-            Utils.logInfo(`Estado de autenticación - Nuevo: ${e.detail.allAuthenticated}`, "Main");
-            
-            const prevAllAuthenticated = window.allBatteriesAuthenticated || false;
-            window.allBatteriesAuthenticated = e.detail.allAuthenticated;
-            
-            if (window.UiManager) {
-                window.UiManager.updateAuthenticationStatus(e.detail.allAuthenticated);
-            }
-            
-            if (e.detail.allAuthenticated === true) {
-                Utils.logInfo("¡ESTADO AUTENTICADO DETECTADO! Verificando transición...", "Main");
-                
-                if (window.ConnectionHandler && window.ConnectionHandler.isLowLevelConnected() && 
-                    !window.ConnectionHandler.isModbusConnected()) {
-                    
-                    Utils.logInfo("¡TRANSICIÓN AUTOMÁTICA ACTIVADA!", "Main");
-                    
-                    if (window.UiManager) {
-                        const messageEl = document.getElementById('connectionMessage');
-                        if (messageEl) {
-                            window.UiManager.showMessage(
-                                messageEl, 
-                                'Todas las baterías autenticadas. Iniciando conexión PyModbus automáticamente...', 
-                                'success'
-                            );
-                        }
-                    }
-                    
-                    setTimeout(() => {
-                        Utils.logInfo("Iniciando secuencia de transición", "Main");
-                        
-                        if (!window.ConnectionHandler) {
-                            Utils.logError("FALLO - No se encuentra el objeto ConnectionHandler", "Main");
-                            return;
-                        }
-                        
-                        if (!window.ConnectionHandler.isLowLevelConnected()) {
-                            Utils.logWarn("No hay conexión a bajo nivel activa para cerrar", "Main");
-                            return;
-                        }
-                        
-                        if (window.ConnectionHandler.isModbusConnected()) {
-                            Utils.logWarn("Ya hay una conexión PyModbus activa", "Main");
-                            return;
-                        }
-                        
-                        Utils.logInfo("Cerrando conexión a bajo nivel automáticamente", "Main");
-                        window.ConnectionHandler.disconnectLowLevel()
-                            .then((disconnectResult) => {
-                                Utils.logInfo(`Conexión a bajo nivel cerrada: ${disconnectResult?.message}`, "Main");
-                                
-                                return new Promise(resolve => setTimeout(() => {
-                                    Utils.logInfo("Iniciando conexión PyModbus...", "Main");
-                                    
-                                    if (!window.ConnectionHandler || typeof window.ConnectionHandler.connectModbus !== 'function') {
-                                        Utils.logError("FALLO - Método connectModbus no disponible", "Main");
-                                        return Promise.reject(new Error("Método connectModbus no disponible"));
-                                    }
-                                    
-                                    resolve(window.ConnectionHandler.connectModbus());
-                                }, 1000));
-                            })
-                            .then((connectResult) => {
-                                Utils.logInfo(`Resultado de conexión PyModbus: ${connectResult?.status}`, "Main");
-                                
-                                if (connectResult && connectResult.status === "success") {
-                                    Utils.logInfo("¡ÉXITO! Conexión PyModbus establecida", "Main");
-                                    
-                                    if (window.UiManager) {
-                                        Utils.logInfo("Forzando actualización de UI a estado 'modbus conectado'", "Main");
-                                        window.UiManager.updateConnectionStatus({
-                                            lowLevel: false,
-                                            modbus: true
-                                        });
-                                        
-                                        setTimeout(() => {
-                                            Utils.logInfo("Cambiando a vista múltiple", "Main");
-                                            window.UiManager.switchView('multi');
-                                        }, 1000);
-                                    }
-                                } else {
-                                    Utils.logError(`Error al conectar PyModbus: ${connectResult?.message}`, "Main");
-                                    handleConnectionError("Error al conectar PyModbus automáticamente. Intente conectar manualmente.");
-                                }
-                            })
-                            .catch(error => {
-                                Utils.logError(`EXCEPCIÓN durante la transición: ${error.message}`, "Main");
-                                handleConnectionError("Error durante la transición. Intente conectar manualmente.");
-                            });
-                    }, 2000);
-                } else {
-                    Utils.logInfo("No se inicia transición - Condiciones no cumplidas", "Main");
+        // Redirigir al nuevo sistema
+        if (e && e.detail && typeof e.detail.connected !== 'undefined') {
+            document.dispatchEvent(new CustomEvent('conexion-unica-status-change', {
+                detail: { 
+                    conectado: e.detail.connected,
+                    sistemaCompleto: e.detail.connected // Asumir completo si está conectado
                 }
-            }
-        }
-        
-        function handleConnectionError(message) {
-            Utils.logError(`Manejando error de conexión: ${message}`, "Main");
-            
-            const modbusMessageEl = document.getElementById('modbusConnectionMessage');
-            if (modbusMessageEl && window.UiManager) {
-                window.UiManager.showMessage(
-                    modbusMessageEl,
-                    message,
-                    'error'
-                );
-            }
-            
-            const modbusConnectBtn = document.getElementById('modbusConnectBtn');
-            if (modbusConnectBtn) {
-                Utils.logInfo("Habilitando botón de conexión manual como fallback", "Main");
-                modbusConnectBtn.disabled = false;
-                modbusConnectBtn.classList.add('ready');
-                modbusConnectBtn.title = "Haga clic para intentar conectar PyModbus manualmente.";
-            }
+            }));
         }
     });
     
-    // Cambios de vista
+    document.addEventListener('modbus-connection-status-change', (e) => {
+        Utils.logWarn("Evento 'modbus-connection-status-change' deprecated. Use 'conexion-unica-status-change'", "Main");
+        
+        // Redirigir al nuevo sistema
+        if (e && e.detail && typeof e.detail.connected !== 'undefined') {
+            document.dispatchEvent(new CustomEvent('conexion-unica-status-change', {
+                detail: { 
+                    conectado: e.detail.connected,
+                    sistemaCompleto: e.detail.connected
+                }
+            }));
+        }
+    });
+    
+    // Evento de cambio de vista (mantener por compatibilidad)
     document.addEventListener('view-changed', (e) => {
         Utils.logInfo(`Evento 'view-changed' recibido: ${e.detail?.view}`, "Main");
+        // El evento se mantiene para compatibilidad pero ya no requiere acción específica
+    });
+    
+    // Evento de estado de autenticación (mantener por compatibilidad)
+    document.addEventListener('authentication-status-change', (e) => {
+        Utils.logInfo(`Evento 'authentication-status-change' recibido: ${e.detail?.allAuthenticated}`, "Main");
         
-        if (e && e.detail && e.detail.view) {
-            if (e.detail.view === 'multi') {
-                if (typeof window.updateMultiBatteryDashboard === 'function') {
-                    window.updateMultiBatteryDashboard({ forceUpdate: true });
-                }
-            }
+        // Actualizar estado en UiManager si es necesario
+        if (window.UiManager && window.UiManager.updateAuthenticationStatus) {
+            window.UiManager.updateAuthenticationStatus(e.detail?.allAuthenticated || false);
         }
     });
     
-    // CORREGIDO: Asegurar de nuevo la visibilidad de secciones críticas
+    // Asegurar de nuevo la visibilidad de secciones críticas
     setTimeout(() => {
         criticalSections.forEach(id => {
             const section = document.getElementById(id);
@@ -636,27 +416,3 @@ function setupEventListeners() {
     }, 1000);
 }
 
-/**
- * Verifica el progreso de carga de información detallada
- */
-function checkDetailedInfoLoading() {
-    if (typeof getDetailedInfoLoadingStatus === 'function') {
-        getDetailedInfoLoadingStatus().then(result => {
-            if (result.status === 'success' && result.loading_active) {
-                Utils.logInfo("Detectada carga de información detallada en progreso", "Main");
-                
-                if (window.UiManager && window.UiManager.getCurrentView() === 'multi' && 
-                    typeof window.updateMultiBatteryDashboard === 'function') {
-                    
-                    window.updateMultiBatteryDashboard({
-                        loadingProgress: result.progress
-                    });
-                }
-                
-                setTimeout(checkDetailedInfoLoading, 2000);
-            }
-        }).catch(error => {
-            Utils.logError(`Error al verificar estado de carga: ${error.message}`, "Main");
-        });
-    }
-}

@@ -1,306 +1,335 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz Modbus RTU - Sistema de Baterías Huawei</title>
-    
-    <!-- jQuery y jQuery UI -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- React (para componentes como el monitor de autenticación) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    
-    <!-- Estilos CSS de la aplicación original -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/authentication_monitor.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/batteryDetailWindow.css') }}">
-    <!-- NUEVO: Estilos para el sistema de ventanas -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/windows.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowDemo.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowBattery.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/windowSystem.css') }}">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Interfaz Modbus RTU - Sistema de Baterías Huawei</title>
+   
+   <!-- jQuery y jQuery UI -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+   
+   <!-- Chart.js para gráficos -->
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
+   <!-- React (para componentes como el monitor de autenticación) -->
+   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+   
+   <!-- Estilos CSS de la aplicación original -->
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/core/variables.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/multiBatteryDashboard.css') }}">
+   
+   <!-- ACTUALIZADO: Estilos de vista industrial -->
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/vista-industrial/batteryModernView.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/vista-industrial/chargeStateSection.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/vista-industrial/cellsInfoSection.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/vista-industrial/powerFlowSection.css') }}">
 
-    <!-- Favicon -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/authentication_monitor.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/batteryDetailWindow.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/vista-industrial/currentGauge.css') }}">
+   <!-- Sistema de ventanas -->
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/windows.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/taskbar.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/windowBattery.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/cellsTab.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/healthTab.css') }}">
+
+   <!-- Favicon -->
+   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-    <div id="auth-monitor-container" class="auth-monitor-container"></div>
-    
-    <!-- Botón de consola persistente -->
-    <div class="console-toggle-button" id="consoleToggleBtn">
-        <i class="console-icon">⚙️</i> Consola
-    </div>
+   <div id="auth-monitor-container" class="auth-monitor-container"></div>
+   
+   <!-- Botón de consola persistente -->
+   <div class="console-toggle-button" id="consoleToggleBtn">
+       <i class="console-icon">⚙️</i> Consola
+   </div>
 
-    <!-- Ventana flotante de consola -->
-    <div class="console-modal" id="consoleModal">
-        <div class="console-modal-content">
-            <div class="console-modal-header">
-                <span class="console-title">Consola de Depuración</span>
-                <span class="console-close" id="consoleCloseBtn">×</span>
-            </div>
-            <div class="console-container">
-                <div id="console-output"></div>
-            </div>
-            <div class="console-modal-footer">
-                <button id="clearConsoleBtn">Limpiar</button>
-                <button id="pauseConsoleBtn">Pausar</button>
-            </div>
-        </div>
-    </div>
+   <!-- Ventana flotante de consola -->
+   <div class="console-modal" id="consoleModal">
+       <div class="console-modal-content">
+           <div class="console-modal-header">
+               <span class="console-title">Consola de Depuración</span>
+               <span class="console-close" id="consoleCloseBtn">×</span>
+           </div>
+           <div class="console-container">
+               <div id="console-output"></div>
+           </div>
+           <div class="console-modal-footer">
+               <button id="clearConsoleBtn">Limpiar</button>
+               <button id="pauseConsoleBtn">Pausar</button>
+           </div>
+       </div>
+   </div>
 
-    <!-- Contenedor Principal -->
-    <div class="container">
-        <header>
-            <h1>Interfaz Modbus RTU - Sistema de Baterías Huawei ESM</h1>
-            <div class="status-indicator disconnected" id="connectionStatus">
-                <span class="dot"></span>
-                <span class="text">Desconectado</span>
-            </div>
-            <!-- Botón para el sistema de ventanas -->
-            <button id="openWindowSystemBtn" class="header-button">
-                <span class="window-icon">🪟</span> Sistema de Ventanas
-            </button>
-        </header>
+   <!-- Contenedor Principal -->
+   <div class="container">
+       <header>
+           <h1>Interfaz Modbus RTU - Sistema de Baterías Huawei ESM</h1>
+           <div class="status-indicator disconnected" id="connectionStatus">
+               <span class="dot"></span>
+               <span class="text">Desconectado</span>
+           </div>          
+       </header>
 
-        <main>
-            <!-- Sección de Configuración de Comunicación -->
-            <section id="connection-section" class="section card">
-                <h2>Configuración de Comunicación</h2>
-                <div class="form-grid">
+       <main>
+           <!-- Sección de Configuración de Comunicación -->
+           <section id="connection-section" class="section card">
+               <h2>Configuración de Comunicación</h2>
+               <div class="form-grid">
+                   <div>
+                       <label for="slaveId">ID Batería Principal:</label>
+                       <select id="slaveId">
+                           <!-- Se poblará dinámicamente -->
+                       </select>
+                   </div>
+                   <div>
+                       <label for="port">Puerto:</label>
+                       <input type="text" id="port" value="COM8">
+                   </div>
+                   <div>
+                       <label for="baudrate">Baudrate:</label>
+                       <select id="baudrate">
+                           <option value="9600" selected>9600</option>
+                           <option value="19200">19200</option>
+                           <option value="38400">38400</option>
+                           <option value="57600">57600</option>
+                           <option value="115200">115200</option>
+                       </select>
+                   </div>
+                   <div>
+                       <label for="parity">Paridad:</label>
+                       <select id="parity">
+                           <option value="N" selected>Ninguna (N)</option>
+                           <option value="E">Par (E)</option>
+                           <option value="O">Impar (O)</option>
+                       </select>
+                   </div>
                     <div>
-                        <label for="slaveId">ID Batería Principal:</label>
-                        <select id="slaveId">
-                            <!-- Se poblará dinámicamente -->
-                        </select>
-                    </div>
-                    <div>
-                        <label for="port">Puerto:</label>
-                        <input type="text" id="port" value="COM8">
-                    </div>
-                    <div>
-                        <label for="baudrate">Baudrate:</label>
-                        <select id="baudrate">
-                            <option value="9600" selected>9600</option>
-                            <option value="19200">19200</option>
-                            <option value="38400">38400</option>
-                            <option value="57600">57600</option>
-                            <option value="115200">115200</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="parity">Paridad:</label>
-                        <select id="parity">
-                            <option value="N" selected>Ninguna (N)</option>
-                            <option value="E">Par (E)</option>
-                            <option value="O">Impar (O)</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label for="stopbits">Bits de parada:</label>
-                        <select id="stopbits">
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="bytesize">Bits de datos:</label>
-                        <select id="bytesize">
-                             <option value="7">7</option>
-                            <option value="8" selected>8</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="timeout">Timeout (s):</label>
-                        <input type="number" id="timeout" value="1" min="1" max="10">
-                    </div>
-                </div>
-            </section>
+                       <label for="stopbits">Bits de parada:</label>
+                       <select id="stopbits">
+                           <option value="1" selected>1</option>
+                           <option value="2">2</option>
+                       </select>
+                   </div>
+                   <div>
+                       <label for="bytesize">Bits de datos:</label>
+                       <select id="bytesize">
+                            <option value="7">7</option>
+                           <option value="8" selected>8</option>
+                       </select>
+                   </div>
+                   <div>
+                       <label for="timeout">Timeout (s):</label>
+                       <input type="number" id="timeout" value="1" min="1" max="10">
+                   </div>
+               </div>
+           </section>
 
-            <!-- Sección de Conexión a Bajo Nivel -->
-            <section id="low-level-connection-section" class="section card">
-                <h2>Conexión a Bajo Nivel</h2>
-                <p class="section-description">
-                    Esta conexión es necesaria para inicializar y autenticar las baterías.
-                </p>
-                <div class="button-group">
-                    <button id="lowLevelConnectBtn" class="primary-btn">Conectar (Bajo Nivel)</button>
-                    <button id="lowLevelDisconnectBtn" class="secondary-btn" disabled>Desconectar (Bajo Nivel)</button>
-                    <button id="initializeBtn" class="action-btn" disabled>Inicializar Baterías</button>
-                </div>
-                <div class="message-area" id="connectionMessage"></div>
-            </section>
-
-            <!-- Sección de Conexión PyModbus -->
-            <section id="modbus-connection-section" class="section card" style="display: none;">
-                <h2>Conexión PyModbus</h2>
-                <p class="section-description">
-                    Una vez inicializadas todas las baterías, conecte PyModbus para operaciones normales.
-                </p>
-                <div class="button-group">
-                    <button id="modbusConnectBtn" class="primary-btn" disabled>Conectar PyModbus</button>
-                    <button id="modbusDisconnectBtn" class="secondary-btn" disabled>Desconectar PyModbus</button>
-                </div>
-                <div class="view-selector">
-                    <!-- El selector de vistas se insertará aquí dinámicamente por uiManager.js -->
-                </div>
-                <div class="message-area" id="modbusConnectionMessage"></div>
-            </section>
-
-            <!-- NUEVA SECCIÓN: Panel Multi-Batería -->
-            <section id="multi-battery-section" class="section card" style="display: none;">
-                <h2>Monitoreo de Múltiples Baterías</h2>
-                
-                <!-- Contenedor para el componente React de múltiples baterías -->
-                <div id="multi-battery-dashboard">
-                    <!-- React de multiBatteryDashboard.js se montará aquí -->
-                </div>
-                
-                <div class="message-area" id="multiBatteryMessage"></div>
-            </section>
+           <!-- NUEVA: Sección de Conexión Única -->
+           <section id="conexion-unica-section" class="section card">
+               <h2>🔌 Conexión al Sistema de Baterías</h2>
+               <p class="section-description">
+                   Conexión unificada que maneja la comunicación, inicialización y autenticación de baterías automáticamente.
+               </p>
+               
+               <div class="connection-status-info">
+                   <div class="status-grid">
+                       <div class="status-item">
+                           <span class="status-label">Estado de Comunicación:</span>
+                           <span class="status-value" id="comunicacionStatus">Desconectado</span>
+                       </div>
+                       <div class="status-item">
+                           <span class="status-label">Baterías Inicializadas:</span>
+                           <span class="status-value" id="bateriasStatus">No iniciado</span>
+                       </div>
+                       <div class="status-item">
+                           <span class="status-label">Sistema Listo:</span>
+                           <span class="status-value" id="sistemaStatus">No</span>
+                       </div>
+                   </div>
+               </div>
+               
+               <div class="button-group">
+                   <button id="conexionUnicaConnectBtn" class="primary-btn">
+                       🚀 Conectar Sistema Completo
+                   </button>
+                   <button id="conexionUnicaDisconnectBtn" class="secondary-btn" disabled>
+                       ⏹️ Desconectar Sistema
+                   </button>
+                   <button id="initializeBtn" class="action-btn" disabled>
+                       🔄 Reinicializar Baterías
+                   </button>
+               </div>
+               
+               <!-- Dashboard de Baterías -->
+               <div class="dashboard-access" style="margin-top: 20px;">
+                   <h3>📊 Monitorización</h3>
+                   <p>Una vez conectado el sistema, acceda al dashboard de múltiples baterías:</p>
+                   <div class="view-selector">
+                       <button class="dashboard-btn" id="openDashboardBtn" disabled>
+                           🔄 Abrir Dashboard de Baterías
+                       </button>
+                   </div>
+               </div>
+               
+               <div class="message-area" id="conexionUnicaMessage"></div>
+           </section>
 
             <!-- Sección de Lectura -->
-            <section id="read-section" class="section card" style="display: none;">
-                <h2>Lectura de Registros</h2>
-                 <div class="form-grid">
-                    <div>
-                        <label for="readSlaveId">ID Esclavo:</label>
-                        <input type="number" id="readSlaveId" value="217" min="1" max="247">
-                    </div>
-                     <div>
-                        <label for="readFunction">Función:</label>
-                        <select id="readFunction">
-                            <option value="holding" selected>Holding Regs (03)</option>
-                            <option value="input">Input Regs (04)</option>
-                            <option value="coil">Coils (01)</option>
-                            <option value="discrete">Discrete Inputs (02)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="readAddress">Dirección:</label>
-                        <input type="number" id="readAddress" value="0" min="0">
-                    </div>
-                    <div>
-                        <label for="readCount">Cantidad:</label>
-                        <input type="number" id="readCount" value="7" min="1" max="125">
-                    </div>
-                </div>
-                 <div class="button-group">
-                    <button id="readBtn">Leer</button>
-                 </div>
-                <h3>Resultados:</h3>
-                <div class="result" id="readResult"></div>
-                <div class="table-container">
-                    <table id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>Registro</th>
-                                <th>Valor (Dec)</th>
-                                <th>Valor (Hex)</th>
-                                <th>Valor Interpretado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dataTableBody">
-                            <!-- Las filas se añadirán dinámicamente por main.js -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Sección de Escritura -->
-            <section id="write-section" class="section card" style="display: none;">
-                <h2>Escritura de Registros</h2>
+           <section id="read-section" class="section card" style="display: none;">
+               <h2>📖 Lectura de Registros</h2>
                 <div class="form-grid">
-                     <div>
-                        <label for="writeSlaveId">ID Esclavo:</label>
-                        <input type="number" id="writeSlaveId" value="217" min="1" max="247">
-                    </div>
+                   <div>
+                       <label for="readSlaveId">ID Esclavo:</label>
+                       <input type="number" id="readSlaveId" value="217" min="1" max="247">
+                   </div>
                     <div>
-                        <label for="writeFunction">Función:</label>
-                        <select id="writeFunction">
-                            <option value="holding" selected>Holding Regs (06/16)</option>
-                            <option value="coil">Coils (05/15)</option>
-                        </select>
-                    </div>
+                       <label for="readFunction">Función:</label>
+                       <select id="readFunction">
+                           <option value="holding" selected>Holding Regs (03)</option>
+                           <option value="input">Input Regs (04)</option>
+                           <option value="coil">Coils (01)</option>
+                           <option value="discrete">Discrete Inputs (02)</option>
+                       </select>
+                   </div>
+                   <div>
+                       <label for="readAddress">Dirección:</label>
+                       <input type="number" id="readAddress" value="0" min="0">
+                   </div>
+                   <div>
+                       <label for="readCount">Cantidad:</label>
+                       <input type="number" id="readCount" value="7" min="1" max="125">
+                   </div>
+               </div>
+                <div class="button-group">
+                   <button id="readBtn">Leer</button>
+                </div>
+               <h3>Resultados:</h3>
+               <div class="result" id="readResult"></div>
+               <div class="table-container">
+                   <table id="dataTable">
+                       <thead>
+                           <tr>
+                               <th>Registro</th>
+                               <th>Valor (Dec)</th>
+                               <th>Valor (Hex)</th>
+                               <th>Valor Interpretado</th>
+                           </tr>
+                       </thead>
+                       <tbody id="dataTableBody">
+                           <!-- Las filas se añadirán dinámicamente por main.js -->
+                       </tbody>
+                   </table>
+               </div>
+           </section>
+
+           <!-- Sección de Escritura -->
+           <section id="write-section" class="section card" style="display: none;">
+               <h2>✏️ Escritura de Registros</h2>
+               <div class="form-grid">
                     <div>
-                        <label for="writeAddress">Dirección:</label>
-                        <input type="number" id="writeAddress" value="0" min="0">
-                    </div>
-                     <div>
-                        <label for="writeValues">Valores (separados por coma):</label>
-                        <input type="text" id="writeValues" value="0" placeholder="Ej: 100, 255 o true, false">
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button id="writeBtn">Escribir</button>
-                </div>
-                <div class="message-area" id="writeMessage"></div>
-            </section>
+                       <label for="writeSlaveId">ID Esclavo:</label>
+                       <input type="number" id="writeSlaveId" value="217" min="1" max="247">
+                   </div>
+                   <div>
+                       <label for="writeFunction">Función:</label>
+                       <select id="writeFunction">
+                           <option value="holding" selected>Holding Regs (06/16)</option>
+                           <option value="coil">Coils (05/15)</option>
+                       </select>
+                   </div>
+                   <div>
+                       <label for="writeAddress">Dirección:</label>
+                       <input type="number" id="writeAddress" value="0" min="0">
+                   </div>
+                    <div>
+                       <label for="writeValues">Valores (separados por coma):</label>
+                       <input type="text" id="writeValues" value="0" placeholder="Ej: 100, 255 o true, false">
+                   </div>
+               </div>
+               <div class="button-group">
+                   <button id="writeBtn">Escribir</button>
+               </div>
+               <div class="message-area" id="writeMessage"></div>
+           </section>
 
-            <!-- Sección de Info Dispositivo (FC41) -->
-            <section id="device-info-section" class="section card" style="display: none;">
-                <h2>Información del Dispositivo (FC41 Cache)</h2>
-                <div class="button-group">
-                    <button id="readInfoBtn">Leer Info Dispositivo (Cache)</button>
-                </div>
-                <h3>Datos Obtenidos:</h3>
-                <div class="result" id="deviceInfoResult">
-                    <pre><code><!-- El resultado parseado por main.js irá aquí --></code></pre>
-                </div>
-                <div class="message-area" id="deviceInfoMessage"></div>
-            </section>
+           <!-- Sección de Info Dispositivo (FC41) -->
+           <section id="device-info-section" class="section card" style="display: none;">
+               <h2>ℹ️ Información del Dispositivo (FC41 Cache)</h2>
+               <div class="button-group">
+                   <button id="readInfoBtn">Leer Info Dispositivo (Cache)</button>
+               </div>
+               <h3>Datos Obtenidos:</h3>
+               <div class="result" id="deviceInfoResult">
+                   <pre><code><!-- El resultado parseado por main.js irá aquí --></code></pre>
+               </div>
+               <div class="message-area" id="deviceInfoMessage"></div>
+           </section>
 
-        </main>
-    </div>
+       </main>
+   </div>
 
-    <!-- Contenedor para la barra de tareas del sistema de ventanas -->
-    <div id="windows-taskbar"></div>
+   <!-- Contenedor para la barra de tareas del sistema de ventanas -->
+   <div id="windows-taskbar"></div>
 
-    <!-- Scripts JavaScript de la aplicación original -->
-    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/batteryMiniPanel-jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/multiBatteryDashboard.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/batteryDetailWindow.js') }}"></script>
-    <script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/console.js') }}"></script>
+   <!-- Scripts JavaScript - ORDEN CORREGIDO -->
+   <!-- Scripts base -->
+   <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/modbusApi.js') }}"></script>
 
-    <!-- NUEVO: Scripts para el sistema de ventanas -->
-    <script src="{{ url_for('static', filename='js/windowManager.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/windowDemo.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/windowTest.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/windowIntegration.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/windowSystemInit.js') }}"></script>
+   <!-- Sistema de ventanas (ANTES de otros componentes) -->
+   <script src="{{ url_for('static', filename='js/windowManager.js') }}"></script>
 
-    <!-- Inicializar el sistema de ventanas automáticamente -->
-    <script>
-        $(document).ready(function() {
-            // Verificar si el sistema de ventanas está activo
-            setTimeout(function() {
-                if (typeof WindowManager === 'undefined') {
-                    console.error("Error: WindowManager no disponible");
-                } else {
-                    console.log("Sistema de ventanas inicializado correctamente");
-                    // Opcionalmente, mostrar una pequeña notificación
-                    if (location.search.includes('windowDemo=true')) {
-                        // Si hay un parámetro en la URL, mostrar la demostración
-                        WindowTest.runFullTest();
-                    }
-                }
-            }, 1000);
-        });
-    </script>
+   <!-- Componentes de pestañas (ANTES de batteryDetailWindow) -->
+   <script src="{{ url_for('static', filename='js/battery-components/utils/BatteryHealthCalculations.js') }}"></script>	
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/GeneralTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/TechnicalTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/CellsTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/HealthTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/HistoryTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/AdvancedTab.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/battery-components/tabs/DiagnosticsTab.js') }}"></script>
+
+   <!-- Battery components (EN ORDEN correcto) -->
+   <script src="{{ url_for('static', filename='js/batteryMiniPanel-jquery.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/batteryDetailWindow.js') }}"></script>
+
+   <!-- NUEVO: MultiBatteryWindow -->
+   <script src="{{ url_for('static', filename='js/MultiBatteryWindow.js') }}"></script>
+
+   <!-- Core handlers -->
+   <script src="{{ url_for('static', filename='js/connectionHandler.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/uiManager.js') }}"></script>
+
+   <!-- Auth monitor -->
+   <script type="text/babel" src="{{ url_for('static', filename='js/authentication_monitor.js') }}"></script>
+
+   <!-- Main y console -->
+   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/console.js') }}"></script>
+
+   <!-- Scripts de efectos y gráficos (vista industrial) -->
+   <script src="{{ url_for('static', filename='js/vista-industrial/efectos/svgIcons.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/efectos/particleSystem.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/celdas/cellsSVG.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/celdas/cellsAnalyzer.js') }}"></script>
+   
+   <!-- Scripts divididos de la vista industrial -->
+   <script src="{{ url_for('static', filename='js/vista-industrial/modernView.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/windowManager.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/cellsIntegration.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/chartsAndFlow.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/eventsAndSummary.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/dataUtils.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/powerFlowSVG.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/powerFlowSection.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/vista-industrial/currentGauge.js') }}"></script>
+   
 </body>
 </html>

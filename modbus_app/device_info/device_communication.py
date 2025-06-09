@@ -19,7 +19,40 @@ connection_params = {
     'bytesize': 8,
     'timeout': 1.0
 }
+def is_client_connected():
+    """Verifica si hay conexión activa."""
+    try:
+        from modbus_app.battery_initializer import BatteryInitializer
+        initializer = BatteryInitializer.get_instance()
+        return initializer and initializer._is_connected
+    except:
+        return False
 
+def disconnect_client():
+    """Desconecta el cliente actual."""
+    try:
+        from modbus_app.battery_initializer import BatteryInitializer
+        initializer = BatteryInitializer.get_instance()
+        return initializer.disconnect() if initializer else False
+    except:
+        return False
+
+def connect_client(**kwargs):
+    """Reconecta el cliente con los parámetros dados."""
+    try:
+        from modbus_app.battery_initializer import BatteryInitializer
+        
+        # Crear nueva instancia con los parámetros
+        initializer = BatteryInitializer(**kwargs)
+        
+        if initializer.connect():
+            BatteryInitializer.set_instance(initializer)
+            return True, "Reconectado exitosamente"
+        else:
+            return False, "Fallo al reconectar"
+    except Exception as e:
+        return False, f"Error al reconectar: {str(e)}"
+        
 def compute_crc16(data):
     """Calcula el CRC16 para Modbus."""
     crc = 0xFFFF
@@ -53,8 +86,6 @@ def authenticate_device(slave_id=217):
     bytesize = connection_params['bytesize']
     timeout = connection_params['timeout']
 
-    # Cerrar temporalmente el cliente actual para liberar el puerto serial
-    from modbus_app.client import is_client_connected, disconnect_client  # Importación corregida
     was_connected = is_client_connected()
     try:
         if was_connected:

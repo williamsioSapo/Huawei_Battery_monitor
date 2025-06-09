@@ -92,8 +92,8 @@ def register_auth_routes(app):
             
     # Low-level connection and initialization routes
     
-    @app.route('/api/low_level/connect', methods=['POST'])
-    def low_level_connect_api():
+    @app.route('/api/connect', methods=['POST'])
+    def connect_api():
         """Endpoint for direct serial communication connection."""
         data = request.json
         port = data.get('port', 'COM1')
@@ -103,14 +103,7 @@ def register_auth_routes(app):
         bytesize = int(data.get('bytesize', 8))
         timeout = int(data.get('timeout', 1))
         
-        # Check if there's an active Modbus connection on the same port
-        from modbus_app.client import is_client_connected, get_client_port
-        if is_client_connected() and get_client_port() == port:
-            return jsonify({
-                "status": "error", 
-                "message": f"Error: Port {port} is being used by PyModbus. Disconnect first."
-            })
-        
+       
         try:
             # Create initializer instance
             initializer = BatteryInitializer(
@@ -143,7 +136,7 @@ def register_auth_routes(app):
                 "message": f"Error connecting at low level: {str(e)}"
             })
 
-    @app.route('/api/low_level/disconnect', methods=['POST'])
+    @app.route('/api/disconnect', methods=['POST'])
     def low_level_disconnect_api():
         """Endpoint to disconnect direct serial communication."""
         try:
@@ -164,7 +157,7 @@ def register_auth_routes(app):
                 "message": f"Error disconnecting: {str(e)}"
             })
 
-    @app.route('/api/low_level/initialize', methods=['POST'])
+    @app.route('/api/initialize', methods=['POST'])
     def low_level_initialize_api():
         """Endpoint to initialize all configured batteries."""
         try:
@@ -230,7 +223,7 @@ def register_auth_routes(app):
                 "message": f"Unexpected error: {str(e)}"
             })
 
-    @app.route('/api/low_level/status', methods=['GET'])
+    @app.route('/api/status', methods=['GET'])
     def low_level_status_api():
         """Endpoint to verify low-level connection status."""
         try:
@@ -259,7 +252,7 @@ def register_auth_routes(app):
                 "error": str(e)
             })
 
-    @app.route('/api/low_level/retry_battery/<int:battery_id>', methods=['POST'])
+    @app.route('/api/retry_battery/<int:battery_id>', methods=['POST'])
     def low_level_retry_battery_api(battery_id):
         """
         Endpoint to retry initialization of a specific battery.

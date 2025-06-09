@@ -30,6 +30,7 @@
         "discovery_date": "2025-04-29T13:10:56",
         "last_seen": "2025-04-29T13:10:56",
         "custom_name": "Batería Huawei 214",
+		"diagnostics_enabled": false,
         "registers": {
           "battery_voltage": 54.44,
           "pack_voltage": 54.11,
@@ -52,6 +53,7 @@
         "discovery_date": "2025-04-29T13:10:56",
         "last_seen": "2025-04-29T13:10:56",
         "custom_name": "Batería Huawei 215",
+		"diagnostics_enabled": false,
         "registers": {
           "battery_voltage": 54.53,
           "pack_voltage": 54.17,
@@ -74,6 +76,7 @@
         "discovery_date": "2025-04-29T13:10:57",
         "last_seen": "2025-04-29T13:10:57",
         "custom_name": "Batería Huawei 216",
+		"diagnostics_enabled": false,
         "registers": {
           "battery_voltage": 54.51,
           "pack_voltage": 52.36,
@@ -96,6 +99,7 @@
         "discovery_date": "2025-04-29T13:10:58",
         "last_seen": "2025-04-29T13:10:58",
         "custom_name": "Batería Huawei 217",
+		"diagnostics_enabled": false,
         "registers": {
           "battery_voltage": 54.52,
           "pack_voltage": 52.42,
@@ -137,11 +141,17 @@
     "log_level": "INFO",
     "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     "max_console_messages": 500,
+	"diagnostics_log_directory": "logs",
     "verbose_modules": [
       "device_info_manager",
       "device_communication",
       "device_cache",
       "battery_monitor"
     ]
+  },
+  "monitoring": {
+    "history_enabled": true,
+    "history_interval_minutes": 2,
+    "history_include_cells": true
   }
 }

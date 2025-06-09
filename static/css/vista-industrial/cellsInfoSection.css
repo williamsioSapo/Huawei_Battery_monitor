@@ -1,0 +1,637 @@
+/**
+ * cellsInfoSection.css - Estilos para la Sección de Información de Celdas
+ * Vista Moderna de Batería - Diseño Industrial LiFePO4 con Carcasa y Remaches
+ * Incluye sistema de colores avanzado y tooltips hover
+ */
+
+/* ========== CONTENEDOR PRINCIPAL DE STRINGS ========== */
+
+.cells-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: var(--modern-gradient-primary);
+  border: var(--modern-border);
+  border-radius: 16px;
+  box-shadow: var(--modern-shadow);
+  position: relative;
+  overflow: hidden;
+  /* Ahora tiene 3 filas completas de espacio */
+}
+
+.cells-info-section .section-title {
+  text-align: left;
+  margin-bottom: 0px;
+}
+
+/* ========== CONTENEDOR DE STRINGS ========== */
+
+.strings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+}
+
+/* ========== STRING INDIVIDUAL ========== */
+
+.battery-string {
+  position: relative;
+  background: var(--modern-surface);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.battery-string:hover {
+  border-color: var(--modern-text-accent);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+/* ========== HEADER DEL STRING ========== */
+
+.string-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.string-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--modern-text-accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.string-temperature {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--modern-text-secondary);
+  font-family: 'Courier New', monospace;
+}
+
+.temp-icon {
+  font-size: 16px;
+}
+
+/* ========== CARCASA CON SVG ========== */
+
+.battery-casing {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Altura fija para consistencia */
+  margin: 10px 0;
+}
+
+.casing-svg {
+  position: absolute;
+  top: 81px;
+  left: 0;
+  width: 100%;
+   z-index: 1;
+  pointer-events: none; /* Permite interacción con celdas debajo */
+}
+
+/* ========== ESTILOS DEL SVG ========== */
+
+.casing-body {
+  fill: none;
+  stroke: #404040;
+  stroke-width: 6;
+  rx: 8;
+  ry: 8;
+}
+
+.rivet {
+  fill: url(#rivetGradient);
+  stroke: #2a2a2a;
+  stroke-width: 0.5;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* ========== GRID DE CELDAS ========== */
+
+.cells-grid-container {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
+  z-index: 2;
+  display: grid;
+  gap: 4px;
+  padding: 15px;
+}
+
+/* Grids específicos por configuración */
+.cells-grid-11s2p,
+.cells-grid-22s1p {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.cells-grid-16s1p {
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* ========== CELDAS INDIVIDUALES ========== */
+
+.battery-cell {
+  position: relative;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* Para 22S1P - celdas divididas */
+.battery-cell.split-cell {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  padding: 0;
+}
+
+.split-cell .sub-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  font-size: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Efectos hover */
+.battery-cell:hover,
+.split-cell .sub-cell:hover {
+  transform: scale(1.05);
+  border-color: var(--modern-text-accent);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+  z-index: 10;
+}
+
+/* ========== SISTEMA DE COLORES DE CELDAS ========== */
+
+/* Estados normales */
+.battery-cell.normal,
+.sub-cell.normal {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.battery-cell.warning,
+.sub-cell.warning {
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+}
+
+.battery-cell.critical,
+.sub-cell.critical {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+/* Estados especiales - Min/Max tensión */
+.battery-cell.highest-voltage,
+.sub-cell.highest-voltage {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  box-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+  animation: high-voltage-pulse 2s ease-in-out infinite;
+}
+
+.battery-cell.lowest-voltage,
+.sub-cell.lowest-voltage {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  box-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+  animation: low-voltage-pulse 2s ease-in-out infinite;
+}
+
+/* Estados graduales entre extremos */
+.battery-cell.high-voltage,
+.sub-cell.high-voltage {
+  background: linear-gradient(135deg, #ff6b7a 0%, #ee5a67 100%);
+}
+
+.battery-cell.low-voltage,
+.sub-cell.low-voltage {
+  background: linear-gradient(135deg, #54a0ff 0%, #2e86de 100%);
+}
+
+/* ========== ANIMACIONES ========== */
+
+@keyframes high-voltage-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.9);
+  }
+}
+
+@keyframes low-voltage-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.9);
+  }
+}
+
+/* ========== TOOLTIP SYSTEM ========== */
+
+.cell-tooltip {
+  position: absolute;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--modern-text-primary);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  border: 1px solid var(--modern-text-accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+  max-width: 200px;
+  white-space: nowrap;
+}
+
+.cell-tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cell-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--modern-text-accent);
+}
+
+.tooltip-cell-id {
+  font-weight: 700;
+  color: var(--modern-text-accent);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.tooltip-voltage,
+.tooltip-temperature,
+.tooltip-status {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.tooltip-voltage::before {
+  content: "⚡ ";
+  color: #f1c40f;
+}
+
+.tooltip-temperature::before {
+  content: "🌡️ ";
+}
+
+.tooltip-status::before {
+  content: "📊 ";
+}
+
+/* ========== ESTADÍSTICAS ADICIONALES ========== */
+
+.string-stats {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 10px;
+  color: var(--modern-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 13px;
+  color: var(--modern-text-primary);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.stat-value.good {
+  color: var(--modern-success);
+}
+
+.stat-value.warning {
+  color: var(--modern-warning);
+}
+
+.stat-value.critical {
+  color: var(--modern-error);
+}
+
+/* ========== ESPACIOS VACÍOS ========== */
+
+.empty-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  cursor: default;
+}
+
+.empty-cell:hover {
+  transform: none;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+@media (max-width: 1200px) {
+  .battery-casing {
+    height: 150px;
+  }
+  
+  .cells-grid-container {
+    padding: 10px;
+    gap: 3px;
+  }
+  
+  .battery-cell {
+    font-size: 9px;
+  }
+  
+  .split-cell .sub-cell {
+    font-size: 7px;
+  }
+  
+  .string-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .strings-container {
+    gap: 15px;
+  }
+  
+  .battery-casing {
+    height: 120px;
+  }
+  
+  .cells-grid-container {
+    padding: 8px;
+    gap: 2px;
+  }
+  
+  .battery-cell {
+    font-size: 8px;
+  }
+  
+  .split-cell .sub-cell {
+    font-size: 6px;
+  }
+  
+  .cell-tooltip {
+    font-size: 10px;
+    padding: 8px 12px;
+  }
+}
+
+/* ========== ACCESIBILIDAD ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .battery-cell,
+  .sub-cell,
+  .cell-tooltip {
+    transition: none;
+  }
+  
+  .battery-cell.highest-voltage,
+  .battery-cell.lowest-voltage,
+  .sub-cell.highest-voltage,
+  .sub-cell.lowest-voltage {
+    animation: none;
+  }
+}
+
+.metrics-grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    margin-top: 120px;
+    max-width: 380px;
+    width: 100%;
+}
+
+/* ========== CARDS INDIVIDUALES ========== */
+
+.metric-card-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--modern-gradient-secondary);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 
+                0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.cells-info-section .metric-card-mini::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 100%);
+}
+
+.cells-info-section .metric-label {
+    font-size: 9px;
+    color: var(--modern-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.cells-info-section .metric-value {
+    font-size: 13px;
+    color: var(--modern-text-primary);
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 2px;
+    line-height: 1;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.cells-info-section .metric-sublabel {
+    font-size: 8px;
+    color: var(--modern-text-muted);
+    font-weight: 400;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+/* ========== COLORES POR TIPO DE CARD ========== */
+
+/* Card Voltaje AVG (Siempre Azul) */
+.metric-card-voltage {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.metric-card-voltage:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+    border-color: #3498db;
+}
+
+/* Card Temperatura AVG (Color Dinámico) */
+.metric-card-temp.normal {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.metric-card-temp.normal:hover {
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    border-color: #2ecc71;
+}
+
+.metric-card-temp.warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.metric-card-temp.warning:hover {
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
+    border-color: #f39c12;
+}
+
+.metric-card-temp.critical {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+.metric-card-temp.critical:hover {
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    border-color: #e74c3c;
+}
+
+/* Card Rango Voltaje (Color por Balance) */
+.metric-card-range-v.balanced {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.metric-card-range-v.balanced:hover {
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    border-color: #2ecc71;
+}
+
+.metric-card-range-v.warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.metric-card-range-v.warning:hover {
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
+    border-color: #f39c12;
+}
+
+.metric-card-range-v.critical {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+.metric-card-range-v.critical:hover {
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    border-color: #e74c3c;
+}
+
+/* Card Rango Temperatura (Color por Dispersión) */
+.metric-card-range-t.uniform {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.metric-card-range-t.uniform:hover {
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    border-color: #2ecc71;
+}
+
+.metric-card-range-t.moderate {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.metric-card-range-t.moderate:hover {
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
+    border-color: #f39c12;
+}
+
+.metric-card-range-t.critical {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+.metric-card-range-t.critical:hover {
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    border-color: #e74c3c;
+}
+
+/* ========== EFECTOS GENERALES ========== */
+
+.metric-card-mini:hover {
+    transform: scale(1.05);
+    z-index: 5;
+}
+
+/* Animación sutil para estados críticos */
+@keyframes subtle-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+    }
+}

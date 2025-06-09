@@ -3,6 +3,14 @@ from flask import request, jsonify
 from modbus_app.authentication_status import all_batteries_authenticated, get_failed_batteries
 from modbus_app import operations
 
+def is_client_connected():
+    """Verifica si hay conexión activa."""
+    try:
+        from modbus_app.battery_initializer import BatteryInitializer
+        initializer = BatteryInitializer.get_instance()
+        return initializer and initializer._is_connected
+    except:
+        return False
 def verify_authentication_complete():
     """
     Verifies if all batteries are correctly authenticated.
@@ -27,26 +35,10 @@ def verify_authentication_complete():
 def register_device_routes(app):
     """Register device information related routes with the Flask app."""
     
-    @app.route('/api/read_device_info', methods=['POST'])
-    def read_device_info_api():
-        """Endpoint to read device information using FC41."""
-        # Verify authentication is complete
-        auth_error = verify_authentication_complete()
-        if auth_error:
-            return jsonify(auth_error)
-            
-        data = request.json
-        slave_id = int(data.get('slaveId', 217))
-        info_index = int(data.get('index', 0))
-
-        result = operations.execute_read_device_info(slave_id, info_index)
-        return jsonify(result)
-        
     @app.route('/api/device_info', methods=['GET'])
     def device_info_api():
         """Endpoint to get cached device information."""
-        from modbus_app.client import is_client_connected
-        if not is_client_connected():
+        if not is_client_connected():  # Usa la función local
             return jsonify({
                 "status": "error", 
                 "message": "No active connection to the device"
@@ -61,3 +53,5 @@ def register_device_routes(app):
         result = get_device_info(slave_id)
         
         return jsonify(result)
+        
+  

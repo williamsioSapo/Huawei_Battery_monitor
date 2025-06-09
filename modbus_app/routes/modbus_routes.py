@@ -31,102 +31,6 @@ def verify_authentication_complete():
 def register_modbus_routes(app):
    """Register standard Modbus operation routes with the Flask app."""
    
-   @app.route('/api/modbus/connect', methods=['POST'])
-   def modbus_connect_api():
-       """Endpoint para conectar PyModbus client."""
-       log_stdout(f"MODBUS-DEBUG: Iniciando /api/modbus/connect")
-       
-       data = request.json
-       port = data.get('port', 'COM1')
-       baudrate = int(data.get('baudrate', 9600))
-       parity = data.get('parity', 'N')
-       stopbits = int(data.get('stopbits', 1))
-       bytesize = int(data.get('bytesize', 8))
-       timeout = int(data.get('timeout', 1))
-       
-       # Check if there's a low-level initializer active on the same port
-       try:
-           from modbus_app.battery_initializer import BatteryInitializer
-           initializer = BatteryInitializer.get_instance()
-           if initializer and initializer._serial and initializer._serial.is_open and initializer.port == port:
-               log_stdout(f"MODBUS-DEBUG: Error: Puerto {port} está siendo usado por bajo nivel")
-               return jsonify({
-                   "status": "error", 
-                   "message": f"Error: Port {port} is being used by low-level connection. Disconnect first."
-               })
-       except:
-           # Si hay una excepción, no hay initializer activo
-           log_stdout(f"MODBUS-DEBUG: No se detectó initializer activo")
-           pass
-       
-       # Check if all batteries are correctly initialized
-       if not all_batteries_authenticated():
-           failed_batteries = get_failed_batteries()
-           log_stdout(f"MODBUS-DEBUG: No todas las baterías están autenticadas. Fallidas: {failed_batteries}")
-           return jsonify({
-               "status": "warning",
-               "message": "Not all batteries are correctly initialized. It's recommended to complete initialization first.",
-               "all_authenticated": False,
-               "failed_batteries": failed_batteries,
-               "proceed_anyway": True  # Allow continuing despite warning
-           })
-       
-       # Connect PyModbus client
-       log_stdout(f"MODBUS-DEBUG: Conectando cliente PyModbus en {port}")
-       from modbus_app.client import connect_client
-       success, message = connect_client(port, baudrate, parity, stopbits, bytesize, timeout)
-       
-       if not success:
-           log_stdout(f"MODBUS-DEBUG: Error al conectar: {message}")
-           return jsonify({
-               "status": "error", 
-               "message": f"Error connecting PyModbus: {message}"
-           })
-       
-       # MODIFICADO: Verificar si todas las baterías ya están autenticadas
-       if all_batteries_authenticated():
-           log_stdout("MODBUS-DEBUG: Todas las baterías ya están autenticadas, omitiendo carga de información detallada")
-           return jsonify({
-               "status": "success", 
-               "message": "PyModbus client connected successfully",
-               "loading_detailed_info": False  # Indicar que no se está cargando información
-           })
-       else:
-           # Solo si hay algún problema con la autenticación, intentar cargar información
-           log_stdout("MODBUS-DEBUG: No todas las baterías están autenticadas, iniciando carga de información detallada (caso anómalo)")
-           
-           from modbus_app.routes.battery_routes import battery_monitor as global_battery_monitor
-           global_battery_monitor.load_all_detailed_info()
-           
-           return jsonify({
-               "status": "success", 
-               "message": "PyModbus client connected successfully, loading detailed information (anomalous case)",
-               "loading_detailed_info": True
-           })
-
-   @app.route('/api/modbus/disconnect', methods=['POST'])
-   def modbus_disconnect_api():
-       """Endpoint to disconnect PyModbus client."""
-       from modbus_app.client import disconnect_client
-       disconnected = disconnect_client()
-       if disconnected:
-           return jsonify({
-               "status": "success", 
-               "message": "PyModbus client disconnected successfully"
-           })
-       else:
-           return jsonify({
-               "status": "warning", 
-               "message": "No active PyModbus connection to disconnect"
-           })
-
-   @app.route('/api/status', methods=['GET'])
-   def status_api():
-       """Endpoint to check connection status."""
-       from modbus_app.client import is_client_connected
-       connected = is_client_connected()
-       return jsonify({"connected": connected})
-
    @app.route('/api/read', methods=['POST'])
    def read_api():
        """Endpoint for standard Modbus reads."""
@@ -172,7 +76,6 @@ def register_modbus_routes(app):
        if auth_error:
            return jsonify(auth_error)
            
-       from modbus_app.client import is_client_connected
        if not is_client_connected():
            return jsonify({
                "status": "error",

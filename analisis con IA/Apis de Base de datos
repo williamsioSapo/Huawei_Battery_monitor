@@ -1,0 +1,444 @@
+# Informe de APIs de Base de Datos - Sistema Modbus RTU
+
+## Resumen Ejecutivo
+
+Este documento describe todas las APIs disponibles para el manejo de la base de datos de historial de baterías en el sistema Modbus RTU. El sistema utiliza SQLite con auto-expansión de esquema y está diseñado para registrar datos históricos de múltiples baterías Huawei ESM.
+
+## Arquitectura de la Base de Datos
+
+### Componentes Principales
+- **Base de Datos**: SQLite con archivo `battery_history.db`
+- **Auto-Expansión**: El esquema se expande automáticamente según necesidades
+- **Thread-Safe**: Todas las operaciones son seguras para concurrencia
+- **Optimizada**: Índices automáticos para consultas eficientes
+
+### Tablas Principales
+1. `battery_history` - Registro principal de datos históricos
+2. `cell_voltages_history` - Voltajes individuales de celdas
+3. `cell_temperatures_history` - Temperaturas individuales de celdas
+4. `sync_status` - Control de sincronización por batería
+5. `export_sessions` - Metadatos de exportaciones
+
+## APIs Disponibles
+
+### 1. Reset Total del Sistema
+
+#### `POST /api/batteries/history/reset_total`
+
+**Descripción**: Elimina completamente la base de datos y la recrea con esquema básico.
+
+**Autenticación**: Requiere baterías autenticadas
+
+**Request**:
+```json
+{} // Sin parámetros
+```
+
+**Response Exitosa**:
+```json
+{
+  "status": "success",
+  "message": "Reset total del sistema de historial completado exitosamente",
+  "database_reset": true,
+  "history_restarted": true,
+  "monitoring_restored": true,
+  "monitored_batteries": [214, 215, 216],
+  "timestamp": "2025-05-29T10:30:00",
+  "database_details": {
+    "original_file_deleted": true,
+    "new_file_created": true,
+    "auxiliary_files_cleaned": true
+  },
+  "database_path": "battery_history.db"
+}
+```
+
+**Response de Error**:
+```json
+{
+  "status": "error",
+  "message": "Error crítico durante reset total del sistema: [detalle]",
+  "database_reset": false,
+  "history_restarted": false,
+  "monitoring_restored": false,
+  "timestamp": "2025-05-29T10:30:00"
+}
+```
+
+**Casos de Uso**:
+- Limpiar completamente el historial
+- Resolver problemas de corrupción de DB
+- Reiniciar sistema de monitoreo
+
+---
+
+### 2. Estado del Sistema de Historial
+
+#### `GET /api/batteries/history/status`
+
+**Descripción**: Obtiene el estado completo del sistema de historial incluyendo monitoreo y base de datos.
+
+**Autenticación**: Requiere baterías autenticadas
+
+**Response**:
+```json
+{
+  "status": "success",
+  "monitor_status": {
+    "polling_active": true,
+    "history_active": true,
+    "history_enabled": true,
+    "monitored_batteries": [214, 215, 216],
+    "history_interval_seconds": 120,
+    "last_history_saves": {
+      "214": 1640995200,
+      "215": 1640995200,
+      "216": 1640995200
+    }
+  },
+  "database_info": {
+    "status": "success",
+    "database_stats": {
+      "battery_history_count": 1250,
+      "cell_voltages_history_count": 20000,
+      "cell_temperatures_history_count": 20000,
+      "sync_status_count": 3,
+      "batteries": [
+        {
+          "battery_id": 214,
+          "record_count": 450,
+          "first_record": "2025-01-01T00:00:00",
+          "last_record": "2025-05-29T10:30:00"
+        }
+      ],
+      "file_size_mb": 15.7
+    },
+    "file_info": {
+      "file_path": "battery_history.db",
+      "file_size_bytes": 16457728,
+      "file_size_mb": 15.7,
+      "created_time": "2025-01-01T00:00:00",
+      "modified_time": "2025-05-29T10:30:00"
+    }
+  },
+  "history_stats": {
+    "total_records_saved": 1250,
+    "records_today": 45,
+    "last_save_time": "2025-05-29T10:25:00",
+    "last_error": null,
+    "start_time": "2025-05-29T08:00:00"
+  },
+  "timestamp": "2025-05-29T10:30:00"
+}
+```
+
+**Casos de Uso**:
+- Dashboard de estado del sistema
+- Monitoreo de salud de la base de datos
+- Verificar estado del historial automático
+
+---
+
+### 3. Información Detallada de Base de Datos
+
+#### `GET /api/batteries/history/database_info`
+
+**Descripción**: Obtiene información técnica detallada de la base de datos.
+
+**Autenticación**: Requiere baterías autenticadas
+
+**Response**:
+```json
+{
+  "status": "success",
+  "database_stats": {
+    "battery_history_count": 1250,
+    "cell_voltages_history_count": 20000,
+    "cell_temperatures_history_count": 20000,
+    "sync_status_count": 3,
+    "export_sessions_count": 5,
+    "batteries": [
+      {
+        "battery_id": 214,
+        "record_count": 450,
+        "first_record": "2025-01-01T00:00:00",
+        "last_record": "2025-05-29T10:30:00"
+      },
+      {
+        "battery_id": 215,
+        "record_count": 400,
+        "first_record": "2025-01-01T00:00:00",
+        "last_record": "2025-05-29T10:25:00"
+      }
+    ],
+    "file_size_mb": 15.7
+  },
+  "file_info": {
+    "file_path": "battery_history.db",
+    "file_size_bytes": 16457728,
+    "file_size_mb": 15.7,
+    "created_time": "2025-01-01T00:00:00",
+    "modified_time": "2025-05-29T10:30:00"
+  },
+  "timestamp": "2025-05-29T10:30:00"
+}
+```
+
+**Casos de Uso**:
+- Análisis de uso de almacenamiento
+- Estadísticas para reportes
+- Monitoreo de crecimiento de datos
+
+---
+
+### 4. Crear Backup de Base de Datos
+
+#### `POST /api/batteries/history/create_backup`
+
+**Descripción**: Crea una copia de seguridad de la base de datos actual.
+
+**Autenticación**: Requiere baterías autenticadas
+
+**Request**:
+```json
+{
+  "backup_name": "backup_manual_20250529.db" // Opcional
+}
+```
+
+**Response Exitosa**:
+```json
+{
+  "status": "success",
+  "message": "Backup creado exitosamente",
+  "backup_path": "database_backups/backup_manual_20250529.db",
+  "backup_size_mb": 15.7,
+  "timestamp": "2025-05-29T10:30:00"
+}
+```
+
+**Response de Error**:
+```json
+{
+  "status": "error",
+  "message": "Error creando backup: [detalle del error]"
+}
+```
+
+**Casos de Uso**:
+- Backup manual antes de operaciones críticas
+- Exportación de datos para análisis externo
+- Archivado de datos históricos
+
+---
+
+## APIs de Monitoreo de Baterías (Relacionadas con DB)
+
+### 5. Iniciar Monitoreo con Historial
+
+#### `POST /api/batteries/start_monitoring`
+
+**Descripción**: Inicia el monitoreo de baterías que automáticamente guarda datos en la base de datos.
+
+**Request**:
+```json
+{
+  "battery_ids": [214, 215, 216] // Opcional, usa todas si no se especifica
+}
+```
+
+**Response**:
+```json
+{
+  "status": "success",
+  "message": "Monitoring started for 3 batteries",
+  "battery_ids": [214, 215, 216]
+}
+```
+
+**Funcionalidad de DB**: 
+- Guarda automáticamente registros cada 2 minutos (configurable)
+- Incluye datos básicos y expandidos según configuración
+- Auto-expande esquema de DB según campos detectados
+
+---
+
+### 6. Detener Monitoreo
+
+#### `POST /api/batteries/stop_monitoring`
+
+**Descripción**: Detiene el monitoreo automático y la grabación en base de datos.
+
+**Response**:
+```json
+{
+  "status": "success",
+  "message": "Battery monitoring stopped"
+}
+```
+
+---
+
+## Flujo de Datos y Almacenamiento
+
+### Proceso de Grabación Automática
+
+1. **Monitoreo Activo**: Cada 8 segundos lee datos básicos de baterías
+2. **Evaluación de Historial**: Cada lectura verifica si es tiempo de guardar historial (intervalo configurable)
+3. **Lectura Expandida**: Cuando es tiempo de historial, lee registros adicionales:
+   - `0x0042` - Tiempos de descarga (32-bit)
+   - `0x0044` - Descarga AH acumulada (32-bit)
+   - `0x0046` - Fallas de hardware
+   - `0x0048` - Estado de sensores
+   - `0x0049` - Modo de operación
+   - `0x004A` - Estado de subsistemas
+4. **Auto-Expansión**: Si detecta campos nuevos, automáticamente agrega columnas a la DB
+5. **Grabación**: Guarda registro completo con timestamp y metadatos
+
+### Campos de Datos Almacenados
+
+#### Tabla `battery_history` (Campos Básicos)
+```sql
+- id (PRIMARY KEY)
+- battery_id (INTEGER)
+- timestamp (DATETIME)
+- source ('live_monitor' | 'initial_sync')
+- pack_voltage (REAL)
+- battery_current (REAL)
+- soc (INTEGER)
+- soh (INTEGER)
+- temp_min (INTEGER)
+- temp_max (INTEGER)
+```
+
+#### Campos Auto-Expandidos
+```sql
+- discharge_ah_accumulated (INTEGER)
+- discharge_times_total (INTEGER)
+- charge_cycles_accumulated (INTEGER)
+- hardware_faults (INTEGER)
+- sensor_status (INTEGER)
+- operation_mode (INTEGER)
+- subsystem_status (INTEGER)
+- cell_count (INTEGER)
+- cell_voltage_min/max/avg (REAL)
+- cell_temp_min/max/avg (REAL)
+```
+
+## Configuración y Personalización
+
+### Archivo `config.json` - Sección Monitoring
+```json
+{
+  "monitoring": {
+    "history_enabled": true,
+    "history_interval_minutes": 2,
+    "history_include_cells": true
+  }
+}
+```
+
+### Parámetros Configurables
+- **history_enabled**: Habilita/deshabilita grabación automática
+- **history_interval_minutes**: Intervalo entre grabaciones (default: 2 min)
+- **history_include_cells**: Incluir datos detallados de celdas individuales
+
+## Consideraciones para Frontend
+
+### Manejo de Estados
+- **Verificar autenticación** antes de llamadas a APIs
+- **Polling** para estado del sistema en tiempo real
+- **Manejo de errores** robusto para operaciones de base de datos
+- **Confirmación de usuario** para operaciones destructivas (reset)
+
+### UX Recomendadas
+- **Dashboard de estado** con información de `/history/status`
+- **Confirmación modal** para reset total
+- **Indicador de progreso** para operaciones largas
+- **Notificaciones** de éxito/error para backups
+
+### Optimización de Performance
+- **Cache** información de estado para evitar polling excesivo
+- **Paginación** para datos históricos grandes
+- **Lazy loading** para estadísticas detalladas
+
+## Códigos de Estado HTTP
+
+- **200**: Operación exitosa
+- **400**: Request malformado
+- **401**: No autenticado (baterías no inicializadas)
+- **500**: Error interno del sistema
+- **503**: Sistema no disponible (sin conexión Modbus)
+
+## Ejemplos de Integración
+
+### Verificar Estado Antes de Operaciones
+```javascript
+async function checkSystemStatus() {
+  const response = await fetch('/api/batteries/history/status');
+  const status = await response.json();
+  
+  if (status.status === 'success') {
+    return {
+      monitoringActive: status.monitor_status.polling_active,
+      historyActive: status.monitor_status.history_active,
+      databaseSize: status.database_info.database_stats.file_size_mb
+    };
+  }
+  throw new Error('Cannot get system status');
+}
+```
+
+### Crear Backup con Confirmación
+```javascript
+async function createBackup(backupName = null) {
+  const confirmBackup = confirm('¿Crear backup de la base de datos?');
+  if (!confirmBackup) return;
+  
+  const response = await fetch('/api/batteries/history/create_backup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ backup_name: backupName })
+  });
+  
+  const result = await response.json();
+  if (result.status === 'success') {
+    alert(`Backup creado: ${result.backup_path}`);
+  } else {
+    alert(`Error: ${result.message}`);
+  }
+}
+```
+
+### Reset Total con Múltiples Confirmaciones
+```javascript
+async function resetTotalSystem() {
+  const confirm1 = confirm('⚠️ PELIGRO: ¿Eliminar TODA la base de datos?');
+  if (!confirm1) return;
+  
+  const confirm2 = confirm('Esta acción NO se puede deshacer. ¿Continuar?');
+  if (!confirm2) return;
+  
+  const response = await fetch('/api/batteries/history/reset_total', {
+    method: 'POST'
+  });
+  
+  const result = await response.json();
+  if (result.status === 'success') {
+    alert('Reset completado exitosamente');
+    // Recargar página o actualizar estado
+  } else {
+    alert(`Error en reset: ${result.message}`);
+  }
+}
+```
+
+---
+
+## Notas Finales
+
+- **Todas las APIs requieren autenticación previa** de baterías
+- **Auto-expansión** permite flexibilidad sin cambios de código
+- **Thread-safe** soporta operaciones concurrentes
+- **Backups automáticos** recomendados antes de resets
+- **Monitoreo en tiempo real** para detectar problemas

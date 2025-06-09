@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SQLite Database Structure</title>
+<style>
+body{font-family:Arial;margin:20px;font-size:13px}
+h1{color:#2c3e50;font-size:18px;margin:15px 0 10px}
+h2{color:#34495e;font-size:14px;margin:12px 0 8px}
+h3{color:#7f8c8d;font-size:12px;margin:8px 0 5px}
+pre{background:#f8f9fa;padding:8px;border-left:3px solid #007bff;font-size:11px;overflow-x:auto}
+.table{background:#fff;border:1px solid #ddd;margin:8px 0}
+.table th,.table td{padding:4px 8px;border-bottom:1px solid #eee;font-size:11px}
+.table th{background:#f1f1f1;font-weight:bold}
+.code{background:#2d3748;color:#e2e8f0;padding:6px;font-family:monospace;font-size:10px}
+.flow{background:#e3f2fd;padding:8px;border-radius:4px;margin:8px 0}
+</style>
+</head>
+<body>
+
+<h1>SQLite Database Structure - Battery History System</h1>
+
+<h2>📁 File Location</h2>
+<pre>Location: C:\Sata\modbusserver\battery_history.db
+Type: SQLite (single file, no server required)
+Access: modbus_app.history.database.BatteryHistoryDB</pre>
+
+<h2>🗃️ Table Structure</h2>
+
+<h3>1. battery_history (Main Table)</h3>
+<div class="table">
+<table width="100%">
+<tr><th>Column</th><th>Type</th><th>Description</th></tr>
+<tr><td>id</td><td>INTEGER PK</td><td>Auto increment ID</td></tr>
+<tr><td>battery_id</td><td>INTEGER</td><td>Battery ID (214, 215, etc)</td></tr>
+<tr><td>timestamp</td><td>DATETIME</td><td>Record timestamp</td></tr>
+<tr><td>source</td><td>TEXT</td><td>'initial_sync' or 'live_monitor'</td></tr>
+<tr><td>pack_voltage</td><td>REAL</td><td>Pack voltage (V)</td></tr>
+<tr><td>battery_current</td><td>REAL</td><td>Current (A, signed)</td></tr>
+<tr><td>soc</td><td>INTEGER</td><td>State of Charge (%)</td></tr>
+<tr><td>soh</td><td>INTEGER</td><td>State of Health (%)</td></tr>
+<tr><td>temp_min/max</td><td>INTEGER</td><td>Min/Max temperatures (°C)</td></tr>
+<tr><td>discharge_ah_accumulated</td><td>INTEGER</td><td>Total AH discharged</td></tr>
+<tr><td>discharge_times_total</td><td>INTEGER</td><td>Total discharge cycles</td></tr>
+<tr><td>charge_cycles_accumulated</td><td>INTEGER</td><td>Total charge cycles</td></tr>
+<tr><td>hardware_faults</td><td>INTEGER</td><td>Register 0x0046</td></tr>
+<tr><td>sensor_status</td><td>INTEGER</td><td>Register 0x0048</td></tr>
+<tr><td>operation_mode</td><td>INTEGER</td><td>Register 0x0049</td></tr>
+<tr><td>subsystem_status</td><td>INTEGER</td><td>Register 0x004A</td></tr>
+<tr><td>cell_count</td><td>INTEGER</td><td>Number of cells (11 or 22)</td></tr>
+<tr><td>cell_voltage_min/max/avg</td><td>REAL</td><td>Cell voltage statistics</td></tr>
+<tr><td>cell_temp_min/max/avg</td><td>REAL</td><td>Cell temperature statistics</td></tr>
+</table>
+</div>
+
+<h3>2. cell_voltages_history</h3>
+<div class="table">
+<table width="100%">
+<tr><th>Column</th><th>Type</th><th>Description</th></tr>
+<tr><td>id</td><td>INTEGER PK</td><td>Auto increment</td></tr>
+<tr><td>battery_history_id</td><td>INTEGER FK</td><td>Links to battery_history</td></tr>
+<tr><td>cell_number</td><td>INTEGER</td><td>Cell number (1-22)</td></tr>
+<tr><td>voltage</td><td>REAL</td><td>Individual cell voltage (V)</td></tr>
+<tr><td>status</td><td>TEXT</td><td>'OK', 'DISCONNECTED', 'ERROR'</td></tr>
+<tr><td>raw_value</td><td>INTEGER</td><td>Raw Modbus register value</td></tr>
+</table>
+</div>
+
+<h3>3. cell_temperatures_history</h3>
+<div class="table">
+<table width="100%">
+<tr><th>Column</th><th>Type</th><th>Description</th></tr>
+<tr><td>id</td><td>INTEGER PK</td><td>Auto increment</td></tr>
+<tr><td>battery_history_id</td><td>INTEGER FK</td><td>Links to battery_history</td></tr>
+<tr><td>cell_number</td><td>INTEGER</td><td>Cell number (1-22)</td></tr>
+<tr><td>temperature</td><td>INTEGER</td><td>Individual cell temp (°C)</td></tr>
+<tr><td>status</td><td>TEXT</td><td>'OK', 'DISCONNECTED', 'OUT_OF_RANGE'</td></tr>
+<tr><td>raw_value</td><td>INTEGER</td><td>Raw Modbus register value</td></tr>
+</table>
+</div>
+
+<h3>4. sync_status</h3>
+<div class="table">
+<table width="100%">
+<tr><th>Column</th><th>Type</th><th>Description</th></tr>
+<tr><td>battery_id</td><td>INTEGER PK</td><td>Battery ID</td></tr>
+<tr><td>manufacturer</td><td>TEXT</td><td>Battery manufacturer</td></tr>
+<tr><td>model</td><td>TEXT</td><td>Battery model</td></tr>
+<tr><td>serial_number</td><td>TEXT</td><td>Serial number</td></tr>
+<tr><td>cell_count</td><td>INTEGER</td><td>Number of cells</td></tr>
+<tr><td>initial_sync_completed</td><td>BOOLEAN</td><td>FC41 sync done?</td></tr>
+<tr><td>initial_sync_date</td><td>DATETIME</td><td>When FC41 sync completed</td></tr>
+<tr><td>total_records_imported</td><td>INTEGER</td><td>Records from FC41</td></tr>
+<tr><td>continuous_monitoring</td><td>BOOLEAN</td><td>Live monitoring active?</td></tr>
+<tr><td>monitoring_start_date</td><td>DATETIME</td><td>When monitoring started</td></tr>
+<tr><td>last_monitor_reading</td><td>DATETIME</td><td>Last live reading</td></tr>
+<tr><td>total_monitor_records</td><td>INTEGER</td><td>Live monitoring records</td></tr>
+</table>
+</div>
+
+<h3>5. export_sessions</h3>
+<div class="table">
+<table width="100%">
+<tr><th>Column</th><th>Type</th><th>Description</th></tr>
+<tr><td>id</td><td>INTEGER PK</td><td>Auto increment</td></tr>
+<tr><td>battery_id</td><td>INTEGER</td><td>Battery ID</td></tr>
+<tr><td>export_type</td><td>TEXT</td><td>'full', 'range', 'filtered'</td></tr>
+<tr><td>start_date/end_date</td><td>DATETIME</td><td>Export date range</td></tr>
+<tr><td>records_exported</td><td>INTEGER</td><td>Number of records exported</td></tr>
+<tr><td>file_format</td><td>TEXT</td><td>'json', 'csv'</td></tr>
+<tr><td>file_path</td><td>TEXT</td><td>Export file location</td></tr>
+</table>
+</div>
+
+<h2>🐍 Python Usage</h2>
+
+<div class="code">
+from modbus_app.history.database import BatteryHistoryDB, get_db
+
+# Create instance
+db = BatteryHistoryDB("battery_history.db")
+# Or use global instance
+db = get_db()
+
+# Sync status
+db.get_sync_status(battery_id)
+db.create_or_update_sync_status(battery_id, **kwargs)
+
+# Insert data
+db.insert_history_record(battery_id, timestamp, source, basic_data, 
+                        cell_voltages, cell_temperatures)
+
+# Query data
+db.get_history_range(battery_id, start_date, end_date, limit)
+db.get_cell_data_for_history(history_id)
+db.get_database_stats()
+</div>
+
+<h2>📊 Data Flow</h2>
+
+<div class="flow">
+<strong>1. Initial Sync:</strong> Read complete history via FC41 → source='initial_sync'<br>
+<strong>2. Continuous Monitor:</strong> Read every 2 min via normal registers → source='live_monitor'<br>
+<strong>3. Each Record:</strong> Basic data + 22 individual cell voltages + 22 individual cell temperatures
+</div>
+
+<h2>🔧 Key Features</h2>
+<ul>
+<li>Single SQLite file (no server required)</li>
+<li>Thread-safe operations with connection pooling</li>
+<li>Automatic indexing for fast queries</li>
+<li>Individual cell tracking (up to 22 cells)</li>
+<li>Support for both historical import and live monitoring</li>
+<li>Export session tracking</li>
+<li>Optimized for time-series data</li>
+</ul>
+
+<h2>📋 Register Mapping</h2>
+<div class="table">
+<table width="100%">
+<tr><th>Register</th><th>Field</th><th>Description</th></tr>
+<tr><td>0x010F</td><td>cell_count</td><td>Number of cells (11 or 22)</td></tr>
+<tr><td>0x0046</td><td>hardware_faults</td><td>Hardware fault indicators</td></tr>
+<tr><td>0x0048</td><td>sensor_status</td><td>Sensor status bits</td></tr>
+<tr><td>0x0049</td><td>operation_mode</td><td>Battery operation mode</td></tr>
+<tr><td>0x004A</td><td>subsystem_status</td><td>Subsystem status bits</td></tr>
+<tr><td>0x0012+</td><td>cell_temperatures</td><td>Individual cell temperatures</td></tr>
+<tr><td>0x0022+</td><td>cell_voltages</td><td>Individual cell voltages</td></tr>
+</table>
+</div>
+
+</body>
+</html>

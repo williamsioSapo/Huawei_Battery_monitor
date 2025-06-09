@@ -39,95 +39,281 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         }
         return await response.json(); // Devuelve el cuerpo JSON
     } catch (error) {
-        // Utils.logError(`Fallo en API request: ${method} ${endpoint}: ${error.message}`, "ModbusAPI"); // Log opcional aquí
-        throw error; // Re-lanza el error para que sea manejado por quien llama a la función
+        // Re-lanza el error para que sea manejado por quien llama a la función
+        throw error;
     }
 }
 
-// Funciones específicas para cada endpoint
+// ========== FUNCIONES PARA CONEXIÓN ÚNICA ==========
+
+/**
+ * Obtiene las baterías disponibles en el sistema
+ * @returns {Promise<Object>} - Lista de baterías disponibles
+ */
 function getAvailableBatteries() {
     return apiRequest('/api/batteries', 'GET');
 }
 
-// Funciones para comunicación de bajo nivel
-function lowLevelConnect(params) {
-    return apiRequest('/api/low_level/connect', 'POST', params);
+/**
+ * Establece conexión única al sistema (reemplaza lowLevelConnect)
+ * @param {Object} params - Parámetros de conexión
+ * @returns {Promise<Object>} - Resultado de la conexión
+ */
+function conectarSistema(params) {
+    return apiRequest('/api/connect', 'POST', params);
 }
 
-function lowLevelDisconnect() {
-    return apiRequest('/api/low_level/disconnect', 'POST');
+/**
+ * Desconecta del sistema (reemplaza lowLevelDisconnect)
+ * @returns {Promise<Object>} - Resultado de la desconexión
+ */
+function desconectarSistema() {
+    return apiRequest('/api/disconnect', 'POST');
 }
 
-function lowLevelInitialize() {
-    return apiRequest('/api/low_level/initialize', 'POST');
+/**
+ * Inicializa las baterías del sistema
+ * @returns {Promise<Object>} - Resultado de la inicialización
+ */
+function inicializarBaterias() {
+    return apiRequest('/api/initialize', 'POST');
 }
 
-function lowLevelRetryBattery(batteryId) {
-    return apiRequest(`/api/low_level/retry_battery/${batteryId}`, 'POST');
+/**
+ * Reintenta la inicialización de una batería específica
+ * @param {number} batteryId - ID de la batería a reintentar
+ * @returns {Promise<Object>} - Resultado del reintento
+ */
+function reintentarBateria(batteryId) {
+    return apiRequest(`/api/retry_battery/${batteryId}`, 'POST');
 }
 
-// Funciones para comunicación PyModbus
-function connectModbus(params) {
-    return apiRequest('/api/modbus/connect', 'POST', params);
-}
-
-function disconnectModbus() {
-    return apiRequest('/api/modbus/disconnect', 'POST');
-}
-
-
-function checkStatus() {
+/**
+ * Verifica el estado actual del sistema
+ * @returns {Promise<Object>} - Estado del sistema
+ */
+function verificarEstadoSistema() {
     return apiRequest('/api/status', 'GET');
 }
 
-function readModbusRegisters(params) {
+// ========== FUNCIONES PARA OPERACIONES DE REGISTROS ==========
+
+/**
+ * Lee registros del sistema (reemplaza readModbusRegisters)
+ * @param {Object} params - Parámetros de lectura
+ * @returns {Promise<Object>} - Datos leídos
+ */
+function readRegisters(params) {
     return apiRequest('/api/read', 'POST', params);
 }
 
-function writeModbusRegisters(params) {
+/**
+ * Escribe registros en el sistema (reemplaza writeModbusRegisters)
+ * @param {Object} params - Parámetros de escritura
+ * @returns {Promise<Object>} - Resultado de la escritura
+ */
+function writeRegisters(params) {
     return apiRequest('/api/write', 'POST', params);
 }
 
-// Esta función no parece usarse en main.js original, que usa /api/device_info
-function readModbusDeviceInfo(params) {
-    // Ya se usa Utils.logWarn en la versión previa, lo cual está bien.
-    // Si no estuviera, aquí se añadiría:
-    Utils.logWarn("Llamada a readModbusDeviceInfo (directo), se prefiere /api/device_info (cache)", "ModbusAPI");
-    return apiRequest('/api/read_device_info', 'POST', params);
+/**
+ * Lee información del dispositivo (caché FC41)
+ * @param {Object} params - Parámetros opcionales
+ * @returns {Promise<Object>} - Información del dispositivo
+ */
+function readDeviceInfo(params) {
+    Utils.logInfo("Leyendo información de dispositivo desde caché", "API");
+    return apiRequest('/api/device_info', 'GET');
 }
 
-// Nueva función para verificar datos de celdas individuales
+/**
+ * Verifica datos de celdas individuales de una batería
+ * @param {number} slaveId - ID de la batería (default: 217)
+ * @returns {Promise<Object>} - Datos de verificación de celdas
+ */
 function verifyCellData(slaveId = 217) {
     return apiRequest('/api/verify_cells', 'POST', { slaveId: slaveId });
 }
-// Funciones para monitoreo de múltiples baterías
+
+// ========== FUNCIONES PARA MONITOREO DE MÚLTIPLES BATERÍAS ==========
+
+/**
+ * Inicia el monitoreo de múltiples baterías
+ * @param {Array} batteryIds - IDs de baterías a monitorear (vacío = todas)
+ * @returns {Promise<Object>} - Resultado del inicio de monitoreo
+ */
 function startMultiBatteryMonitoring(batteryIds = []) {
     return apiRequest('/api/batteries/start_monitoring', 'POST', { battery_ids: batteryIds });
 }
 
+/**
+ * Detiene el monitoreo de múltiples baterías
+ * @returns {Promise<Object>} - Resultado de detener monitoreo
+ */
 function stopMultiBatteryMonitoring() {
     return apiRequest('/api/batteries/stop_monitoring', 'POST');
 }
 
+/**
+ * Obtiene el estado de todas las baterías monitoreadas
+ * @returns {Promise<Object>} - Estado de todas las baterías
+ */
 function getAllBatteriesStatus() {
     return apiRequest('/api/batteries/status', 'GET');
 }
 
-// function getBatteryStatus(batteryId) { // No parece usarse directamente
-//     return apiRequest(`/api/batteries/status/${batteryId}`, 'GET');
-// }
-
-// Función para iniciar la carga de información detallada
+/**
+ * Inicia la carga de información detallada de baterías
+ * @param {Array} batteryIds - IDs de baterías (vacío = todas)
+ * @returns {Promise<Object>} - Resultado del inicio de carga
+ */
 function loadBatteriesDetailedInfo(batteryIds = []) {
     return apiRequest('/api/batteries/load_detailed_info', 'POST', { battery_ids: batteryIds });
 }
 
-// Función para verificar el estado de la carga de información detallada
+/**
+ * Verifica el estado de la carga de información detallada
+ * @returns {Promise<Object>} - Estado de la carga
+ */
 function getDetailedInfoLoadingStatus() {
     return apiRequest('/api/batteries/detailed_info_status', 'GET');
 }
 
-// Función para obtener la información detallada de una batería específica
+/**
+ * Obtiene la información detallada de una batería específica
+ * @param {number} batteryId - ID de la batería
+ * @returns {Promise<Object>} - Información detallada de la batería
+ */
 function getBatteryDetailedInfo(batteryId) {
     return apiRequest(`/api/batteries/detailed_info/${batteryId}`, 'GET');
 }
+
+/**
+ * Obtiene todos los registros mapeados de una batería
+ * @param {number} batteryId - ID de la batería
+ * @returns {Promise<Object>} - Datos de registros mapeados
+ */
+function getAllMappedRegisters(batteryId) {
+    return apiRequest(`/api/batteries/mapped_registers/${batteryId}`, 'GET');
+}
+
+// ========== FUNCIONES DE COMPATIBILIDAD (DEPRECATED) ==========
+
+/**
+ * @deprecated Use conectarSistema() en su lugar
+ */
+function lowLevelConnect(params) {
+    Utils.logWarn("lowLevelConnect() deprecated. Use conectarSistema()", "API");
+    return conectarSistema(params);
+}
+
+/**
+ * @deprecated Use desconectarSistema() en su lugar
+ */
+function lowLevelDisconnect() {
+    Utils.logWarn("lowLevelDisconnect() deprecated. Use desconectarSistema()", "API");
+    return desconectarSistema();
+}
+
+/**
+ * @deprecated Use inicializarBaterias() en su lugar
+ */
+function lowLevelInitialize() {
+    Utils.logWarn("lowLevelInitialize() deprecated. Use inicializarBaterias()", "API");
+    return inicializarBaterias();
+}
+
+/**
+ * @deprecated Use reintentarBateria() en su lugar
+ */
+function lowLevelRetryBattery(batteryId) {
+    Utils.logWarn("lowLevelRetryBattery() deprecated. Use reintentarBateria()", "API");
+    return reintentarBateria(batteryId);
+}
+
+/**
+ * @deprecated Use verificarEstadoSistema() en su lugar
+ */
+function checkStatus() {
+    Utils.logWarn("checkStatus() deprecated. Use verificarEstadoSistema()", "API");
+    return verificarEstadoSistema();
+}
+
+/**
+ * @deprecated Use readRegisters() en su lugar
+ */
+function readModbusRegisters(params) {
+    Utils.logWarn("readModbusRegisters() deprecated. Use readRegisters()", "API");
+    return readRegisters(params);
+}
+
+/**
+ * @deprecated Use writeRegisters() en su lugar
+ */
+function writeModbusRegisters(params) {
+    Utils.logWarn("writeModbusRegisters() deprecated. Use writeRegisters()", "API");
+    return writeRegisters(params);
+}
+
+/**
+ * @deprecated Use readDeviceInfo() en su lugar
+ */
+function readModbusDeviceInfo(params) {
+    Utils.logWarn("readModbusDeviceInfo() deprecated. Use readDeviceInfo()", "API");
+    return readDeviceInfo(params);
+}
+
+// ========== FUNCIONES ELIMINADAS (YA NO DISPONIBLES) ==========
+
+/**
+ * @removed Esta función ya no existe - era específica de PyModbus
+ */
+function connectModbus(params) {
+    Utils.logError("connectModbus() eliminada. El sistema ahora usa conexión única. Use conectarSistema()", "API");
+    throw new Error("connectModbus() ya no está disponible. Use conectarSistema()");
+}
+
+/**
+ * @removed Esta función ya no existe - era específica de PyModbus
+ */
+function disconnectModbus() {
+    Utils.logError("disconnectModbus() eliminada. El sistema ahora usa conexión única. Use desconectarSistema()", "API");
+    throw new Error("disconnectModbus() ya no está disponible. Use desconectarSistema()");
+}
+
+// ========== EXPORTACIÓN DE FUNCIONES ==========
+
+// Funciones principales (nuevas)
+window.conectarSistema = conectarSistema;
+window.desconectarSistema = desconectarSistema;
+window.inicializarBaterias = inicializarBaterias;
+window.reintentarBateria = reintentarBateria;
+window.verificarEstadoSistema = verificarEstadoSistema;
+window.readRegisters = readRegisters;
+window.writeRegisters = writeRegisters;
+window.readDeviceInfo = readDeviceInfo;
+
+// Funciones de baterías
+window.getAvailableBatteries = getAvailableBatteries;
+window.verifyCellData = verifyCellData;
+window.startMultiBatteryMonitoring = startMultiBatteryMonitoring;
+window.stopMultiBatteryMonitoring = stopMultiBatteryMonitoring;
+window.getAllBatteriesStatus = getAllBatteriesStatus;
+window.loadBatteriesDetailedInfo = loadBatteriesDetailedInfo;
+window.getDetailedInfoLoadingStatus = getDetailedInfoLoadingStatus;
+window.getBatteryDetailedInfo = getBatteryDetailedInfo;
+window.getAllMappedRegisters = getAllMappedRegisters;
+
+// Funciones de compatibilidad (deprecated)
+window.lowLevelConnect = lowLevelConnect;
+window.lowLevelDisconnect = lowLevelDisconnect;
+window.lowLevelInitialize = lowLevelInitialize;
+window.lowLevelRetryBattery = lowLevelRetryBattery;
+window.checkStatus = checkStatus;
+window.readModbusRegisters = readModbusRegisters;
+window.writeModbusRegisters = writeModbusRegisters;
+window.readModbusDeviceInfo = readModbusDeviceInfo;
+
+// Funciones eliminadas (lanzan error)
+window.connectModbus = connectModbus;
+window.disconnectModbus = disconnectModbus;
