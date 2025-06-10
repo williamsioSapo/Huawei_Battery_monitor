@@ -25,7 +25,7 @@
 
 <div align="center">
   <h3>Sistema de Diagnósticos Avanzados</h3>
-  <img src="static/images/diagnosticos_avanzados.png" alt="Panel de diagnósticos" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <img src="static/images/Celdas.png" alt="Panel de diagnósticos" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
   <p><i>Análisis completo de registros y exportación de datos</i></p>
 </div>
 
