@@ -13,7 +13,7 @@
 
 <div align="center">
   <h3>Interfaz Principal de Monitoreo</h3>
-  <img src="static/images/interface_principal.png" alt="Interfaz principal del sistema" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <img src="static/images/Monitordebaterias.png" alt="Interfaz principal del sistema" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
   <p><i>Panel principal con dashboard de múltiples baterías en tiempo real</i></p>
 </div>
 
