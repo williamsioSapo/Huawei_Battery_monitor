@@ -9,6 +9,25 @@
 **Sistema avanzado de monitoreo y control para baterías Huawei ESM-48150B1** con protocolo Modbus RTU nativo. Este proyecto implementa un cliente Modbus personalizado que reemplaza PyModbus con una solución optimizada específicamente para baterías Huawei, incluyendo autenticación automática y soporte completo para funciones propietarias.
 
 > **⚡ Características Destacadas:** Monitoreo simultáneo de múltiples baterías, interfaz web moderna, protcolo Huawei nativo, sistema de diagnósticos avanzado y exportación de datos detallados.
+ ## 📸 Vista del Sistema
+
+<div align="center">
+  <h3>Interfaz Principal de Monitoreo</h3>
+  <img src="static/images/interface_principal.png" alt="Interfaz principal del sistema" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Panel principal con dashboard de múltiples baterías en tiempo real</i></p>
+</div>
+
+<div align="center">
+  <h3>Dashboard de Batería Individual</h3>
+  <img src="static/images/dashboard_bateria.png" alt="Dashboard detallado de batería" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Vista detallada con datos de celdas, gráficos y diagnósticos</i></p>
+</div>
+
+<div align="center">
+  <h3>Sistema de Diagnósticos Avanzados</h3>
+  <img src="static/images/diagnosticos_avanzados.png" alt="Panel de diagnósticos" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <p><i>Análisis completo de registros y exportación de datos</i></p>
+</div>
 
 ## 🚀 Características Principales
 
