@@ -167,7 +167,7 @@ Al ejecutar por primera vez, el sistema detectará automáticamente:
 ### 2. Parámetros Típicos para Huawei ESM-48150B1
 ```json
 {
-  "port": "COM8",           # Detectado automáticamente
+  "port": "COM8",           # ver en panel de control
   "baudrate": 9600,         # Estándar para Huawei
   "parity": "N",            # Sin paridad
   "stopbits": 1,            # 1 bit de parada
