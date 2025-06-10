@@ -19,7 +19,7 @@
 
 <div align="center">
   <h3>Dashboard de Batería Individual</h3>
-  <img src="static/images/dashboard_bateria.png" alt="Dashboard detallado de batería" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
+  <img src="static/images/Vista moderna.png" alt="Dashboard detallado de batería" style="width: 90%; max-width: 800px; border: 2px solid #ddd; border-radius: 8px;">
   <p><i>Vista detallada con datos de celdas, gráficos y diagnósticos</i></p>
 </div>
 
