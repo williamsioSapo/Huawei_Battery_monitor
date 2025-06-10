@@ -134,8 +134,8 @@ Para obtener información detallada sobre cada aspecto del sistema, consulta las
 ### Instalación Automática
 ```bash
 # Clonar repositorio
-git clone https://github.com/nestorcal/ModbusReader_SR
-cd ModbusReader_SR
+git clone https://github.com/williamsioSapo/Huawei_Battery_monitor
+cd Huawei_Battery_monitor
 
 # Crear entorno virtual
 python -m venv env
