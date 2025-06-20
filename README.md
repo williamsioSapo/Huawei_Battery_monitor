@@ -116,6 +116,10 @@ Para obtener información detallada sobre cada aspecto del sistema, consulta las
 - 🌐 [**API y Integración**](docs/API_REFERENCIA.md) - Documentación completa de endpoints
 - 🔋 [**Protocolo Huawei**](docs/PROTOCOLO_HUAWEI.md) - Detalles técnicos de autenticación y FC41
 
+### 📋 **Documentación Técnica del Protocolo**
+- 📖 [**Registros Modbus Huawei ESM**](docs/REGISTROS_MODBUS.md) - Especificación completa de registros, umbrales y configuraciones
+- 🔐 [**Protocolo de Autenticación Huawei**](docs/Authentificacion.md) - Secuencia propietaria de 3 pasos y funciones FC41
+
 ### 🛠️ **Diagnósticos y Soporte**
 - 🔍 [**Diagnósticos Avanzados**](docs/DIAGNOSTICOS_AVANZADOS.md) - Análisis de registros y datos de celdas
 - ❓ [**Solución de Problemas**](docs/SOLUCION_PROBLEMAS.md) - Troubleshooting y errores comunes
@@ -244,7 +248,9 @@ ModbusReader_SR/
     ├── INSTALACION.md      # Guía de instalación
     ├── CONFIGURACION_HARDWARE.md
     ├── USO.md              # Manual de usuario
-    └── API_REFERENCIA.md   # Documentación de la API
+    ├── API_REFERENCIA.md   # Documentación de la API
+    ├── REGISTROS_MODBUS.md # Especificación completa de registros
+    └── PROTOCOLO_AUTENTICACION.md # Protocolo propietario Huawei
 ```
 
 ## 🔍 Diagnósticos y Troubleshooting
