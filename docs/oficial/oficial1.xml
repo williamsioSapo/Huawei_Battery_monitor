@@ -1,1 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lang name="default">
+  <!--信号-->
+  <item key="0x1200" value="Cell Highvoltage Alarm Threshold"         mark="电芯高压告警值" />
+  <item key="0x1201" value="Cell Highvoltage Alarm Restore Threshold" mark="电芯高压告警恢复值" />
+  <item key="0x1202" value="Cell Lowvoltage Restore Threshold"        mark="电芯低压恢复值" />
+  <item key="0x1203" value="Cell Lowvoltage Alarm Threshold"          mark="电芯低压告警值" />
+  <item key="0x1204" value="Cell Overvoltage Protect Threshold"       mark="电芯过压保护值" />
+  <item key="0x1205" value="Cell Overvoltage Restore Threshold"       mark="电芯过压恢复值" />
+  <item key="0x1206" value="Cell Undervoltage Restore Threshold"      mark="电芯欠压恢复值" />
+  <item key="0x1207" value="Cell Undervoltage Protect Threshold"      mark="电芯欠压保护值" />
 
+  <item key="0x1210" value="Pack Highvoltage Alarm Threshold"         mark="电池高压告警值" />
+  <item key="0x1211" value="Pack Highvoltage Restore Threshold"       mark="电池高压恢复值" />
+  <item key="0x1212" value="Pack Lowvoltage Restore Threshold"        mark="电池低压恢复值" />
+  <item key="0x1213" value="Pack Lowvoltage Alarm Threshold"          mark="电池低压告警值" />
+  <item key="0x1214" value="Pack Overvoltage Protect Threshold"       mark="电池过压保护值" />
+  <item key="0x1215" value="Pack Overvoltage Restore Threshold"       mark="电池过压恢复值" />
+  <item key="0x1216" value="Pack Undervoltage Restore Threshold"      mark="电池欠压恢复值" />
+  <item key="0x1217" value="Pack Undervoltage Protect Threshold"      mark="电池欠压保护值" />
+
+  <item key="0x1220" value="Charge High-temp Alarm Threshold"         mark="充电高温告警值" />
+  <item key="0x1221" value="Charge High-temp Restore Threshold"       mark="充电高温恢复值" />
+  <item key="0x1222" value="Charge Low-temp Restore Threshold"        mark="充电低温恢复值" />
+  <item key="0x1223" value="Charge Low-temp Alarm Threshold"          mark="充电低温告警值" />
+  <item key="0x1224" value="Charge Over-temp Protect Threshold"       mark="充电过温保护值" />
+  <item key="0x1225" value="Charge Over-temp Restore Threshold"       mark="充电过温恢复值" />
+  <item key="0x1226" value="Charge Under-temp Restore Threshold"      mark="充电欠温恢复值" />
+  <item key="0x1227" value="Charge Under-temp Protect Threshold"      mark="充电欠温保护值" />
+  <item key="0x1228" value="Discharge High-temp Alarm Threshold"      mark="放电高温告警值" />
+  <item key="0x1229" value="Discharge High-temp Restore Threshold"    mark="放电高温恢复值" />
+  <item key="0x122A" value="Discharge Low-temp Restore Threshold"     mark="放电低温恢复值" />
+  <item key="0x122B" value="Discharge Low-temp Alarm Threshold"       mark="放电低温告警值" />
+  <item key="0x122C" value="Discharge Over-temp Protect Threshold"    mark="放电过温保护值" />
+  <item key="0x122D" value="Discharge Over-temp Restore Threshold"    mark="放电过温恢复值" />
+  <item key="0x122E" value="Discharge Under-temp Restore Threshold"   mark="放电欠温恢复值" />
+  <item key="0x122F" value="Discharge Under-temp Protect Threshold"   mark="放电欠温保护值" />
+
+  <item key="0x1232" value="Environment High-temp Alarm Threshold"    mark="环境高温告警值" />
+  <item key="0x1233" value="Environment Low-temp Alarm Threshold"     mark="环境低温告警值" />
+  <item key="0x1234" value="Environment Over-temp Protect Threshold"  mark="环境过温保护值" />
+  <item key="0x1235" value="Environment Over-temp Restore Threshold"  mark="环境过温恢复值" />
+  <item key="0x1236" value="Environment Under-temp Restore Threshold" mark="环境欠温恢复值" />
+  <item key="0x1237" value="Environment Under-temp Protect Threshold" mark="环境欠温保护值" />
+
+  <item key="0x1238" value="BMS Over-temp Protect Threshold"          mark="功率过温保护值/BMS过温保护值" />
+  <item key="0x1239" value="BMS Over-temp Restore Threshold"          mark="功率过温恢复值/BMS过温恢复值" />
+  <item key="0x123A" value="BMS High-temp Alarm Threshold"            mark="功率高温告警值/BMS高温告警值" />
+  <item key="0x123B" value="BMS High-temp Restore Threshold"          mark="功率高温恢复值/BMS高温恢复值" />
+
+  <item key="0x1270" value="Charging Overcurrent Alarm Threshold"     mark="充电过流告警值" />
+  <item key="0x1271" value="Charging Overcurrent Restore Threshold"   mark="充电过流恢复值" />
+  <item key="0x1272" value="Discharge Overcurrent Restore Threshold"  mark="放电过流恢复值" />
+  <item key="0x1273" value="Discharge Overcurrent Alarm Threshold"    mark="放电过流告警值" />
+  <item key="0x1274" value="Charging Overcurrent Protect Threshold"   mark="充电过流保护值" />
+  <item key="0x1275" value="Charge Overcurrent Delay"                 mark="充电过流延时" />
+  <item key="0x1276" value="Discharge Overcurrent Protect Threshold"  mark="放电过流保护值" />
+  <item key="0x1277" value="Discharge Overcurrent Delay"              mark="放电过流延时" />
+  <item key="0x1278" value="Secondary Overcurrent Protect Threshold"  mark="二级过流保护值" />
+  <item key="0x1279" value="Secondary Overcurrent Delay"              mark="二级过流延时" />
+  <item key="0x127A" value="Output Short-circuit Protect Threshold"   mark="输出短路保护值" />
+  <item key="0x127B" value="Output Short-circuit Delay"               mark="输出短路延时" />
+  <item key="0x127C" value="Overcurrent Restore Delay"                mark="过流恢复延时" />
+  <item key="0x127D" value="Over Current Lock Times"                  mark="过流锁定次数" />
+  <item key="0x127E" value="Charging Current Limit Setting"           mark="充电限流设置" />
+
+  <item key="0x12AB" value="Log Storage Start Time"                   mark="日志存储开启时间" />
+  <item key="0x12AD" value="Log Storage End Time"                     mark="日志存储结束时间" />
+  <item key="0x12AF" value="Log Storage Interval"                     mark="日志存储时间间隔" />
+
+
+  <item key="0x0000" value="Battery Voltage"                     mark="母排电压"/>
+  <item key="0x0001" value="Pack Voltage"                        mark="电池电压"/>
+  <item key="0x0002" value="Battery Current"                     mark="电池电流"/>
+  <item key="0x0003" value="Battery SOC"                         mark="电池SOC"/>
+  <item key="0x0004" value="Battery SOH"                         mark="电池SOH"/>
+  <item key="0x0005" value="Highest Cell Temp"                   mark="电芯最高温度"/>
+  <item key="0x0006" value="Lowest Cell Temp"                    mark="电芯最低温度"/>
+  <item key="0x0101" value="Software Version"                    mark="软件版本"/>
+  <item key="0x0106" value="Software Subversion"                 mark="软件子版本"/>
+  <item key="0x0107" value="Battery Capacity"                    mark="电池容量"/>
+  <item key="0x0044" value="Discharge AH"                        mark="放电AH数"/>
+  <item key="0x0042" value="Discharge Times"                     mark="放电次数"/>
+  <item key="0x100B" value="Discharge Current Limit"             mark="放电限流点"/>
+  <item key="0x100D" value="Charge Current Limit"                mark="充电限流点"/>
+  <item key="0x118C" value="GPSIP"                               mark="GPSIP"/>
+  <item key="0x1196" value="GPS Port"                            mark="GPS端口"/>
+  <item key="0x020B" value="Environment Temp"                    mark="PCB温度/环境温度"/>
+  <item key="0x1130" value="SMS Center Number"                   mark="短信中心号码"/>
+  <item key="0x113A" value="Mobile Number 1"                     mark="手机号码1"/>
+  <item key="0x1144" value="Mobile Number 2"                     mark="手机号码2"/>
+  <item key="0x114E" value="Mobile Number 3"                     mark="手机号码3"/>
+  <item key="0x1158" value="Mobile Number 4"                     mark="手机号码4"/>
+  <item key="0x1162" value="Mobile Number 5"                     mark="手机号码5"/>
+  <item key="0x0332" value="Battery Model"                       mark="电池型号"/>
+  <item key="0x7D6B" value="Accumulated Cycle Times"             mark="累计循环次数"/>
+  <item key="0x010A" value="Serial Number"                       mark="序列号"/>
+  <item key="0x000A" value="Battery Status"                      mark="电池充放电状态,0-充电;1-放电;2-满电;3-空闲;0xFFFF表示未知"/>
+  <item key="0x1118" value="Gyroscope Status"                    mark="陀螺仪开关,0-功能关闭;1-功能开启"/>
+  <item key="0x100F" value="DO1 Alarm Action"                    mark="DO1告警动作,0-闭合为告警;1-开路为告警"/>
+  <item key="0x1010" value="DO2 Alarm Action"                    mark="DO2告警动作,0-闭合为告警;1-开路为告警"/>
+  <item key="0x1119" value="Gyro Sensor Sensitivity"             mark="陀螺仪传感器灵敏度,0:低灵敏度1:中灵敏度2:高灵敏度"/>
+  <item key="0x020D" value="Board High Temp"                     mark="单板高温"/>
+  <item key="0x020F" value="Board Low Temp"                      mark="单板低温"/>
+  <item key="0x0206" value="Battery Pack Current"                mark="母排电流"/>
+  <item key="0x101B" value="Default Charge Limit Coeft"          mark="默认充电限流点"/>
+
+  <!--信号枚举-->
+  <item key="0x000A_enum" value="Charge,Discharge,Full,Free"     mark="电池充放电状态,0-充电;1-放电;2-满电;3-空闲;0xFFFF表示未知"/>
+  <item key="0x1118_enum" value="Disable,Enable"                 mark="陀螺仪开关,0-功能关闭;1-功能开启"/>
+  <item key="0x100F_enum" value="Close,Open"                     mark="DO1告警动作,0-闭合为告警;1-开路为告警"/>
+  <item key="0x1010_enum" value="Close,Open"                     mark="DO2告警动作,0-闭合为告警;1-开路为告警"/>
+  <item key="0x1119_enum" value="Low,Medium,High"                mark="陀螺仪传感器灵敏度,0:低灵敏度1:中灵敏度2:高灵敏度"/>
+
+  <!--告警-开始地址0x0046~0x004A，5个寄存器-->
+  <item key="0x0046_0"  value="Heater Fault"                                    mark="加热器故障" />
+  <item key="0x0046_1"  value="Cell Voltage Detection Failure"                  mark="电芯电压采样故障" />
+  <item key="0x0046_2"  value="Cell Temperature Detection Failure"              mark="电芯温度采样故障" />
+  <item key="0x0046_3"  value="Charging Output Short Circuit"                   mark="充电变换器充电短路" />
+  <item key="0x0046_4"  value="Relay Short Fault"                               mark="继电器线圈短路" />
+  <item key="0x0046_5"  value="Overload Lock"                                   mark="过载锁死" />
+  <item key="0x0046_6"  value="Bidirectional MOS Fault"                         mark="双向MOS故障" />
+  <item key="0x0046_7"  value=""                                                mark="" />
+  <item key="0x0046_8"  value=""                                                mark="" />
+  <item key="0x0046_9"  value=""                                                mark="" />
+  <item key="0x0046_10" value=""                                                mark="" />
+  <item key="0x0046_11" value=""                                                mark="" />
+  <item key="0x0046_12" value=""                                                mark="" />
+  <item key="0x0046_13" value=""                                                mark="" />
+  <item key="0x0046_14" value=""                                                mark="" />
+  <item key="0x0046_15" value=""				                                        mark="" />
+  <item key="0x0046_0xFA0F" value="Li-bat Fault"				                        mark="" />
+  <item key="0x0046_0x05F0" value="Li-bat Protection"				                    mark="" />
+ 
+  <item key="0x0047_0"  value="1th Cell Fault"                                  mark="第1号电芯故障" />
+  <item key="0x0047_1"  value="2th Cell Fault"                                  mark="第2号电芯故障" />
+  <item key="0x0047_2"  value="3th Cell Fault"                                  mark="第3号电芯故障" />
+  <item key="0x0047_3"  value="4th Cell Fault"                                  mark="第4号电芯故障" />
+  <item key="0x0047_4"  value="5th Cell Fault"                                  mark="第5号电芯故障" />
+  <item key="0x0047_5"  value="6th Cell Fault"                                  mark="第6号电芯故障" />
+  <item key="0x0047_6"  value="7th Cell Fault"                                  mark="第7号电芯故障" />
+  <item key="0x0047_7"  value="8th Cell Fault"                                  mark="第8号电芯故障" />
+  <item key="0x0047_8"  value="9th Cell Fault"                                  mark="第9号电芯故障" />
+  <item key="0x0047_9"  value="10th Cell Fault"                                 mark="第10号电芯故障" />
+  <item key="0x0047_10" value="11th Cell Fault"                                 mark="第11号电芯故障" />
+  <item key="0x0047_11" value="12th Cell Fault"                                 mark="第12号电芯故障" />
+  <item key="0x0047_12" value="13th Cell Fault"                                 mark="第13号电芯故障" />
+  <item key="0x0047_13" value="14th Cell Fault"                                 mark="第14号电芯故障" />
+  <item key="0x0047_14" value="15th Cell Fault"                                 mark="第15号电芯故障" />
+  <item key="0x0047_15" value="16th Cell Fault"			                            mark="第16号电芯故障" />
+  <item key="0x0047_0xF00F" value="Cell Fault"				                mark="" />
+  <item key="0x0047_0x0FF0" value="Cell Fault"				                mark="" />
+  
+  <item key="0x0048_0"  value="Charging Low Temperature Protection"             mark="充电低温保护" />
+  <item key="0x0048_1"  value="Charging High Temperature Protection"            mark="充电高温保护" />
+  <item key="0x0048_2"  value="Discharging Low Temperature Protection"          mark="放电低温保护" />
+  <item key="0x0048_3"  value="Discharging High Temperature Protection"         mark="放电高温保护" />
+  <item key="0x0048_4"  value="Package Over Voltage Protection"                 mark="电池组充电过压保护" />
+  <item key="0x0048_5"  value="Cell Charge Over Voltage Protection"             mark="单电芯充电过压保护" />
+  <item key="0x0048_6"  value="Battery Discharging Under Voltage Protection"    mark="电池组放电欠压保护" />
+  <item key="0x0048_7"  value="Cell Discharging Under Voltage Protection"       mark="单电芯放电欠压保护" />
+  <item key="0x0048_8"  value="Battery Over Voltage Protect"                    mark="输出过压保护" />
+  <item key="0x0048_9"  value="Module Inside Temp Protection"                   mark="功率模块过温保护" />
+  <item key="0x0048_10" value="Output Short Circuit Protection"                 mark="输出短路保护" />
+  <item key="0x0048_11" value="Pro DiChg Low Voltage Disconnect"                mark="单组电芯低压切离放电" />
+  <item key="0x0048_12" value="Input The Reverse"                               mark="输入反接" />
+  <item key="0x0048_13" value="Anti-thieft Alarm Locked"                        mark="防盗被锁" />
+  <item key="0x0048_14" value="Overload Protection"                             mark="过载保护" />
+  <item key="0x0048_15" value=""			                                          mark="" />
+  <item key="0x0048_0xFF03" value="Li-bat Protection"				                    mark="" />
+  <item key="0x0048_0x0008" value="Battery Reversely Connection"				              mark="" />
+  <item key="0x0048_0x0004" value="Break Lock Failure"				              mark="" />
+
+  <!--0x0049 协议告警名称
+  <item key="0x0049_0"  value="Low Temperature Charging Warning"                mark="充电低温预警" />
+  <item key="0x0049_1"  value="High Temperature Charging Warning"               mark="充电高温预警" />
+  <item key="0x0049_2"  value="Discharging Low Temperature Alarm"               mark="放电低温预警" />
+  <item key="0x0049_3"  value="Discharging High Temperature Alarm"              mark="放电高温预警" />
+  <item key="0x0049_4"  value="Package Over Voltage Alarm"                      mark="电池组充电过压预警" />
+  <item key="0x0049_5"  value="Cell Charge Over Voltage Alarm"                  mark="单电芯充电过压预警" />
+  <item key="0x0049_6"  value="Battery Discharging Under Voltage Alarm"         mark="电池组放电欠压预警" />
+  <item key="0x0049_7"  value="Cell Discharging Under Voltage Alarm"            mark="单电芯放电欠压预警" />
+  <item key="0x0049_8"  value="Converter Open-loop Alarm"                       mark="变换器开路检测" />
+  <item key="0x0049_9"  value="Serial Number Conflict Alarm"                    mark="序列号冲突告警" />
+  <item key="0x0049_10" value=""                                                mark="" />
+  <item key="0x0049_11" value=""                                                mark="" />
+  <item key="0x0049_12" value=""                                                mark="" />
+  <item key="0x0049_13" value=""                                                mark="" />
+  <item key="0x0049_14" value=""                                                mark="" />
+  <item key="0x0049_15" value=""			                                          mark="" />
+  <item key="0x0049_0xF00F" value="告警组名称，中英文都要"				                mark="" />
+  <item key="0x0049_0x0FF0" value="告警组名称，中英文都要"				                mark="" />
+  -->
+  <item key="0x0049_0"  value="Under Temperature"                               mark="充电低温预警" />
+  <item key="0x0049_1"  value="Charge Over Temperature"                         mark="充电高温预警" />
+  <item key="0x0049_2"  value="Under Temperature"                               mark="放电低温预警" />
+  <item key="0x0049_3"  value="Discharge Over Temperature"                      mark="放电高温预警" />
+  <item key="0x0049_4"  value="Over Voltage Alarm"                              mark="充电过压预警" />
+  <item key="0x0049_5"  value="Over Voltage Alarm"                              mark="充电过压预警" />
+  <item key="0x0049_6"  value="Under Voltage Alarm"                             mark="放电欠压预警" />
+  <item key="0x0049_7"  value="Under Voltage Alarm"                             mark="放电欠压预警" />
+  <item key="0x0049_8"  value="Converter Open-loop Alarm"                       mark="变换器开路检测" />
+  <item key="0x0049_9"  value="Serial Number Conflict Alarm"                    mark="序列号冲突告警" />
+  <item key="0x0049_10" value=""                                                mark="" />
+  <item key="0x0049_11" value=""                                                mark="" />
+  <item key="0x0049_12" value=""                                                mark="" />
+  <item key="0x0049_13" value=""                                                mark="" />
+  <item key="0x0049_14" value=""                                                mark="" />
+  <item key="0x0049_15" value=""			                                          mark="" />
+  <item key="0x0049_0xF00F" value="告警组名称，中英文都要"				                mark="" />
+  <item key="0x0049_0x0FF0" value="告警组名称，中英文都要"				                mark="" />
+  <!--0x004A 协议告警名称
+  <item key="0x004A_0"  value="Manual Shutdown State"                           mark="手动关机" />
+  <item key="0x004A_1"  value="VBUS Over Voltage Lock"                          mark="母排内过压锁死告警" />
+  <item key="0x004A_2"  value="Anti-theft Handshake State"                      mark="防盗握手失败" />
+  <item key="0x004A_3"  value="Abnormal Shutdown State"                         mark="新增异常关机" />
+  <item key="0x004A_4"  value="Battery Discharge Over Current Alarm"            mark="放电过流预警" />
+  <item key="0x004A_5"  value="Battery Discharge Over Current Protection"       mark="放电过流保护" />
+  <item key="0x004A_6"  value="Battery Discharge Of Over Current Lock"          mark="放电过流锁死" />
+  <item key="0x004A_7"  value="VBUS Over Voltage Protection"                    mark="母排内过压保护" />
+  <item key="0x004A_8"  value="Slow Up Failure Protection"                      mark="缓起失败保护" />
+  <item key="0x004A_9"  value="Readed FRU Failure"                              mark="FRU读取故障" />
+  <item key="0x004A_10" value="Charging Over Current Alarm"                     mark="充电过流预警" />
+  <item key="0x004A_11" value="Charging Over Current Protection"                mark="充电过流保护" />
+  <item key="0x004A_12" value="Gyroscope Fault Alarm"                           mark="陀螺仪故障" />
+  <item key="0x004A_13" value="Battery Side Upper Pipe Short Circuit"           mark="电池侧上管短路" />
+  <item key="0x004A_14" value=""                                                mark="" />
+  <item key="0x004A_15" value=""                                                mark="" />
+  <item key="0x004A_0xF00F" value="告警组名称，中英文都要"				                mark="" />
+  <item key="0x004A_0x0FF0" value="告警组名称，中英文都要"				                mark="" />
+  -->
+  <item key="0x004A_0"  value="Command Shutdown"                                mark="命令关机" />
+  <item key="0x004A_1"  value="Li-bat Fault"                                    mark="锂电故障" />
+  <item key="0x004A_2"  value="Anti-theft Handshake State"                      mark="防盗握手失败" />
+  <item key="0x004A_3"  value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_4"  value="Discharge Over Current"                          mark="放电过流预警" />
+  <item key="0x004A_5"  value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_6"  value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_7"  value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_8"  value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_9"  value="Readed FRU Failure"                              mark="FRU读取故障" />
+  <item key="0x004A_10" value="Charge Over Current"                             mark="充电过流" />
+  <item key="0x004A_11" value="Li-bat Protection"                               mark="锂电保护" />
+  <item key="0x004A_12" value="Gyroscope Fault Alarm"                           mark="陀螺仪故障" />
+  <item key="0x004A_13" value="Li-bat Fault"                                    mark="锂电故障" />
+  <item key="0x004A_14" value=""                                                mark="" />
+  <item key="0x004A_15" value=""                                                mark="" />
+  <item key="0x004A_0xF00F" value="告警组名称，中英文都要"				                mark="" />
+  <item key="0x004A_0x0FF0" value="告警组名称，中英文都要"				                mark="" />
+
+  <!--0x0320 17-24节电芯告警-->
+  <item key="0x0320_0"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_1"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_2"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_3"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_4"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_5"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_6"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_7"      value="Cell Fault"     mark="电芯故障" />
+  <item key="0x0320_8"      value="" />
+  <item key="0x0320_9"      value="" />
+  <item key="0x0320_10"     value="" />
+  <item key="0x0320_11"     value="" />
+  <item key="0x0320_12"     value="" />
+  <item key="0x0320_13"     value="" />
+  <item key="0x0320_14"     value="" />
+  <item key="0x0320_15"     value="" />
+
+  <!--0x0347 中国区运行日志告警-->
+  <item key="0x0347_0"      value="Low Battery Temperature"                 mark="电池温度低" />
+  <item key="0x0347_1"      value="High Battery Temperature"                mark="电池温度高" />
+  <item key="0x0347_2"      value="Li-bat Protection"                       mark="锂电保护" />
+  <item key="0x0347_3"      value="Li-bat Protection"                       mark="锂电保护" />
+  <item key="0x0347_4"      value="High Battery Temperature"                mark="功率高温预警" />
+  <item key="0x0347_5"      value="Remaining Capacity Alarm   "             mark="剩余容量告警" />
+  <item key="0x0347_6"      value="" />
+  <item key="0x0347_7"      value="" />
+  <item key="0x0347_8"      value="" />
+  <item key="0x0347_9"      value="" />
+  <item key="0x0347_10"     value="" />
+  <item key="0x0347_11"     value="" />
+  <item key="0x0347_12"     value="" />
+  <item key="0x0347_13"     value="" />
+  <item key="0x0347_14"     value="" />
+  <item key="0x0347_15"     value="" />
+
+
+
+
+  <!--菜单-->
+  <item key="SoftwareUpgrade"       value="Software Upgrade"                    mark="软件升级"/>
+  <item key="ParamSetting"          value="Parameter Setting"                   mark="参数设置"/>
+  <item key="AlarmParamSet"         value="Alarm Parameters"                    mark="告警参数设置"/>
+  <item key="ExportPerformanceData" value="Export Performance Data"             mark="导出性能日志"/>
+  <item key="ExportHistoricalAlarm" value="Export Historical Alarm"             mark="导出历史告警日志"/>
+  <item key="ExportRunAlarmLog"     value="Export Run Alarm Log"                mark="导出运行告警日志"/>
+  <item key="ImportCertFile"        value="Import Certificate File"             mark="导入锂电证书"/>
+  <item key="AntiTheftParamSet"     value="Anti-theft Parameter Setting"        mark="防盗参数设置"/>
+  <item key="LivePerformLog"        value="Record Real-Time Data"               mark="实时性能数据"/>
+
+  <item key="ImportExportDiff"      value="Import And Export Difference File"     mark="文件上传下载"/>/>
+  <item key="ActiveGyroscope"       value="Active Gyroscope"                    mark="激活陀螺仪"/>/>
+
+
+  <!--格式化字符串-->
+  <item key="BatteryCellFormat"     value="{0}th"                               mark="电池第几节格式化字符串"/>
+  <item key="DataFormatErrFmt"      value="{0} data format is wrong!"           mark="{0} 数据格式错误！"/>
+  <item key="DataLenTooLong"        value="{0} data length too long!"           mark="{0} 数据长度超限"/>
+  <item key="FileNotExistsFmt"      value="The file [{0}] not exists!"          mark="文件 [{0}] 不存在！"/>
+  <item key="ExportingFile"         value="Exporting. Please wait. {0} / {1}"   mark="正在导出文件, 请等待. {0} / {1}"/>
+  <item key="ImportingFile"         value="Importing. Please wait. {0} / {1}"   mark="正在导入文件, 请等待. {0} / {1}"/>
+  <item key="SendingFrame"          value="Sending frame. {0} / {1}"            mark="正在发送升级包. {0} / {1}"/>
+
+
+  <item key="ApplicationName" value="Lithium Battery Maintenance Tool" mark="应用程序名称"/>
+  <item key="Battery"         value="Battery"                          mark="电池"/>
+  <item key="BarCode"         value="Battery Bar Code"                 mark="电池序列号"/>
+  <item key="CellTemp"        value="Cell Temperature"                 mark="电芯温度"/>
+  <item key="CellVolt"        value="Cell Voltage"                     mark="电芯电压"/>
+  <item key="MainInformation" value="Main Information"                 mark="主要信息"/>
+  <item key="BatteryNumber"   value="Battery No."                      mark="电池序号"/>
+  <item key="ActiveAlarm"     value="Active Alarm"                     mark="活动告警"/>
+  <item key="AlarmName"       value="Alarm Name"                       mark="告警名称"/>
+  <item key="BatteryGroup"    value="Lithium Battery Group"            mark="锂电池组"/>
+  <item key="LithiumBattery"  value="Lithium Battery"                  mark="锂电池"/>
+
+
+  <!--提示语-->
+  <item key="BarcodeIsEmpty"    value="The battery bar code is empty, please try again later" mark="电池序列号为空，请稍后再试" />
+  <item key="SystemIsBusy"      value="The system is busy, please try again later"            mark="系统繁忙，请稍后再试" />
+  <item key="IllegalOperation"  value="Illegal operation!"                                    mark="非法操作！" />
+  <item key="MsgBoxWarn"        value="Warn"                                                  mark="警告" />
+  <item key="CancelProgress"    value="Do you want to cancel the work in progress?"           mark="您要取消正在进行的工作吗？" />
+  <item key="GetBattVerFail"    value="Failed to get lithium battery version number!"         mark="获取电池子版本号失败！" />
+  <item key="UpdateFileFmtErr"  value="Upgraded file format error!"                           mark="升级包文件格式错误！" />
+  <item key="SoftwareNotMatch"  value="The software isn't for this battery."                  mark="升级包不匹配当前电池."/>
+  <item key="SelectUpdatePack"  value="Please select an upgrade package"                      mark="请选择一个升级包文件"/>
+  <item key="UpdateFileFilter"  value="bin file(*.bin)|*.bin|All files(*.*)|*.*"              mark="bin file(*.bin)|*.bin|所有文件(*.*)|*.*"/>
+  <item key="SelectCertFile"    value="Please select a certificate file"                      mark="请选择证书文件"/>
+  <item key="CertFileFilter"    value="Certificate file(*.cer,*.pem)|*.cer;*.pem|All files(*.*)|*.*" mark="证书文件(*.cer,*.pem)|*.cer;*.pem|所有文件(*.*)|*.*"/>
+  <item key="SelectLogSavePos"  value="Please select the log storage path"                    mark="请选择日志保存位置"/>
+  <item key="SelectComPort"     value="Please select the correct serial port!"                mark="请选择正确的端口号！"/>
+  <item key="InnerError"        value="An unknown error occurred, please try again later"     mark="内部错误，请稍后重试！"/>
+  <item key="TryAgainLater"     value="Please try again later！"                              mark="请稍后重试"/>
+  <item key="NoDataModify"      value="No data modification!"                                 mark="没有数据被修改！"/>
+  <item key="DataFormatError"   value="Parameter data format is wrong!"                       mark="数据格式错误！"/>
+  <item key="MediumSensityTip"  value="There is a risk of battery mis-locking in \nthe event of an earthquake!\nAre you sure?" mark="如果发生地震，可能会导致电池误锁！\n是否继续？"/>
+  <item key="HighSensityTip"    value="There is a risk of battery mis-locking\n during vibration or earthquake!\nAre you sure?" mark="在振动或地震中可能会误锁电池！ \n是否继续？" />
+  <item key="MediumSensityWarn" value="The gyroscope sensitivity is medium.\nThere is a risk of battery mis-locking in \nthe event of an earthquake!\nAre you sure?" mark=""/>
+  <item key="HighSensityWarn"   value="The gyroscope sensitivity is high.\nThere is a risk of battery mis-locking\n during vibration or earthquake!\nAre you sure?"                       mark=""/>
+  <item key="MediumSensity"     value="Medium Sensitivity"                                    mark="中灵敏度"/>
+  <item key="HighSensity"       value="High Sensitivity"                                      mark="高灵敏度"/>
+
+  <item key="InvalidValue"      value="Invalid value!"                                        mark="无效值！"/>
+  <item key="PrecisionInvalid"  value="The precision is invalid!"                             mark="精度无效！"/>
+  <item key="StartTimeLessEnd"  value="Start time should be less than end time!"              mark="开始时间必须小于结束时间！"/>
+  <item key="EndTimeBigStart"   value="End time should be greater than start time!"           mark="结束时间必须大于开始时间！"/>
+  <item key="ParamSetFinish"    value="Parameter setting is complete"                         mark="参数设置完成"/>
+
+  <item key="InputHostAddress"  value="Please enter host address!"                           mark="请输入网管IP！"/>
+  <item key="InputNameAndKey"   value="Please enter your name and password!"                 mark="请输入用户名和密码！"/>
+  <item key="HostIpFormatErr"   value="Host address format is wrong!"                        mark="IP数据格式错误！"/>
+  <item key="SigningStatus"     value="Signing in. . ."                                      mark="正在登陆..."/>
+
+  <item key="PerformNotExists"  value="Perform log file not exists!"                         mark="性能日志文件不存在！"/>
+
+
+  <!--窗口界面-->
+  <item key="Processing"       value="Processing ..."                       mark="正在处理"/>
+  <item key="ProcessingEx"     value="Processing, please wait..."           mark="正在处理，请稍候..."/>
+  <item key="OperationFail"    value="Operation failed"                     mark="操作失败"/>
+  <item key="SelectComPortEx"  value="Please select the serial port"        mark="请选择端口号"/>
+  <item key="ButtonConncet"    value="Conncet"                              mark="连接"/>
+  <item key="ButtonCancel"     value="Cancel"                               mark="取消"/>
+  <item key="ButtonExport"     value="Export"                               mark="导出"/>
+  <item key="ButtonImport"     value="Import"                               mark="导入"/>
+  <item key="BtnDisableGyro"   value="Close Gyroscope"                      mark="禁用陀螺仪"/>
+  <item key="BtnEnableGyro"    value="Open Gyroscope"                       mark="激活陀螺仪"/> 
+  <item key="BtnSubmitSet"     value="Submit Setting"                       mark="提交设置"/>
+  <item key="BtnSubmit"        value="Submit"                               mark="提交"/>
+  <item key="BtnShowInFolder"  value="Show In Folder"                       mark="打开文件夹"/>
+  <item key="BtnClose"         value="Close"                                mark="关闭"/>
+  <item key="ButtonLogIn"      value="Log In"                               mark="登陆"/>
+  <item key="ButtonStart"      value="Start"                                mark="开始"/>
+  <item key="ButtonStop"       value="Stop"                                 mark="停止"/>
+  <item key="ButtonView"       value="View"                                 mark="查看"/>
+  <item key="ButtonLiveLog"    value="View Live Log"                        mark="查看实时日志"/>
+
+  <item key="Succeeded"        value="Modify Successfully"                            mark="成功"/>
+  <item key="Failed"           value="Failed"                               mark="失败"/>
+  <item key="AlarmName"        value="Alarm"                                mark="告警名称"/>
+
+  <item key="LableLanguage"    value="Language："                           mark="语言："/>
+
+  <item key="CertFileType"     value="Certificate File Type"                mark="导入的证书类型"/>
+  <item key="UserPrivateKey"   value="User Private Key File"                mark="用户私钥"/>
+  <item key="UserCertFile"     value="User Certificate File"                mark="用户证书"/>
+  <item key="CaCertFile"       value="CA Certificate File"                  mark="CA证书"/>
+
+  <item key="0x1119_lable"     value="Gyroscope Sensitivity:"               mark="陀螺仪灵敏度: "/>
+  <item key="0x118C_lable"     value="PMS IP For GPS:"                      mark="网管IP："/>
+  <item key="0x1196_lable"     value="PMS Port For GPS:"                    mark="网管端口："/>
+  <item key="0x1130_lable"     value="SMS Center Number:"                   mark="短信中心号码："/>
+  <item key="0x113A_lable"     value="Receive SMS Number 1:"                mark="短信接收号码1："/>
+  <item key="0x1144_lable"     value="Receive SMS Number 2:"                mark="短信接收号码2："/>
+  <item key="0x114E_lable"     value="Receive SMS Number 3:"                mark="短信接收号码3："/>
+  <item key="0x1158_lable"     value="Receive SMS Number 4:"                mark="短信接收号码4："/>
+  <item key="0x1162_lable"     value="Receive SMS Number 5:"                mark="短信接收号码5："/>
+  <item key="0x100D_lable"     value="Charge Limit Coef:"                   mark="充电限流点："/>
+  <item key="0x100B_lable"     value="Discharge Limit Coef:"                mark="放电限流点："/>
+  <item key="0x101B_lable"     value="Default Charge Limit Coef:"           mark="默认充电限流点："/>
+  <item key="0x100F_lable"     value="DO1 Alarm Action:"                    mark="DO1告警动作"/>
+  <item key="0x1010_lable"     value="DO2 Alarm Action:"                    mark="DO2告警动作"/>
+
+  <item key="CellVoltParam"    value="Cell Voltage Parameters"             mark="电芯电压参数"/>
+  <item key="PackVoltParam"    value="Battery Package Voltage Parameters"  mark="电池电压参数"/>
+  <item key="BmsTempParam"     value="BMS Temperature Parameters"          mark="功率温度参数"/>
+  <item key="LogTimeParam"     value="Log Storage Time Parameters"         mark="日志存储时间参数"/>
+  <item key="Dis-ChargeTemp"   value="Battery Package Charge / Discharge Temperature Parameters" mark="电池充电/放电温度参数"/>
+  <item key="EnviTempParam"    value="Battery Package Environment Temperature Parameters"        mark="电池环境温度参数"/>
+  <item key="Dis-ChargeCurr"   value="Battery Package Charge / Discharge Current Parameters"     mark="电池充电/放电电流参数"/>
+
+  <item key="ParameterGroup"   value="Parameter"                            mark="参数"/>
+  <item key="RecordPeriod"     value="Record Period"                        mark="记录时间"/>
+  <item key="RecordDuration"   value="Record Duration"                      mark="记录周期"/>
+  <item key="Per10Minutes"     value="Per 10 Minutes"                       mark="每10分钟"/>
+  <item key="Per4Minutes"      value="Per 4 Minutes"                        mark="每4分钟"/>
+  <item key="Per2Minutes"      value="Per 2 Minutes"                        mark="每2分钟"/>
+  <item key="LastMonth"        value="Last Month"                           mark="最近一个月"/>
+  <item key="LastDay"          value="Last Day"                             mark="最近一天"/>
+  <item key="LastHour"         value="Last Hour"                            mark="最近一小时"/>
+  <item key="AllRecord"        value="All"                                  mark="全部"/>
+  <item key="Per5Seconds"      value="Per 5 Seconds"                        mark="每5秒"/>
+  <item key="Per30Seconds"     value="Per 30 Seconds"                       mark="每30秒"/>
+  <item key="Per60Seconds"     value="Per 60 Seconds"                       mark="每60秒"/>
+  <item key="SelectBattery"    value="Select Battery"                       mark="选择电池"/>
+
+  <item key="ConnectNetEco"    value="Connect to PMS for next operation"    mark="为下一步操作，请先登陆网管"/>
+  <item key="PasswordLable"    value="Password："                           mark="密码："/>
+  <item key="NetEcoIpLable"    value="PMS IP:"                              mark="网管IP："/>
+  <item key="UserNameLable"    value="User Name:"                           mark="用户名："/>
+
+  <!--陀螺仪使能-->
+  <item key="Disable"    value="Disable" />
+  <item key="Enable"    value="Enable" />
+
+  <item key="GyroscopeParasTitle"    value="Gyroscope Parameter" />
+  <item key="IotParamsTitle"         value="IOT Networking Parameter" />
+
+
+  <!--ComResultCode-->
+  <item key="SuccessOperate"    value="Operation successful"                    mark="操作成功" />
+  <item key="WaitHostAuth"      value="Waiting for server authorization"        mark="正在等待服务器授权" />
+  <item key="OperateCanceled"   value="Operation cancelled"                     mark="操作已取消" />
+  <item key="InitNetFailed"     value="Init network failed"                     mark="初始化网络失败" />
+  <item key="InvalidRequest"    value="Invalid network request"                 mark="无效的网络请求" />
+  <item key="NetConfigError"    value="Network configuration error"             mark="网络配置错误" />
+  <item key="SessonTimeout"     value="Session timed out, please log in again"  mark="会话超时，请重新登录" />
+  <item key="ConnectHostFail"   value="Can not connect to the host"             mark="无法连接到服务器" />
+  <item key="InvalidCertFile"   value="Invalid certificate file"                mark="无效的证书文件" />
+  <item key="CertFileNotExist"  value="Certificate file does not exist"         mark="证书文件不存在" />
+  <item key="RequestRejected"   value="The request was rejected by the server"  mark="请求被服务器拒绝" />
+  <item key="InvalidToken"      value="Invalid token, please login again"       mark="无效的令牌，请重新登录" />
+  <item key="NameOrPsdError"    value="Wrong user name or password"             mark="用户名或密码错误" />
+  <item key="ApplyLicenceFail"  value="Apply license failed"                    mark="申请许可证失败" />
+  <item key="ImportCertFail"    value="Import certificate failed"               mark="导入证书失败" />
+  <item key="QueryStatusFail"   value="Query import status failed"              mark="查询导入状态失败" />
+  <item key="SystemNotInit"     value="The system is not initialized"           mark="系统未初始化" />
+  <item key="QueryCertReplaceResult"    value="Query certificate replacement results..."     mark="正在查询证书替换结果..." />
+  <item key="NeverCertReplace"          value="Never did a certificate replacement"          mark="锂电从未替换过证书" />
+  <item key="CertBeingReplace"          value="Certificate is being replaced"                mark="锂电正在替换证书..." />
+  <item key="NewCertEffect"             value="The new certificate is in effect"             mark="锂电新证书已经生效" />
+  <item key="NewCertDiseffect"          value="New certificate cannot take effect, waiting to be rewritten"  mark="锂电新证书不能生效，等待再次替换" />
+  <item key="QueryReplaceResultFail"    value="Query certificate replacement results fail"                   mark="查询锂电替换证书结果失败" />
+  <item key="QueryReplaceResultTimeout" value="Query certificate replacement results timeout"                mark="查询锂电替换证书结果超时" />
+  <item key="QueryImportStatusTimeout"  value="Query import status timeout"                                  mark="查询网管证书替换指令下发结果超时" />
+
+
+
+  <item key="LogHead_Date"      value="Date"                           mark="日期"/>
+  <item key="LogHead_Time"      value="Time"                           mark="时间"/>
+  <item key="LogHead_Address"   value="Battery No."                    mark="电池地址"/>
+  <item key="LogHead_Alarms"    value="Alarms"                         mark="告警列表"/>
+  <item key="LogHead_CellVolt"  value="Cell{0} Voltage"                mark="电芯{0}电压"/>
+  <item key="LogHead_CellTemp"  value="Cell{0} Temper"                 mark="电芯{0}温度"/>
+  <item key="LogHead_Index"     value="Index"                          mark="序号"/>
+
+
+  <item key="NotSupported"      value="Not Supported"                  mark="不支持"/>
+
+  <item key="SelectAll"         value="Select All"                     mark="全选"/>
+  <item key="MsgSelectBattery"  value="Please select a battery!"       mark="请选择电池！"/>
+  <item key="SelectCycle"       value="Please select record cycle!"    mark="请日志记录周期！"/>
+  <item key="OpenPerformFail"   value="Unable to open perform log file, please try again later!"  mark="无法打开性能记录文件，请稍后重试！"/>
+
+  <item key="CellIndexFirst"    value="1st"                            mark="第1节"/>
+  <item key="CellIndexSecond"   value="2nd"                            mark="第2节"/>
+  <item key="CellIndexThrid"    value="3rd"                            mark="第3节"/>
+
+  <item key="TempUnit"          value="degC"                           mark="℃"/>
+  <item key="TimesUnit"         value="Times"                          mark="次"/>
+
+  <item key="CertTypeError"     value="Wrong import certificate type！"  mark="导入的证书类型错误！"/>
+  <item key="CollectingData"    value="Collecting data..."               mark="正在采集数据..."/>
+
+
+  <item key="InvalidValue"      value="Invalid Value"                    mark="无效值"/>
+
+  <item key="RestartRecovery"   value="(Restart Recovery)"               mark="重启后恢复"/>
+  <item key="KeepForever"       value="(Keep Forever)"                   mark="永久保存"/>
+
+
+
+
+
+  <!--2020-05-29-->
+  <item key="0x12F0"     value="Voltage function switch parameters"            mark="电压功能开关参数"  />
+  <item key="0x12F1"     value="Temperature function switch parameters"        mark="温度功能开关参数"  />
+  <item key="0x12F2"     value="Current function switch parameters"            mark="电流功能开关参数"  />
+  <item key="0x12F3"     value="Capacity and other function switch parameters" mark="容量及其它功能开关参数"/>
+  <item key="0x12F4"     value="Equalization function switch parameters"       mark="均衡功能开关参数"  />
+  <item key="0x12F5"     value="Indication function switch parameter"          mark="指示功能开关参数"  />
+  
+  <item key="VoltFuncSwitch"     value="Voltage Function Switch Parameters"            mark="电压功能开关参数"  />
+  <item key="TempFuncSwitch"     value="Temperature Function Switch Parameters"        mark="温度功能开关参数"  />
+  <item key="CurrFuncSwitch"     value="Current Function Switch Parameters"            mark="电流功能开关参数"  />
+  <item key="OtherFuncSwitch"    value="Capacity And Other Function Switch Parameters" mark="容量及其它功能开关参数"/>
+  <item key="EquaFuncSwitch"     value="Equalization Function Switch Parameters"       mark="均衡功能开关参数"  />
+  <item key="IndicFuncSwitch"    value="Indication Function Switch Parameter"          mark="指示功能开关参数"  />
+
+  <item key="FunctionSwitchTip"  value="1:Enable; 0:Close"                            mark="1:使能; 0:关闭"  />
+  
+  <item key="0x12F0_0"  value="Cell Overvoltage Alarm Function"                       mark="电芯过压告警功能" />
+  <item key="0x12F0_1"  value="Cell Overvoltage Protection Function"                  mark="电芯过压保护功能" />
+  <item key="0x12F0_2"  value="Battery Undervoltage Alarm Function"                   mark="电芯欠压告警功能" />
+  <item key="0x12F0_3"  value="Cell Undervoltage Protection Function"                 mark="电芯欠压保护功能" />
+  <item key="0x12F0_4"  value="Battery Overvoltage Alarm Function"                    mark="电池过压告警功能" />
+  <item key="0x12F0_5"  value="Battery Overvoltage Protection Function"               mark="电池过压保护功能" />
+  <item key="0x12F0_6"  value="Battery Under-voltage Alarm Function"                  mark="电池欠压告警功能" />
+  <item key="0x12F0_7"  value="Battery Undervoltage Protection Function"              mark="电池欠压保护功能" />
+
+  <item key="0x12F1_0"  value="Charging High Temperature Alarm Function"              mark="充电高温告警功能" />
+  <item key="0x12F1_1"  value="Charging High Temperature Protection Function"         mark="充电高温保护功能" />
+  <item key="0x12F1_2"  value="Charging Low Temperature Alarm Function"               mark="充电低温告警功能" />
+  <item key="0x12F1_3"  value="Charging Low Temperature Protection Function"          mark="充电低温保护功能" />
+  <item key="0x12F1_4"  value="Discharge High Temperature Alarm Function"             mark="放电高温告警功能" />
+  <item key="0x12F1_5"  value="Discharge High Temperature Protection Function"        mark="放电高温保护功能" />
+  <item key="0x12F1_6"  value="Low Temperature Discharge Alarm Function"              mark="放电低温告警功能" />
+  <item key="0x12F1_7"  value="Discharge Low Temperature Protection Function"         mark="放电低温保护功能" />
+  <item key="0x12F1_8"  value="Environmental High Temperature Alarm Function"         mark="环境高温告警功能" />
+  <item key="0x12F1_9"  value="Environmental High Temperature Protection Function"    mark="环境高温保护功能" />
+  <item key="0x12F1_10" value="Low Temperature Alarm Function"                        mark="环境低温告警功能" />
+  <item key="0x12F1_11" value="Environmental Low Temperature Protection Function"     mark="环境低温保护功能" />
+  <item key="0x12F1_12" value="Power High Temperature Protection Function"            mark="功率高温保护功能" />
+  <item key="0x12F1_13" value="Battery Low Temperature Heating Function"              mark="电芯低温加热功能" />
+
+  <item key="0x12F2_0"  value="Charging Current Alarm Function"                       mark="充电电流告警功能" />
+  <item key="0x12F2_1"  value="Charging Overcurrent Protection Function"              mark="充电过流保护功能" />
+  <item key="0x12F2_2"  value="Discharge Current Alarm Function"                      mark="放电电流告警功能" />
+  <item key="0x12F2_3"  value="Discharge Overcurrent Protection Function"             mark="放电过流保护功能" />
+  <item key="0x12F2_4"  value="Secondary Overcurrent Protection Function"             mark="二级过流保护功能" />
+  <item key="0x12F2_5"  value="Output Short Circuit Protection Function"              mark="输出短路保护功能" />
+  <item key="0x12F2_6"  value="Secondary Overcurrent Lock Function"                   mark="二级过流锁定功能" />
+  <item key="0x12F2_7"  value="Output Short Circuit Lock Function"                    mark="输出短路锁定功能" />
+
+  <item key="0x12F3_0"  value="Remaining Capacity Alarm Function"                     mark="剩余容量告警功能" />
+  <item key="0x12F3_1"  value="Intermittent Charging Function"                        mark="间歇式的充电功能" />
+  <item key="0x12F3_2"  value="External Switch Control Function"                      mark="外部开关控制功能" />
+  <item key="0x12F3_3"  value="Static Standby Sleep Function"                         mark="静态待机休眠功能" />
+  <item key="0x12F3_4"  value="Historical Data recording Function"                    mark="历史数据记录功能" />
+  <item key="0x12F3_5"  value="Output Short-circuit Protection In Current Limit Mode" mark="限流模式输出短路保护功能" />
+
+  <item key="0x12F4_0"  value="Battery Balancing Function"                            mark="电池均衡功能" />
+  <item key="0x12F4_1"  value="Static Equalization Function"                          mark="静态均衡功能" />
+  <item key="0x12F4_2"  value="Static Equalization Timing Function"                   mark="静态均衡定时功能" />
+  <item key="0x12F4_3"  value="Balanced Temperature Limit Function"                   mark="均衡温度限制功能" />
+  <item key="0x12F4_4"  value="Battery Failure Alarm Function"                        mark="电芯失效告警功能" />
+  <item key="0x12F4_5"  value="Battery Pack Failure Alarm Function"                   mark="电池组失效告警功能" />
+  <item key="0x12F4_6"  value="Current Sensor Failure Alarm Function"                 mark="电流传感器失效告警功能" />
+
+  <item key="0x12F5_0"  value="Buzzer Sound Indication"                               mark="蜂鸣器声指示" />
+  <item key="0x12F5_1"  value="LCD Display Function"                                  mark="LCD显示功能" />
+
+
+  <!--2020-06-09-->
+  <item key="0x1199"  value="APN Access Point Name"                                  mark="APN接入点名称" />
+  <item key="0x11A7"  value="APN User Name"                                          mark="APN用户名称" />
+  <item key="0x11B5"  value="APN Password"                                           mark="APN用户密码" />
+  
+  <item key="0x1199_lable"  value="APN Access Point Name:"                           mark="APN接入点名称：" />
+  <item key="0x11A7_lable"  value="APN User Name:"                                   mark="APN用户名称：" />
+  <item key="0x11B5_lable"  value="APN Password:"                                    mark="APN用户密码：" />
+  
+  <item key="BtnBatteryNetTest"       value="PMS Network Test"                    mark="测试电池网络"/>
+  <item key="BtnBatteryNetTestStop"   value="Stop Network Test"                      mark="停止网络测试"/>
+
+  <item key="NetTestProcessing"       value="Network testing in progress, please wait..."                           mark="正在进行电池网络测试，请稍等..." />
+
+  <item key="PhoneInputTip" value="  Enter a mobile phone number or \n  country code+mobile phone number. \n  A maximum of 20 digits are allowed."  mark="电话号码输入提示" />
+  <item key="ApnInputTip"   value="'a~z','A~Z','0~9','_','#','@','*','-','.'(Max. 28 Characters)"   mark="APN输入提示"  />
+
+  <item key="MsgboxSameDataFmt" value="{0} and {1} have the same data!"              mark="{0} 和 {1} 值相同!" />
+
+  
+  <item key="StartQueryNetTest"        value="Start querying PMS network status"                      mark="开始查询电池网络状态"/>
+  <item key="BatteryTryConnect"        value="The battery is trying to connect to PMS"                mark="电池正在尝试连接网管"/>
+  <item key="BatteryNetTestSucc"       value="The battery is successfully connected to PMS"           mark="电池连接网管成功"/>
+  <item key="BatteryNetTestFail"       value="The battery failed to connect to PMS"                   mark="电池连接网管失败"/>
+  <item key="QueryTestResultTimeout"   value="Query connect result timeout"                           mark="查询电池网络状态超时"/>
+  
+</lang>
