@@ -1,634 +1,248 @@
-# Documentación Consolidada Modbus – Batería Huawei ESM-48150B1
+# Documentación Modbus - Batería Huawei ESM-48150B1
 
-Este documento unifica los registros Modbus oficiales, traducidos al español.
+## Información General
 
-### Registro 0x1200: Celda Highvoltage Alarma Umbral
+**Modelo:** ESM-48150B1  
+**Protocolo:** Modbus RTU/TCP  
+**Fabricante:** Huawei  
+**Tipo:** Sistema de Gestión de Batería (BMS)
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1200 | Celda Highvoltage Alarma Umbral | - | 1 | Celda Highvoltage Alarma Umbral | NO |
+---
 
-### Registro 0x1201: Celda Highvoltage Alarma Restauración Umbral
+## 1. Registros de Monitoreo Principal (0x0000 - 0x0099)
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1201 | Celda Highvoltage Alarma Restauración Umbral | - | 1 | Celda Highvoltage Alarma Restauración Umbral | NO |
+### 1.1 Parámetros Básicos de Batería
 
-### Registro 0x1202: Celda Lowvoltage Restauración Umbral
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x0000 | Voltaje de Batería | V | 1 | Voltaje total del sistema de batería |
+| 0x0001 | Voltaje de Paquete | V | 1 | Voltaje del paquete de baterías |
+| 0x0002 | Corriente de Batería | A | 1 | Corriente actual de la batería |
+| 0x0003 | Estado de Carga (SOC) | % | 1 | Porcentaje de carga restante |
+| 0x0004 | Estado de Salud (SOH) | % | 1 | Estado de salud de la batería |
+| 0x000A | Estado de Batería | - | 1 | Estado operacional general |
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1202 | Celda Lowvoltage Restauración Umbral | - | 1 | Celda Lowvoltage Restauración Umbral | NO |
+### 1.2 Temperaturas
 
-### Registro 0x1203: Celda Lowvoltage Alarma Umbral
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x0005 | Temperatura Máxima de Celda | °C | 1 | Mayor temperatura entre todas las celdas |
+| 0x0006 | Temperatura Mínima de Celda | °C | 1 | Menor temperatura entre todas las celdas |
+| 0x020B | Temperatura Ambiente | °C | 1 | Temperatura del entorno |
+| 0x020D | Temperatura Alta del PCB | °C | 1 | Temperatura máxima del circuito |
+| 0x020F | Temperatura Baja del PCB | °C | 1 | Temperatura mínima del circuito |
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1203 | Celda Lowvoltage Alarma Umbral | - | 1 | Celda Lowvoltage Alarma Umbral | NO |
+### 1.3 Estadísticas de Uso
 
-### Registro 0x1204: Celda Overvoltage Protección Umbral
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x0042 | Ciclos de Descarga | - | 1 | Número total de descargas |
+| 0x0044 | Amperios-hora Descargados | Ah | 1 | Capacidad total descargada |
+| 0x7D6B | Ciclos Acumulados | - | 1 | Total de ciclos de carga/descarga |
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1204 | Celda Overvoltage Protección Umbral | - | 1 | Celda Overvoltage Protección Umbral | NO |
+---
 
-### Registro 0x1205: Celda Overvoltage Restauración Umbral
+## 2. Información del Sistema (0x0100 - 0x01FF)
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1205 | Celda Overvoltage Restauración Umbral | - | 1 | Celda Overvoltage Restauración Umbral | NO |
+### 2.1 Identificación
 
-### Registro 0x1206: Celda Undervoltage Restauración Umbral
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x0101 | Versión de Software | - | 1 | Versión principal del firmware |
+| 0x0106 | Subversión de Software | - | 1 | Versión secundaria del firmware |
+| 0x0107 | Capacidad de Batería | Ah | 1 | Capacidad nominal total |
+| 0x010A | Número de Serie | - | 1 | Identificador único del dispositivo |
+| 0x0332 | Modelo de Batería | - | 1 | Modelo específico de la batería |
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1206 | Celda Undervoltage Restauración Umbral | - | 1 | Celda Undervoltage Restauración Umbral | NO |
+### 2.2 Corrientes Adicionales
 
-### Registro 0x1207: Celda Undervoltage Protección Umbral
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x0206 | Corriente del Paquete | A | 1 | Corriente específica del paquete |
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1207 | Celda Undervoltage Protección Umbral | - | 1 | Celda Undervoltage Protección Umbral | NO |
+---
 
-### Registro 0x1210: Paquete Highvoltage Alarma Umbral
+## 3. Límites y Control (0x1000 - 0x10FF)
 
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1210 | Paquete Highvoltage Alarma Umbral | - | 1 | Paquete Highvoltage Alarma Umbral | NO |
+### 3.1 Límites de Corriente
 
-### Registro 0x1211: Paquete Highvoltage Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1211 | Paquete Highvoltage Restauración Umbral | - | 1 | Paquete Highvoltage Restauración Umbral | NO |
-
-### Registro 0x1212: Paquete Lowvoltage Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1212 | Paquete Lowvoltage Restauración Umbral | - | 1 | Paquete Lowvoltage Restauración Umbral | NO |
-
-### Registro 0x1213: Paquete Lowvoltage Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1213 | Paquete Lowvoltage Alarma Umbral | - | 1 | Paquete Lowvoltage Alarma Umbral | NO |
-
-### Registro 0x1214: Paquete Overvoltage Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1214 | Paquete Overvoltage Protección Umbral | - | 1 | Paquete Overvoltage Protección Umbral | NO |
-
-### Registro 0x1215: Paquete Overvoltage Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1215 | Paquete Overvoltage Restauración Umbral | - | 1 | Paquete Overvoltage Restauración Umbral | NO |
-
-### Registro 0x1216: Paquete Undervoltage Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1216 | Paquete Undervoltage Restauración Umbral | - | 1 | Paquete Undervoltage Restauración Umbral | NO |
-
-### Registro 0x1217: Paquete Undervoltage Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1217 | Paquete Undervoltage Protección Umbral | - | 1 | Paquete Undervoltage Protección Umbral | NO |
-
-### Registro 0x1220: Carga Alta temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1220 | Carga Alta temp Alarma Umbral | - | 1 | Carga Alta temp Alarma Umbral | NO |
-
-### Registro 0x1221: Carga Alta temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1221 | Carga Alta temp Restauración Umbral | - | 1 | Carga Alta temp Restauración Umbral | NO |
-
-### Registro 0x1222: Carga Baja temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1222 | Carga Baja temp Restauración Umbral | - | 1 | Carga Baja temp Restauración Umbral | NO |
-
-### Registro 0x1223: Carga Baja temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1223 | Carga Baja temp Alarma Umbral | - | 1 | Carga Baja temp Alarma Umbral | NO |
-
-### Registro 0x1224: Carga Sobre temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1224 | Carga Sobre temp Protección Umbral | - | 1 | Carga Sobre temp Protección Umbral | NO |
-
-### Registro 0x1225: Carga Sobre temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1225 | Carga Sobre temp Restauración Umbral | - | 1 | Carga Sobre temp Restauración Umbral | NO |
-
-### Registro 0x1226: Carga Sub temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1226 | Carga Sub temp Restauración Umbral | - | 1 | Carga Sub temp Restauración Umbral | NO |
-
-### Registro 0x1227: Carga Sub temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1227 | Carga Sub temp Protección Umbral | - | 1 | Carga Sub temp Protección Umbral | NO |
-
-### Registro 0x1228: Descarga Alta temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1228 | Descarga Alta temp Alarma Umbral | - | 1 | Descarga Alta temp Alarma Umbral | NO |
-
-### Registro 0x1229: Descarga Alta temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1229 | Descarga Alta temp Restauración Umbral | - | 1 | Descarga Alta temp Restauración Umbral | NO |
-
-### Registro 0x122A: Descarga Baja temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122A | Descarga Baja temp Restauración Umbral | - | 1 | Descarga Baja temp Restauración Umbral | NO |
-
-### Registro 0x122B: Descarga Baja temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122B | Descarga Baja temp Alarma Umbral | - | 1 | Descarga Baja temp Alarma Umbral | NO |
-
-### Registro 0x122C: Descarga Sobre temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122C | Descarga Sobre temp Protección Umbral | - | 1 | Descarga Sobre temp Protección Umbral | NO |
-
-### Registro 0x122D: Descarga Sobre temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122D | Descarga Sobre temp Restauración Umbral | - | 1 | Descarga Sobre temp Restauración Umbral | NO |
-
-### Registro 0x122E: Descarga Sub temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122E | Descarga Sub temp Restauración Umbral | - | 1 | Descarga Sub temp Restauración Umbral | NO |
-
-### Registro 0x122F: Descarga Sub temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x122F | Descarga Sub temp Protección Umbral | - | 1 | Descarga Sub temp Protección Umbral | NO |
-
-### Registro 0x1232: Environment Alta temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1232 | Environment Alta temp Alarma Umbral | - | 1 | Environment Alta temp Alarma Umbral | NO |
-
-### Registro 0x1233: Environment Baja temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1233 | Environment Baja temp Alarma Umbral | - | 1 | Environment Baja temp Alarma Umbral | NO |
-
-### Registro 0x1234: Environment Sobre temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1234 | Environment Sobre temp Protección Umbral | - | 1 | Environment Sobre temp Protección Umbral | NO |
-
-### Registro 0x1235: Environment Sobre temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1235 | Environment Sobre temp Restauración Umbral | - | 1 | Environment Sobre temp Restauración Umbral | NO |
-
-### Registro 0x1236: Environment Sub temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1236 | Environment Sub temp Restauración Umbral | - | 1 | Environment Sub temp Restauración Umbral | NO |
-
-### Registro 0x1237: Environment Sub temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1237 | Environment Sub temp Protección Umbral | - | 1 | Environment Sub temp Protección Umbral | NO |
-
-### Registro 0x1238: BMS Sobre temp Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1238 | BMS Sobre temp Protección Umbral | - | 1 | BMS Sobre temp Protección Umbral | NO |
-
-### Registro 0x1239: BMS Sobre temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1239 | BMS Sobre temp Restauración Umbral | - | 1 | BMS Sobre temp Restauración Umbral | NO |
-
-### Registro 0x123A: BMS Alta temp Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x123A | BMS Alta temp Alarma Umbral | - | 1 | BMS Alta temp Alarma Umbral | NO |
-
-### Registro 0x123B: BMS Alta temp Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x123B | BMS Alta temp Restauración Umbral | - | 1 | BMS Alta temp Restauración Umbral | NO |
-
-### Registro 0x1270: Charging Overcurrent Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1270 | Charging Overcurrent Alarma Umbral | - | 1 | Charging Overcurrent Alarma Umbral | NO |
-
-### Registro 0x1271: Charging Overcurrent Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1271 | Charging Overcurrent Restauración Umbral | - | 1 | Charging Overcurrent Restauración Umbral | NO |
-
-### Registro 0x1272: Descarga Overcurrent Restauración Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1272 | Descarga Overcurrent Restauración Umbral | - | 1 | Descarga Overcurrent Restauración Umbral | NO |
-
-### Registro 0x1273: Descarga Overcurrent Alarma Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1273 | Descarga Overcurrent Alarma Umbral | - | 1 | Descarga Overcurrent Alarma Umbral | NO |
-
-### Registro 0x1274: Charging Overcurrent Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1274 | Charging Overcurrent Protección Umbral | - | 1 | Charging Overcurrent Protección Umbral | NO |
-
-### Registro 0x1275: Carga Overcurrent Retardo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1275 | Carga Overcurrent Retardo | - | 1 | Carga Overcurrent Retardo | NO |
-
-### Registro 0x1276: Descarga Overcurrent Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1276 | Descarga Overcurrent Protección Umbral | - | 1 | Descarga Overcurrent Protección Umbral | NO |
-
-### Registro 0x1277: Descarga Overcurrent Retardo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1277 | Descarga Overcurrent Retardo | - | 1 | Descarga Overcurrent Retardo | NO |
-
-### Registro 0x1278: Secondary Overcurrent Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1278 | Secondary Overcurrent Protección Umbral | - | 1 | Secondary Overcurrent Protección Umbral | NO |
-
-### Registro 0x1279: Secondary Overcurrent Retardo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1279 | Secondary Overcurrent Retardo | - | 1 | Secondary Overcurrent Retardo | NO |
-
-### Registro 0x127A: Salida Short circuit Protección Umbral
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x127A | Salida Short circuit Protección Umbral | - | 1 | Salida Short circuit Protección Umbral | NO |
-
-### Registro 0x127B: Salida Short circuit Retardo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x127B | Salida Short circuit Retardo | - | 1 | Salida Short circuit Retardo | NO |
-
-### Registro 0x127C: Overcurrent Restauración Retardo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x127C | Overcurrent Restauración Retardo | - | 1 | Overcurrent Restauración Retardo | NO |
-
-### Registro 0x127D: Sobre Corriente Lock Times
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x127D | Sobre Corriente Lock Times | - | 1 | Sobre Corriente Lock Times | NO |
-
-### Registro 0x127E: Charging Corriente Límite Setting
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x127E | Charging Corriente Límite Setting | - | 1 | Charging Corriente Límite Setting | NO |
-
-### Registro 0x12AB: Log Storage Start Time
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12AB | Log Storage Start Time | - | 1 | Log Storage Start Time | NO |
-
-### Registro 0x12AD: Log Storage End Time
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12AD | Log Storage End Time | - | 1 | Log Storage End Time | NO |
-
-### Registro 0x12AF: Log Storage Interval
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12AF | Log Storage Interval | - | 1 | Log Storage Interval | NO |
-
-### Registro 0x0000: Batería Voltaje
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0000 | Batería Voltaje | - | 1 | Batería Voltaje | NO |
-
-### Registro 0x0001: Paquete Voltaje
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0001 | Paquete Voltaje | - | 1 | Paquete Voltaje | NO |
-
-### Registro 0x0002: Batería Corriente
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0002 | Batería Corriente | - | 1 | Batería Corriente | NO |
-
-### Registro 0x0003: Batería SOC
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0003 | Batería SOC | - | 1 | Batería SOC | NO |
-
-### Registro 0x0004: Batería SOH
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0004 | Batería SOH | - | 1 | Batería SOH | NO |
-
-### Registro 0x0005: Highest Celda Temperatura
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0005 | Highest Celda Temperatura | - | 1 | Highest Celda Temperatura | NO |
-
-### Registro 0x0006: Lowest Celda Temperatura
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0006 | Lowest Celda Temperatura | - | 1 | Lowest Celda Temperatura | NO |
-
-### Registro 0x0101: Software Versión
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0101 | Software Versión | - | 1 | Software Versión | NO |
-
-### Registro 0x0106: Software Subversion
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0106 | Software Subversion | - | 1 | Software Subversion | NO |
-
-### Registro 0x0107: Batería Capacidad
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0107 | Batería Capacidad | - | 1 | Batería Capacidad | NO |
-
-### Registro 0x0044: Descarga AH
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0044 | Descarga AH | - | 1 | Descarga AH | NO |
-
-### Registro 0x0042: Descarga Times
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0042 | Descarga Times | - | 1 | Descarga Times | NO |
-
-### Registro 0x100B: Descarga Corriente Límite
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x100B | Descarga Corriente Límite | - | 1 | Descarga Corriente Límite | NO |
-
-### Registro 0x100D: Carga Corriente Límite
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x100D | Carga Corriente Límite | - | 1 | Carga Corriente Límite | NO |
-
-### Registro 0x118C: GPSIP
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x118C | GPSIP | - | 1 | GPSIP | NO |
-
-### Registro 0x1196: GPS Puerto
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1196 | GPS Puerto | - | 1 | GPS Puerto | NO |
-
-### Registro 0x020B: Environment Temperatura
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x020B | Environment Temperatura | - | 1 | Environment Temperatura | NO |
-
-### Registro 0x1130: SMS Center Número
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1130 | SMS Center Número | - | 1 | SMS Center Número | NO |
-
-### Registro 0x113A: Mobile Número 1
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x113A | Mobile Número 1 | - | 1 | Mobile Número 1 | NO |
-
-### Registro 0x1144: Mobile Número 2
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1144 | Mobile Número 2 | - | 1 | Mobile Número 2 | NO |
-
-### Registro 0x114E: Mobile Número 3
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x114E | Mobile Número 3 | - | 1 | Mobile Número 3 | NO |
-
-### Registro 0x1158: Mobile Número 4
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1158 | Mobile Número 4 | - | 1 | Mobile Número 4 | NO |
-
-### Registro 0x1162: Mobile Número 5
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1162 | Mobile Número 5 | - | 1 | Mobile Número 5 | NO |
-
-### Registro 0x0332: Batería Modelo
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0332 | Batería Modelo | - | 1 | Batería Modelo | NO |
-
-### Registro 0x7D6B: Accumulated Cycle Times
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x7D6B | Accumulated Cycle Times | - | 1 | Accumulated Cycle Times | NO |
-
-### Registro 0x010A: Serie Número
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x010A | Serie Número | - | 1 | Serie Número | NO |
-
-### Registro 0x000A: Batería Estado
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x000A | Batería Estado | - | 1 | Batería Estado | NO |
-
-### Registro 0x1118: Giroscopio Estado
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1118 | Giroscopio Estado | - | 1 | Giroscopio Estado | NO |
-
-### Registro 0x100F: DO1 Alarma Action
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x100F | DO1 Alarma Action | - | 1 | DO1 Alarma Action | NO |
-
-### Registro 0x1010: DO2 Alarma Action
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1010 | DO2 Alarma Action | - | 1 | DO2 Alarma Action | NO |
-
-### Registro 0x1119: Gyro Sensor Sensitivity
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1119 | Gyro Sensor Sensitivity | - | 1 | Gyro Sensor Sensitivity | NO |
-
-### Registro 0x020D: Board Alta Temperatura
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x020D | Board Alta Temperatura | - | 1 | Board Alta Temperatura | NO |
-
-### Registro 0x020F: Board Baja Temperatura
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x020F | Board Baja Temperatura | - | 1 | Board Baja Temperatura | NO |
-
-### Registro 0x0206: Batería Paquete Corriente
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x0206 | Batería Paquete Corriente | - | 1 | Batería Paquete Corriente | NO |
-
-### Registro 0x101B: Default Carga Límite Coeft
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x101B | Default Carga Límite Coeft | - | 1 | Default Carga Límite Coeft | NO |
-
-### Registro 0x12F0: Voltaje function switch parameters
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F0 | Voltaje function switch parameters | - | 1 | Voltaje function switch parameters | NO |
-
-### Registro 0x12F1: Temperatura function switch parameters
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F1 | Temperatura function switch parameters | - | 1 | Temperatura function switch parameters | NO |
-
-### Registro 0x12F2: Corriente function switch parameters
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F2 | Corriente function switch parameters | - | 1 | Corriente function switch parameters | NO |
-
-### Registro 0x12F3: Capacidad and other function switch parameters
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F3 | Capacidad and other function switch parameters | - | 1 | Capacidad and other function switch parameters | NO |
-
-### Registro 0x12F4: Ecualización function switch parameters
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F4 | Ecualización function switch parameters | - | 1 | Ecualización function switch parameters | NO |
-
-### Registro 0x12F5: Indication function switch parameter
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x12F5 | Indication function switch parameter | - | 1 | Indication function switch parameter | NO |
-
-### Registro 0x1199: APN Access Point Nombre
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x1199 | APN Access Point Nombre | - | 1 | APN Access Point Nombre | NO |
-
-### Registro 0x11A7: APN User Nombre
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x11A7 | APN User Nombre | - | 1 | APN User Nombre | NO |
-
-### Registro 0x11B5: APN Password
-
-| Dirección | Nombre | Unidad | Factor | Descripción | Contradicciones |
-|-----------|--------|--------|--------|-------------|------------------|
-| 0x11B5 | APN Password | - | 1 | APN Password | NO |
-
-# Detalles de Bitfields
-
-## Registro 0x0046
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x100B | Límite de Corriente de Descarga | A | 1 | Máxima corriente permitida en descarga |
+| 0x100D | Límite de Corriente de Carga | A | 1 | Máxima corriente permitida en carga |
+| 0x127E | Configuración Límite de Carga | A | 1 | Parámetro configurable de límite |
+
+### 3.2 Configuración de Salidas Digitales
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x100F | Acción de Alarma DO1 | - | 1 | Configuración de salida digital 1 |
+| 0x1010 | Acción de Alarma DO2 | - | 1 | Configuración de salida digital 2 |
+
+### 3.3 Configuraciones Especiales
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x101B | Coeficiente Límite de Carga | - | 1 | Factor de ajuste para límites |
+| 0x1118 | Estado del Giroscopio | - | 1 | Estado del sensor de movimiento |
+| 0x1119 | Sensibilidad del Giroscopio | - | 1 | Configuración de sensibilidad |
+
+---
+
+## 4. Comunicaciones (0x1100 - 0x11FF)
+
+### 4.1 Configuración SMS
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1130 | Número de Centro SMS | - | 1 | Centro de mensajes SMS |
+| 0x113A | Número Móvil 1 | - | 1 | Primer número de contacto |
+| 0x1144 | Número Móvil 2 | - | 1 | Segundo número de contacto |
+| 0x114E | Número Móvil 3 | - | 1 | Tercer número de contacto |
+| 0x1158 | Número Móvil 4 | - | 1 | Cuarto número de contacto |
+| 0x1162 | Número Móvil 5 | - | 1 | Quinto número de contacto |
+
+### 4.2 Configuración GPS/GPRS
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x118C | Dirección IP GPS | - | 1 | IP del servidor GPS |
+| 0x1196 | Puerto GPS | - | 1 | Puerto de comunicación GPS |
+| 0x1199 | Nombre del APN | - | 1 | Punto de acceso de red móvil |
+| 0x11A7 | Usuario APN | - | 1 | Usuario para conexión APN |
+| 0x11B5 | Contraseña APN | - | 1 | Contraseña para conexión APN |
+
+---
+
+## 5. Umbrales de Voltaje (0x1200 - 0x121F)
+
+### 5.1 Umbrales de Celdas Individuales
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1200 | Umbral Alarma Alto Voltaje Celda | V | 1 | Límite superior para alarma |
+| 0x1201 | Umbral Restauración Alto Voltaje Celda | V | 1 | Punto de restauración de alarma alta |
+| 0x1202 | Umbral Restauración Bajo Voltaje Celda | V | 1 | Punto de restauración de alarma baja |
+| 0x1203 | Umbral Alarma Bajo Voltaje Celda | V | 1 | Límite inferior para alarma |
+| 0x1204 | Umbral Protección Sobrevoltaje Celda | V | 1 | Límite crítico superior |
+| 0x1205 | Umbral Restauración Sobrevoltaje Celda | V | 1 | Restauración de protección alta |
+| 0x1206 | Umbral Restauración Subtensión Celda | V | 1 | Restauración de protección baja |
+| 0x1207 | Umbral Protección Subtensión Celda | V | 1 | Límite crítico inferior |
+
+### 5.2 Umbrales del Paquete Completo
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1210 | Umbral Alarma Alto Voltaje Paquete | V | 1 | Límite superior para alarma del paquete |
+| 0x1211 | Umbral Restauración Alto Voltaje Paquete | V | 1 | Restauración de alarma alta del paquete |
+| 0x1212 | Umbral Restauración Bajo Voltaje Paquete | V | 1 | Restauración de alarma baja del paquete |
+| 0x1213 | Umbral Alarma Bajo Voltaje Paquete | V | 1 | Límite inferior para alarma del paquete |
+| 0x1214 | Umbral Protección Sobrevoltaje Paquete | V | 1 | Límite crítico superior del paquete |
+| 0x1215 | Umbral Restauración Sobrevoltaje Paquete | V | 1 | Restauración protección alta del paquete |
+| 0x1216 | Umbral Restauración Subtensión Paquete | V | 1 | Restauración protección baja del paquete |
+| 0x1217 | Umbral Protección Subtensión Paquete | V | 1 | Límite crítico inferior del paquete |
+
+---
+
+## 6. Umbrales de Temperatura (0x1220 - 0x123F)
+
+### 6.1 Temperaturas de Carga
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1220 | Umbral Alarma Alta Temperatura Carga | °C | 1 | Límite superior en carga |
+| 0x1221 | Umbral Restauración Alta Temperatura Carga | °C | 1 | Restauración alarma alta carga |
+| 0x1222 | Umbral Restauración Baja Temperatura Carga | °C | 1 | Restauración alarma baja carga |
+| 0x1223 | Umbral Alarma Baja Temperatura Carga | °C | 1 | Límite inferior en carga |
+| 0x1224 | Umbral Protección Sobretemperatura Carga | °C | 1 | Límite crítico superior carga |
+| 0x1225 | Umbral Restauración Sobretemperatura Carga | °C | 1 | Restauración protección alta carga |
+| 0x1226 | Umbral Restauración Subtemperatura Carga | °C | 1 | Restauración protección baja carga |
+| 0x1227 | Umbral Protección Subtemperatura Carga | °C | 1 | Límite crítico inferior carga |
+
+### 6.2 Temperaturas de Descarga
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1228 | Umbral Alarma Alta Temperatura Descarga | °C | 1 | Límite superior en descarga |
+| 0x1229 | Umbral Restauración Alta Temperatura Descarga | °C | 1 | Restauración alarma alta descarga |
+| 0x122A | Umbral Restauración Baja Temperatura Descarga | °C | 1 | Restauración alarma baja descarga |
+| 0x122B | Umbral Alarma Baja Temperatura Descarga | °C | 1 | Límite inferior en descarga |
+| 0x122C | Umbral Protección Sobretemperatura Descarga | °C | 1 | Límite crítico superior descarga |
+| 0x122D | Umbral Restauración Sobretemperatura Descarga | °C | 1 | Restauración protección alta descarga |
+| 0x122E | Umbral Restauración Subtemperatura Descarga | °C | 1 | Restauración protección baja descarga |
+| 0x122F | Umbral Protección Subtemperatura Descarga | °C | 1 | Límite crítico inferior descarga |
+
+### 6.3 Temperaturas Ambientales y del Sistema
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1232 | Umbral Alarma Alta Temperatura Ambiente | °C | 1 | Límite superior ambiente |
+| 0x1233 | Umbral Alarma Baja Temperatura Ambiente | °C | 1 | Límite inferior ambiente |
+| 0x1234 | Umbral Protección Sobretemperatura Ambiente | °C | 1 | Límite crítico superior ambiente |
+| 0x1235 | Umbral Restauración Sobretemperatura Ambiente | °C | 1 | Restauración protección alta ambiente |
+| 0x1236 | Umbral Restauración Subtemperatura Ambiente | °C | 1 | Restauración protección baja ambiente |
+| 0x1237 | Umbral Protección Subtemperatura Ambiente | °C | 1 | Límite crítico inferior ambiente |
+| 0x1238 | Umbral Protección Sobretemperatura BMS | °C | 1 | Límite crítico superior del BMS |
+| 0x1239 | Umbral Restauración Sobretemperatura BMS | °C | 1 | Restauración protección alta BMS |
+| 0x123A | Umbral Alarma Alta Temperatura BMS | °C | 1 | Límite superior del BMS |
+| 0x123B | Umbral Restauración Alta Temperatura BMS | °C | 1 | Restauración alarma alta BMS |
+
+---
+
+## 7. Protecciones de Corriente (0x1270 - 0x127F)
+
+### 7.1 Umbrales de Sobrecorriente
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1270 | Umbral Alarma Sobrecorriente Carga | A | 1 | Límite alarma en carga |
+| 0x1271 | Umbral Restauración Sobrecorriente Carga | A | 1 | Restauración alarma carga |
+| 0x1272 | Umbral Restauración Sobrecorriente Descarga | A | 1 | Restauración alarma descarga |
+| 0x1273 | Umbral Alarma Sobrecorriente Descarga | A | 1 | Límite alarma en descarga |
+| 0x1274 | Umbral Protección Sobrecorriente Carga | A | 1 | Límite crítico carga |
+| 0x1276 | Umbral Protección Sobrecorriente Descarga | A | 1 | Límite crítico descarga |
+| 0x1278 | Umbral Protección Sobrecorriente Secundaria | A | 1 | Protección secundaria |
+| 0x127A | Umbral Protección Cortocircuito | A | 1 | Detección de cortocircuito |
+
+### 7.2 Temporizadores y Retardos
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x1275 | Retardo Sobrecorriente Carga | ms | 1 | Tiempo antes de activar protección |
+| 0x1277 | Retardo Sobrecorriente Descarga | ms | 1 | Tiempo antes de activar protección |
+| 0x1279 | Retardo Sobrecorriente Secundaria | ms | 1 | Tiempo protección secundaria |
+| 0x127B | Retardo Cortocircuito | ms | 1 | Tiempo detección cortocircuito |
+| 0x127C | Retardo Restauración Sobrecorriente | ms | 1 | Tiempo para restaurar |
+| 0x127D | Número de Bloqueos por Sobrecorriente | - | 1 | Contador de eventos |
+
+---
+
+## 8. Configuración de Logs (0x12A0 - 0x12AF)
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x12AB | Hora Inicio Almacenamiento Logs | - | 1 | Timestamp de inicio |
+| 0x12AD | Hora Fin Almacenamiento Logs | - | 1 | Timestamp de finalización |
+| 0x12AF | Intervalo Almacenamiento Logs | s | 1 | Frecuencia de registro |
+
+---
+
+## 9. Switches de Función (0x12F0 - 0x12F5)
+
+| Dirección | Parámetro | Unidad | Factor | Descripción |
+|-----------|-----------|--------|--------|-------------|
+| 0x12F0 | Parámetros Switch Función Voltaje | - | 1 | Habilitación funciones de voltaje |
+| 0x12F1 | Parámetros Switch Función Temperatura | - | 1 | Habilitación funciones de temperatura |
+| 0x12F2 | Parámetros Switch Función Corriente | - | 1 | Habilitación funciones de corriente |
+| 0x12F3 | Parámetros Switch Función Capacidad | - | 1 | Habilitación funciones de capacidad |
+| 0x12F4 | Parámetros Switch Función Ecualización | - | 1 | Habilitación ecualización de celdas |
+| 0x12F5 | Parámetros Switch Función Indicación | - | 1 | Habilitación indicadores |
+
+---
+
+## 10. Registros de Estado y Alarmas (Bitfields)
+
+### 10.1 Registro 0x0046 - Fallos del Sistema
 
 | Bit | Descripción |
 |-----|-------------|
@@ -640,28 +254,13 @@ Este documento unifica los registros Modbus oficiales, traducidos al español.
 | 5 | Bloqueo por sobrecarga |
 | 6 | Fallo en MOSFET bidireccional |
 
-## Registro 0x0047
+### 10.2 Registro 0x0047 - Estado de Celdas Individuales
 
 | Bit | Descripción |
 |-----|-------------|
-| 0 | Fallo en celda 1 |
-| 1 | Fallo en celda 2 |
-| 2 | Fallo en celda 3 |
-| 3 | Fallo en celda 4 |
-| 4 | Fallo en celda 5 |
-| 5 | Fallo en celda 6 |
-| 6 | Fallo en celda 7 |
-| 7 | Fallo en celda 8 |
-| 8 | Fallo en celda 9 |
-| 9 | Fallo en celda 10 |
-| 10 | Fallo en celda 11 |
-| 11 | Fallo en celda 12 |
-| 12 | Fallo en celda 13 |
-| 13 | Fallo en celda 14 |
-| 14 | Fallo en celda 15 |
-| 15 | Fallo en celda 16 |
+| 0-15 | Fallo en celda 1-16 respectivamente |
 
-## Registro 0x0048
+### 10.3 Registro 0x0048 - Protecciones Activas
 
 | Bit | Descripción |
 |-----|-------------|
@@ -680,9 +279,8 @@ Este documento unifica los registros Modbus oficiales, traducidos al español.
 | 12 | Inversión de polaridad en la entrada |
 | 13 | Alarma antirrobo activada |
 | 14 | Protección por sobrecarga |
-| 15 | (Reservado o sin uso definido) |
 
-## Registro 0x0049
+### 10.4 Registro 0x0049 - Advertencias Activas
 
 | Bit | Descripción |
 |-----|-------------|
@@ -697,7 +295,7 @@ Este documento unifica los registros Modbus oficiales, traducidos al español.
 | 8 | Alarma por circuito abierto en convertidor |
 | 9 | Conflicto de número de serie |
 
-## Registro 0x004A
+### 10.5 Registro 0x004A - Estados Especiales
 
 | Bit | Descripción |
 |-----|-------------|
@@ -714,3 +312,29 @@ Este documento unifica los registros Modbus oficiales, traducidos al español.
 | 11 | Protección por sobrecorriente de carga |
 | 12 | Fallo del giroscopio |
 | 13 | Cortocircuito en terminal de batería |
+
+---
+
+## Notas de Implementación
+
+### Factores de Escala
+- Todos los registros tienen factor 1 según la documentación original
+- Verificar las unidades reales durante la implementación
+- Algunos valores pueden requerir conversión adicional
+
+### Comunicación Modbus
+- Protocolo: Modbus RTU/TCP
+- Velocidad recomendada: 9600 bps para RTU
+- Paridad: Verificar con el dispositivo específico
+- Timeout recomendado: 1000ms
+
+### Consideraciones de Seguridad
+- Los registros de configuración (0x1200+) pueden afectar la operación del sistema
+- Verificar límites seguros antes de modificar umbrales
+- Realizar respaldos de configuración antes de cambios
+
+### Monitoreo Recomendado
+Los siguientes registros deben monitorearse continuamente:
+- 0x0000-0x0006: Parámetros básicos
+- 0x0046-0x004A: Estados de alarma y protección
+- 0x0048: Protecciones activas críticas
