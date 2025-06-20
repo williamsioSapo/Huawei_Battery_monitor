@@ -1,6 +1,6 @@
 # Detalles Específicos: Huawei ESM-48150B1
 
-[<- Volver al README principal](../README.md)
+[<- Volver al README principal](../README.md) | [Tabla de Registros >>](REGISTROS_MODBUS.md)
 
 La comunicación con la batería Huawei ESM-48150B1 va más allá del protocolo Modbus RTU estándar, especialmente para acceder a información detallada del dispositivo.
 
