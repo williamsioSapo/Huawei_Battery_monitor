@@ -15,8 +15,7 @@ Esta guía te ayudará a configurar tu entorno e instalar las dependencias neces
 
 1.  **Clonar el Repositorio:**
     ```bash
-    git clone https://github.com/nestorcal/ModbusReader_SR
-    cd ModbusReader_SR # O el nombre de tu directorio
+    git clone https://github.com/williamsioSapo/Huawei_Battery_monitor   
     ```
 
 2.  **Revisar que exista el Archivo `requirements.txt`:**
