@@ -50,7 +50,7 @@ Esta guía te ayudará a configurar tu entorno e instalar las dependencias neces
 6.  **Ejecutar la Aplicación:**
     Desde la raíz del proyecto y con el entorno virtual activado:
     ```bash
-    python app.py, o tambien el archivo bat de la misma carpeta.
+    el archivo bat de la misma carpeta es el que inicia la magia . -->>arranca webui.bat<---
     ```
     *   Flask iniciará un servidor de desarrollo (usualmente en `http://127.0.0.1:5000` o `http://0.0.0.0:5000`). La salida en la consola indicará la dirección exacta.
 
