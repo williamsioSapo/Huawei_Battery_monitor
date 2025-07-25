@@ -119,6 +119,7 @@ Para obtener información detallada sobre cada aspecto del sistema, consulta las
 ### 📋 **Documentación Técnica del Protocolo**
 - 📖 [**Registros Modbus Huawei ESM**](docs/REGISTROS_MODBUS.md) - Especificación completa de registros, umbrales y configuraciones
 - 🔐 [**Protocolo de Autenticación Huawei**](docs/Authentificacion.md) - Secuencia propietaria de 3 pasos y funciones FC41
+- 🔐 [**Protocolo del giroscopio**](docs/Giroscopio.md) - Secuencia de desactivacion de giroscopio con Software Liverado
 
 ### 🛠️ **Diagnósticos y Soporte**
 - 🔍 [**Diagnósticos Avanzados**](docs/DIAGNOSTICOS_AVANZADOS.md) - Análisis de registros y datos de celdas
