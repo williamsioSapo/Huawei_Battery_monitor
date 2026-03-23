@@ -1,5 +1,5 @@
 # Modbus Web UI para Baterías Huawei ESM-48150B1
-Contacto + 51 959301916 Williamsio Peru
+Contacto Whatsapp + 51 959301916 Williamsio Peru
 ![Versión de Python](https://img.shields.io/badge/python-3.12+-blue.svg)
 ![Licencia](https://img.shields.io/badge/license-BSD-green.svg)
 ![Estado](https://img.shields.io/badge/estado-beta-orange.svg)
